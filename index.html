@@ -3,132 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | Premium AI Remixing</title>
+  <title>Eco Remix Studio | AI-Powered DIY</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
-  <!-- Ethereal Background Blobs -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-
-  <div class="app-shell">
-    <div class="main-board">
-      <!-- Navigation -->
-      <nav class="nav">
-        <div class="nav-left">
-          <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
-              <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="currentColor"/>
-            </svg>
-            <div class="logo-text">
-              <span>ECO REMIX</span>
-              <strong>STUDIO</strong>
-            </div>
-          </div>
+  
+  <div class="app-container">
+    <!-- Top Nav -->
+    <header class="navbar">
+      <div class="nav-content">
+        <div class="logo-area">
+          <div class="brand-icon">🌱</div>
+          <span class="brand-name">Eco Study</span>
         </div>
-        <div class="nav-center">
-          <a href="#" class="nav-link active">Home</a>
-          <a href="#" class="nav-link">Create</a>
-          <a href="#" class="nav-link">My Remixes</a>
-          <a href="#" class="nav-link">Community</a>
-          <a href="#" class="nav-link">Studio</a>
-        </div>
-        <div class="nav-right">
-          <button class="icon-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          </button>
-          <div class="user-avatar">
+        <nav class="nav-links">
+          <a href="#" class="nav-link">Favorite</a>
+          <a href="#" class="nav-link">Shop</a>
+          <a href="#" class="nav-link">Pricing</a>
+          <a href="#" class="nav-link">History</a>
+          <a href="#" class="nav-link active">Dashboard</a>
+          <a href="#" class="nav-link">Blog</a>
+        </nav>
+        <div class="nav-actions">
+          <div class="user-pill">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User">
+            <span>User Name</span>
           </div>
+          <button class="primary-action">Start Studying</button>
         </div>
-      </nav>
+      </div>
+    </header>
 
-      <div class="content-wrapper">
-        <!-- Main Area -->
-        <div class="main-content">
-          <header class="hero">
-            <h1>GENERATE YOUR SUSTAINABLE CREATION</h1>
-            <div class="search-container">
-              <input type="text" id="aiInput" placeholder="Describe your eco-conscious vision...">
-              <button id="generateBtn" class="ai-remix-btn">AI REMIX</button>
-            </div>
+    <!-- Main Layout -->
+    <div class="layout-wrapper">
+      <!-- Left Content -->
+      <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-text">
+            <h1>Tomorrow is for the Taking</h1>
+            <p>Whether you want to learn millions of experience or our community is here to build a help desk and. Follow our tutorial to find out how everyday and more.</p>
+            <button class="hero-btn" id="generateBtn">Take Remix ➔</button>
+            <div id="aiStatus" class="ai-status"></div>
             
-            <div id="webllmProgress" class="progress-container" style="display: none;">
-              <small id="webllmText">Loading AI Brain...</small>
-              <div id="webllmFill"></div>
-            </div>
-          </header>
-
-          <section class="ideas-section">
-            <h3>AI-GENERATED IDEA CARDS</h3>
-            <div id="ideas" class="ideas-grid">
-              <!-- Cards dynamically injected here -->
-            </div>
-          </section>
-        </div>
-
-        <!-- Sidebar -->
-        <aside class="sidebar">
-          <div class="sidebar-top">
-            <div class="quick-nav">
-              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Materials</button>
-              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg> Style</button>
-              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Impact</button>
-              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> Palettes</button>
+            <div id="webllmProgress" class="model-progress" style="display: none;">
+              <small id="webllmText">Readying Studio...</small>
+              <div class="progress-track"><div id="webllmFill"></div></div>
             </div>
           </div>
+          <div class="hero-illustration">
+            <img src="https://cdni.iconscout.com/illustration/premium/thumb/eco-friendly-lifestyle-5660875-4716496.png" alt="Eco Illustration">
+          </div>
+        </section>
 
-          <div class="recent-remixes">
-            <h4>Recent Remixes</h4>
-            <div id="marketGrid" class="recent-grid">
-              <!-- Reusing marketGrid for the small circles seen in image -->
+        <!-- Search / Idea Lab Input -->
+        <section class="search-area">
+          <div class="input-group">
+            <input type="text" id="aiInput" placeholder="What are you remaking today? (e.g. Cardboard Sneakers)">
+          </div>
+        </section>
+
+        <!-- Courses / AI Ideas Section -->
+        <section class="courses-section">
+          <div class="section-header">
+            <h2>Remixes</h2>
+            <div class="filter-tabs">
+              <button class="tab-btn active">All</button>
+              <button class="tab-btn">Dress</button>
+              <button class="tab-btn">Programming</button>
+              <button class="tab-btn">Marketing</button>
             </div>
+          </div>
+          <div id="ideas" class="course-grid">
+            <!-- AI Ideas render here -->
+          </div>
+        </section>
+      </main>
+
+      <!-- Right Sidebar -->
+      <aside class="sidebar">
+        <!-- Streak / Calendar Module -->
+        <section class="side-module streak-module">
+          <h3>You're on a <span id="streakCount">0-day</span> streak</h3>
+          <p class="date-label">June 2024</p>
+          <div class="calendar-row">
+            <div class="cal-day"><span>16</span></div>
+            <div class="cal-day"><span>17</span></div>
+            <div class="cal-day"><span>18</span></div>
+            <div class="cal-day active"><span>19</span></div>
+            <div class="cal-day"><span>20</span></div>
+            <div class="cal-day"><span>21</span></div>
+            <div class="cal-day"><span>22</span></div>
+          </div>
+          <div class="streak-timeline">
+            <div class="timeline-item"><span class="dot"></span> 09:00 Visual Research Session <span class="tag">Brief</span></div>
+            <div class="timeline-item"><span class="dot"></span> 10:30 Idea Lab Generation <span class="tag orange">Busy</span></div>
+            <div class="timeline-item active"><span class="dot"></span> 14:00 Hands-on Design Workshop</div>
+            <div class="timeline-item"><span class="dot"></span> 15:30 AI Feedback & Scoring</div>
+            <div class="timeline-item"><span class="dot"></span> 17:00 Marketplace Updates <span class="tag blue">New</span></div>
+          </div>
+        </section>
+
+        <!-- Best of the Week / Marketplace -->
+        <section class="side-module marketplace-module">
+          <div class="module-header">
+            <h3>Best of the week</h3>
+            <a href="#" class="see-all">See all reviews</a>
+          </div>
+          <div id="marketGrid" class="market-list">
+            <!-- Circular Marketplace items render here -->
           </div>
           
-          <!-- Hidden old stats for logic -->
-          <div style="display:none">
-            <span id="coinCount">0</span>
-            <span id="projectCount">0</span>
-            <span id="streakCount">0</span>
-            <span id="favoriteCategory"></span>
-            <span id="lastScore"></span>
-            <div id="ownedTemplates"></div>
-            <select id="materialType"><option value="mixed"></option></select>
-            <select id="projectGoal"><option value="storage"></option></select>
-            <input type="file" id="imageInput">
-            <input type="file" id="finalInput">
-            <div id="materialPreview"></div>
-            <div id="finalPreview"></div>
-            <div id="rating"></div>
-            <button id="rateBtn"></button>
-            <span id="aiFeedbackStatus"></span>
+          <div class="promo-card">
+            <div class="promo-content">
+              <span>Ready to level up?</span>
+              <button class="promo-btn">Join The Pro Remix</button>
+            </div>
+            <div class="promo-img">🚀</div>
           </div>
-        </aside>
-      </div>
+        </section>
+      </aside>
     </div>
   </div>
 
-  <!-- Tutorial Modal -->
+  <!-- Tutorial Modal (Hidden logic module) -->
   <dialog id="tutorialModal" class="tutorial-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="tutorialTitle">Project Tutorial</h2>
-        <button id="closeModalBtn" class="close-btn">&times;</button>
+    <div class="modal-wrapper">
+      <header class="modal-header">
+        <h2 id="tutorialTitle">Building your project</h2>
+        <button id="closeModalBtn" class="close-btn">✕</button>
+      </header>
+      <div id="tutorialLoading" class="modal-loading" style="display:none">
+        <div class="loader-spinner"></div>
+        <p>Expert AI is drafting your steps...</p>
       </div>
-      <div class="modal-body">
-        <div id="tutorialLoading" class="tutorial-loader" style="display: none;">
-          <div class="spinner"></div>
-          <p>Writing instructions...</p>
-        </div>
-        <div id="tutorialContent" class="tutorial-text"></div>
-      </div>
+      <div id="tutorialContent" class="modal-body"></div>
     </div>
   </dialog>
+
+  <!-- Functional Hidden Elements -->
+  <div style="display:none">
+    <span id="coinCount">0</span>
+    <span id="projectCount">0</span>
+    <span id="favoriteCategory"></span>
+    <span id="lastScore"></span>
+    <div id="ownedTemplates"></div>
+    <select id="materialType"><option value="mixed"></option></select>
+    <select id="projectGoal"><option value="storage"></option></select>
+    <input type="file" id="imageInput">
+    <input type="file" id="finalInput">
+    <div id="materialPreview"></div>
+    <div id="finalPreview"></div>
+    <div id="rating"></div>
+    <button id="rateBtn"></button>
+    <span id="aiFeedbackStatus"></span>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script type="module" src="script.js"></script>
