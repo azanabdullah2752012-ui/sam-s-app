@@ -129,6 +129,8 @@ async function generateIdeas() {
   const material = elements.materialType.value;
   const goal     = elements.projectGoal.value;
 
+  console.log("[Generate Ideas] clicked — file:", file ? file.name : "none", "material:", material, "goal:", goal);
+
   if (!file) {
     elements.ideas.innerHTML = '<div class="empty-state">Upload a material image first so the board has something to remix.</div>';
     return;
@@ -140,46 +142,25 @@ async function generateIdeas() {
   elements.ideas.innerHTML = '<div class="empty-state ai-thinking">✨ AI is crafting your ideas…</div>';
 
   try {
-    let messages;
+    // Use text-only prompt — the free models don't support vision/image input
+    const messages = [{ role: "user", content: buildIdeaPrompt(material, goal) }];
 
-    // Try to include the image for vision models
-    try {
-      const imageBase64 = await fileToBase64(file);
-      const imageMime   = file.type || "image/jpeg";
-
-      messages = [
-        {
-          role: "user",
-          content: [
-            {
-              type: "image_url",
-              image_url: { url: `data:${imageMime};base64,${imageBase64}` }
-            },
-            {
-              type: "text",
-              text: buildIdeaPrompt(material, goal)
-            }
-          ]
-        }
-      ];
-    } catch {
-      // Fallback: text-only prompt
-      messages = [{ role: "user", content: buildIdeaPrompt(material, goal) }];
-    }
-
-    const raw  = await callOpenRouter(messages, 900);
+    const raw   = await callOpenRouter(messages, 900);
+    console.log("[Generate Ideas] raw AI response:", raw);
     const ideas = parseIdeaJSON(raw);
 
     if (ideas && ideas.length > 0) {
       renderAIIdeas(ideas);
+      if (elements.aiStatus) elements.aiStatus.textContent = "";
     } else {
-      // Fallback to static library
+      console.warn("[Generate Ideas] Could not parse AI JSON, falling back to static library.");
       renderStaticIdeas(material, goal);
     }
   } catch (error) {
-    console.error("AI idea generation failed:", error);
+    console.error("[Generate Ideas] AI call failed:", error);
+    elements.ideas.innerHTML = `<div class="empty-state" style="color:#e07070">⚠️ AI unavailable — showing local ideas instead.<br><small>${escHtml(error.message)}</small></div>`;
+    setTimeout(() => renderStaticIdeas(material, goal), 1500);
     showAIError(elements.aiStatus, error.message);
-    renderStaticIdeas(material, goal);
   } finally {
     setLoading(elements.generateBtn, null, "", false);
     elements.generateBtn.textContent = "Generate Ideas";
@@ -233,8 +214,19 @@ function renderAIIdeas(ideas) {
 }
 
 function renderStaticIdeas(material, goal) {
-  const ideaLibrary = getStaticLibrary();
-  const selectedIdeas = (ideaLibrary[material] || ideaLibrary.mixed)[goal] || [];
+  const ideaLibrary   = getStaticLibrary();
+  const materialBank  = ideaLibrary[material] || ideaLibrary.mixed;
+  // Try exact goal, then first available goal, then mixed fallback
+  const selectedIdeas = materialBank[goal]
+    || Object.values(materialBank)[0]
+    || Object.values(ideaLibrary.mixed)[0]
+    || [];
+
+  if (selectedIdeas.length === 0) {
+    elements.ideas.innerHTML = '<div class="empty-state">No ideas found for this combination. Try a different material or goal.</div>';
+    return;
+  }
+
   elements.ideas.innerHTML = selectedIdeas.map((entry) => `
     <article class="idea-note">
       <strong>${entry.title}</strong>
