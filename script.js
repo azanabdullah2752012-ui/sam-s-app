@@ -1,29 +1,29 @@
 // ─── Config ────────────────────────────────────────────────────────────────
 // ⚠️  IMPORTANT: Replace this key with a fresh one from https://openrouter.ai/keys
 //    The current key returns 401 (expired/revoked). Grab a new free key and paste it here.
-const OPENROUTER_API_KEY = "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";
-const OPENROUTER_BASE    = "https://openrouter.ai/api/v1/chat/completions";
+const OPENROUTER_API_KEY = "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";
+const OPENROUTER_BASE = "https://openrouter.ai/api/v1/chat/completions";
 
 // ✅ All model IDs verified live as of April 2026 via OpenRouter API
 const AI_MODELS = [
-  { id: "meta-llama/llama-3.3-70b-instruct:free",  label: "Llama 3.3 70B (Meta)"       },
-  { id: "google/gemma-3-27b-it:free",               label: "Gemma 3 27B (Google)"       },
-  { id: "nvidia/nemotron-3-super-120b-a12b:free",   label: "Nemotron Super 120B (NVIDIA)" },
-  { id: "openai/gpt-oss-120b:free",                 label: "GPT OSS 120B (OpenAI)"      },
-  { id: "qwen/qwen3-next-80b-a3b-instruct:free",    label: "Qwen3 80B (Alibaba)"        },
-  { id: "google/gemma-4-31b-it:free",               label: "Gemma 4 31B (Google)"       }
+  { id: "meta-llama/llama-3.3-70b-instruct:free", label: "Llama 3.3 70B (Meta)" },
+  { id: "google/gemma-3-27b-it:free", label: "Gemma 3 27B (Google)" },
+  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron Super 120B (NVIDIA)" },
+  { id: "openai/gpt-oss-120b:free", label: "GPT OSS 120B (OpenAI)" },
+  { id: "qwen/qwen3-next-80b-a3b-instruct:free", label: "Qwen3 80B (Alibaba)" },
+  { id: "google/gemma-4-31b-it:free", label: "Gemma 4 31B (Google)" }
 ];
 
 // ─── Storage & Templates ───────────────────────────────────────────────────
 const storageKey = "eco-remix-studio-state";
 
 const templates = [
-  { id: "toy-storage",   name: "Toy Storage Cubes",       description: "Bright stackable bins with labels, handles, and stronger corners.",                         category: "Storage",   price: 8  },
-  { id: "wall-art",      name: "Cap Mosaic Wall Art",      description: "A playful wall piece built from caps, lids, and a simple backing board.",                   category: "Decor",     price: 10 },
-  { id: "bird-feeder",   name: "Bottle Bird Feeder",       description: "A weather-friendly feeder plan with drainage, perch spacing, and refill tips.",              category: "Garden",    price: 6  },
-  { id: "desk-dock",     name: "Desk Dock Organizer",      description: "A phone, pen, and note stand from jars, cardboard, and soft wraps.",                        category: "Workspace", price: 12 },
-  { id: "gift-kit",      name: "Reusable Gift Box Kit",    description: "A repeatable gift package layout that looks deliberate instead of improvised.",              category: "Gift",      price: 7  },
-  { id: "planter-wall",  name: "Vertical Planter Wall",    description: "A bottle-garden setup with spacing, drainage, and mounting guidance.",                      category: "Garden",    price: 14 }
+  { id: "toy-storage", name: "Toy Storage Cubes", description: "Bright stackable bins with labels, handles, and stronger corners.", category: "Storage", price: 8 },
+  { id: "wall-art", name: "Cap Mosaic Wall Art", description: "A playful wall piece built from caps, lids, and a simple backing board.", category: "Decor", price: 10 },
+  { id: "bird-feeder", name: "Bottle Bird Feeder", description: "A weather-friendly feeder plan with drainage, perch spacing, and refill tips.", category: "Garden", price: 6 },
+  { id: "desk-dock", name: "Desk Dock Organizer", description: "A phone, pen, and note stand from jars, cardboard, and soft wraps.", category: "Workspace", price: 12 },
+  { id: "gift-kit", name: "Reusable Gift Box Kit", description: "A repeatable gift package layout that looks deliberate instead of improvised.", category: "Gift", price: 7 },
+  { id: "planter-wall", name: "Vertical Planter Wall", description: "A bottle-garden setup with spacing, drainage, and mounting guidance.", category: "Garden", price: 14 }
 ];
 
 // ─── State ─────────────────────────────────────────────────────────────────
@@ -31,30 +31,30 @@ const state = loadState();
 
 // ─── DOM refs ──────────────────────────────────────────────────────────────
 const elements = {
-  coinCount:            document.getElementById("coinCount"),
-  projectCount:         document.getElementById("projectCount"),
-  streakCount:          document.getElementById("streakCount"),
-  favoriteCategory:     document.getElementById("favoriteCategory"),
-  lastScore:            document.getElementById("lastScore"),
-  ownedTemplates:       document.getElementById("ownedTemplates"),
-  imageInput:           document.getElementById("imageInput"),
-  finalInput:           document.getElementById("finalInput"),
-  materialType:         document.getElementById("materialType"),
-  projectGoal:          document.getElementById("projectGoal"),
-  materialPreview:      document.getElementById("materialPreview"),
-  finalPreview:         document.getElementById("finalPreview"),
-  ideas:                document.getElementById("ideas"),
-  rating:               document.getElementById("rating"),
-  marketGrid:           document.getElementById("marketGrid"),
-  craftsmanshipRange:   document.getElementById("craftsmanshipRange"),
-  originalityRange:     document.getElementById("originalityRange"),
-  functionalityRange:   document.getElementById("functionalityRange"),
-  sustainabilityRange:  document.getElementById("sustainabilityRange"),
-  generateBtn:          document.getElementById("generateBtn"),
-  rateBtn:              document.getElementById("rateBtn"),
-  modelSelect:          document.getElementById("modelSelect"),
-  aiStatus:             document.getElementById("aiStatus"),
-  aiFeedbackStatus:     document.getElementById("aiFeedbackStatus")
+  coinCount: document.getElementById("coinCount"),
+  projectCount: document.getElementById("projectCount"),
+  streakCount: document.getElementById("streakCount"),
+  favoriteCategory: document.getElementById("favoriteCategory"),
+  lastScore: document.getElementById("lastScore"),
+  ownedTemplates: document.getElementById("ownedTemplates"),
+  imageInput: document.getElementById("imageInput"),
+  finalInput: document.getElementById("finalInput"),
+  materialType: document.getElementById("materialType"),
+  projectGoal: document.getElementById("projectGoal"),
+  materialPreview: document.getElementById("materialPreview"),
+  finalPreview: document.getElementById("finalPreview"),
+  ideas: document.getElementById("ideas"),
+  rating: document.getElementById("rating"),
+  marketGrid: document.getElementById("marketGrid"),
+  craftsmanshipRange: document.getElementById("craftsmanshipRange"),
+  originalityRange: document.getElementById("originalityRange"),
+  functionalityRange: document.getElementById("functionalityRange"),
+  sustainabilityRange: document.getElementById("sustainabilityRange"),
+  generateBtn: document.getElementById("generateBtn"),
+  rateBtn: document.getElementById("rateBtn"),
+  modelSelect: document.getElementById("modelSelect"),
+  aiStatus: document.getElementById("aiStatus"),
+  aiFeedbackStatus: document.getElementById("aiFeedbackStatus")
 };
 
 init();
@@ -68,9 +68,9 @@ function init() {
   renderMarketplace();
 
   elements.imageInput.addEventListener("change", (e) => renderPreview(e.target, elements.materialPreview, "Material preview"));
-  elements.finalInput.addEventListener("change",  (e) => renderPreview(e.target, elements.finalPreview,  "Final build preview"));
-  elements.generateBtn.addEventListener("click",  generateIdeas);
-  elements.rateBtn.addEventListener("click",       rateProject);
+  elements.finalInput.addEventListener("change", (e) => renderPreview(e.target, elements.finalPreview, "Final build preview"));
+  elements.generateBtn.addEventListener("click", generateIdeas);
+  elements.rateBtn.addEventListener("click", rateProject);
 }
 
 // ─── Model Select ──────────────────────────────────────────────────────────
@@ -96,9 +96,9 @@ async function callOpenRouter(messages, maxTokens = 900) {
       "X-Title": "Eco Remix Studio"
     },
     body: JSON.stringify({
-      model:       selectedModel(),
+      model: selectedModel(),
       messages,
-      max_tokens:  maxTokens,
+      max_tokens: maxTokens,
       temperature: 0.85
     })
   });
@@ -140,9 +140,9 @@ function setLoading(btn, statusEl, message, active) {
 
 // ─── Generate Ideas (AI) ───────────────────────────────────────────────────
 async function generateIdeas() {
-  const file     = elements.imageInput.files[0];
+  const file = elements.imageInput.files[0];
   const material = elements.materialType.value;
-  const goal     = elements.projectGoal.value;
+  const goal = elements.projectGoal.value;
 
   console.log("[Generate Ideas] clicked — file:", file ? file.name : "none", "material:", material, "goal:", goal);
 
@@ -154,7 +154,7 @@ async function generateIdeas() {
     // Text-only prompt — confirmed free models don't support vision/image input
     const messages = [{ role: "user", content: buildIdeaPrompt(material, goal) }];
 
-    const raw  = await callOpenRouter(messages, 900);
+    const raw = await callOpenRouter(messages, 900);
     console.log("[Generate Ideas] raw AI response:", raw);
     const ideas = parseIdeaJSON(raw);
 
@@ -195,7 +195,7 @@ function parseIdeaJSON(raw) {
   try {
     // Strip markdown fences if present
     const cleaned = raw.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
-    const parsed  = JSON.parse(cleaned);
+    const parsed = JSON.parse(cleaned);
     if (Array.isArray(parsed)) return parsed;
   } catch (_) { /* ignore */ }
 
@@ -223,8 +223,8 @@ function renderAIIdeas(ideas) {
 }
 
 function renderStaticIdeas(material, goal) {
-  const ideaLibrary   = getStaticLibrary();
-  const materialBank  = ideaLibrary[material] || ideaLibrary.mixed;
+  const ideaLibrary = getStaticLibrary();
+  const materialBank = ideaLibrary[material] || ideaLibrary.mixed;
   // Try exact goal, then first available goal, then mixed fallback
   const selectedIdeas = materialBank[goal]
     || Object.values(materialBank)[0]
@@ -258,16 +258,16 @@ async function rateProject() {
   }
 
   const rubric = [
-    { name: "Craftsmanship",  value: Number(elements.craftsmanshipRange.value)  },
-    { name: "Originality",    value: Number(elements.originalityRange.value)    },
-    { name: "Functionality",  value: Number(elements.functionalityRange.value)  },
+    { name: "Craftsmanship", value: Number(elements.craftsmanshipRange.value) },
+    { name: "Originality", value: Number(elements.originalityRange.value) },
+    { name: "Functionality", value: Number(elements.functionalityRange.value) },
     { name: "Sustainability", value: Number(elements.sustainabilityRange.value) }
   ];
 
-  const total       = rubric.reduce((sum, item) => sum + item.value, 0);
-  const score       = Math.round((total / 20) * 100);
+  const total = rubric.reduce((sum, item) => sum + item.value, 0);
+  const score = Math.round((total / 20) * 100);
   const earnedCoins = Math.max(12, Math.round(score * 0.35));
-  const today       = new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10);
 
   // Show instant score UI first
   const staticSummary = summarizeScore(score);
@@ -293,7 +293,7 @@ async function rateProject() {
 
     try {
       const imageBase64 = await fileToBase64(file);
-      const imageMime   = file.type || "image/jpeg";
+      const imageMime = file.type || "image/jpeg";
       messages = [
         {
           role: "user",
@@ -308,7 +308,7 @@ async function rateProject() {
     }
 
     const aiFeedback = await callOpenRouter(messages, 300);
-    const aiNext     = await callOpenRouter([{ role: "user", content: buildNextStepPrompt(rubric, score) }], 150);
+    const aiNext = await callOpenRouter([{ role: "user", content: buildNextStepPrompt(rubric, score) }], 150);
 
     elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, aiFeedback, aiNext);
   } catch (error) {
@@ -384,137 +384,137 @@ function getStaticLibrary() {
   return {
     "plastic-bottle": {
       storage: [
-        makeIdea("Snap desk pods",        "Easy",     "30 min", "Low",    "Cut bottle bodies into bright pods for pens, chargers, and scissors."),
-        makeIdea("Bathroom bins",          "Medium",   "45 min", "Medium", "Wrap bottles in paper or fabric to build a coordinated shelf organizer."),
-        makeIdea("Cable drop station",     "Medium",   "35 min", "Low",    "Use bottle bottoms to keep charging cables upright and easy to grab.")
+        makeIdea("Snap desk pods", "Easy", "30 min", "Low", "Cut bottle bodies into bright pods for pens, chargers, and scissors."),
+        makeIdea("Bathroom bins", "Medium", "45 min", "Medium", "Wrap bottles in paper or fabric to build a coordinated shelf organizer."),
+        makeIdea("Cable drop station", "Medium", "35 min", "Low", "Use bottle bottoms to keep charging cables upright and easy to grab.")
       ],
       decor: [
-        makeIdea("Petal lamp",            "Advanced",  "90 min", "High",   "Shape translucent plastic petals into a bold hanging lamp."),
-        makeIdea("Sun catcher chain",     "Easy",      "25 min", "Low",    "Paint bottle rings and hang them as bright moving window art."),
-        makeIdea("Bottle bloom garland",  "Medium",    "50 min", "Medium", "Turn plastic flowers into a cheerful room installation.")
+        makeIdea("Petal lamp", "Advanced", "90 min", "High", "Shape translucent plastic petals into a bold hanging lamp."),
+        makeIdea("Sun catcher chain", "Easy", "25 min", "Low", "Paint bottle rings and hang them as bright moving window art."),
+        makeIdea("Bottle bloom garland", "Medium", "50 min", "Medium", "Turn plastic flowers into a cheerful room installation.")
       ],
       garden: [
-        makeIdea("Self-watering planter", "Easy",      "30 min", "High",   "Split a bottle into a wick planter that keeps herbs alive longer."),
-        makeIdea("Hanging herb rail",     "Medium",    "55 min", "High",   "Mount bottles sideways to create a compact balcony garden."),
-        makeIdea("Seedling domes",        "Easy",      "20 min", "High",   "Use clear bottle tops as mini greenhouses for new plants.")
+        makeIdea("Self-watering planter", "Easy", "30 min", "High", "Split a bottle into a wick planter that keeps herbs alive longer."),
+        makeIdea("Hanging herb rail", "Medium", "55 min", "High", "Mount bottles sideways to create a compact balcony garden."),
+        makeIdea("Seedling domes", "Easy", "20 min", "High", "Use clear bottle tops as mini greenhouses for new plants.")
       ],
       kids: [
-        makeIdea("Rocket kit",            "Medium",    "40 min", "Medium", "Create a play rocket set with bottle bodies and cardboard fins."),
-        makeIdea("Color sorting game",    "Easy",      "20 min", "Low",    "Build a tactile game for sorting caps, beads, or pom-poms."),
-        makeIdea("Mini bowling set",      "Easy",      "25 min", "Low",    "Weight bottle bases and turn them into indoor play pins.")
+        makeIdea("Rocket kit", "Medium", "40 min", "Medium", "Create a play rocket set with bottle bodies and cardboard fins."),
+        makeIdea("Color sorting game", "Easy", "20 min", "Low", "Build a tactile game for sorting caps, beads, or pom-poms."),
+        makeIdea("Mini bowling set", "Easy", "25 min", "Low", "Weight bottle bases and turn them into indoor play pins.")
       ],
       gift: [
-        makeIdea("Gift capsules",         "Easy",      "25 min", "Low",    "Turn bottle middles into transparent packaging for notes or treats."),
-        makeIdea("Message keepsake",      "Medium",    "35 min", "Low",    "Decorate a bottle as a memory holder for handwritten notes."),
-        makeIdea("Seed favors",           "Easy",      "20 min", "Low",    "Package small seed gifts in reworked bottle pods.")
+        makeIdea("Gift capsules", "Easy", "25 min", "Low", "Turn bottle middles into transparent packaging for notes or treats."),
+        makeIdea("Message keepsake", "Medium", "35 min", "Low", "Decorate a bottle as a memory holder for handwritten notes."),
+        makeIdea("Seed favors", "Easy", "20 min", "Low", "Package small seed gifts in reworked bottle pods.")
       ]
     },
     container: {
       storage: [
-        makeIdea("Pantry color set",   "Easy",   "30 min", "Medium", "Turn mixed jars into a cleaner pantry system with matching labels."),
-        makeIdea("Hardware sorter",    "Medium", "45 min", "High",   "Mount containers on a board to sort screws, clips, and bits."),
-        makeIdea("Travel care caddy",  "Easy",   "25 min", "Medium", "Bundle toiletries or craft items into a reusable case.")
+        makeIdea("Pantry color set", "Easy", "30 min", "Medium", "Turn mixed jars into a cleaner pantry system with matching labels."),
+        makeIdea("Hardware sorter", "Medium", "45 min", "High", "Mount containers on a board to sort screws, clips, and bits."),
+        makeIdea("Travel care caddy", "Easy", "25 min", "Medium", "Bundle toiletries or craft items into a reusable case.")
       ],
       decor: [
-        makeIdea("Memory jars",        "Easy",   "30 min", "Low",    "Fill clear containers with scraps, photos, and notes for shelf decor."),
-        makeIdea("Stencil sleeves",    "Medium", "40 min", "Low",    "Paint containers with layered patterns for soft evening light."),
-        makeIdea("Pressed flower domes","Medium","50 min", "Low",    "Frame dried flowers and found objects inside jars.")
+        makeIdea("Memory jars", "Easy", "30 min", "Low", "Fill clear containers with scraps, photos, and notes for shelf decor."),
+        makeIdea("Stencil sleeves", "Medium", "40 min", "Low", "Paint containers with layered patterns for soft evening light."),
+        makeIdea("Pressed flower domes", "Medium", "50 min", "Low", "Frame dried flowers and found objects inside jars.")
       ],
       garden: [
-        makeIdea("Propagation station","Easy",   "20 min", "High",   "Line up jars for herb cuttings and root growth by a window."),
-        makeIdea("Seed shelf",         "Easy",   "20 min", "Medium", "Sort saved seeds by season and light needs in labeled containers."),
-        makeIdea("Compost caddy",      "Medium", "40 min", "High",   "Create a tidy indoor scrap caddy with a washable lid.")
+        makeIdea("Propagation station", "Easy", "20 min", "High", "Line up jars for herb cuttings and root growth by a window."),
+        makeIdea("Seed shelf", "Easy", "20 min", "Medium", "Sort saved seeds by season and light needs in labeled containers."),
+        makeIdea("Compost caddy", "Medium", "40 min", "High", "Create a tidy indoor scrap caddy with a washable lid.")
       ],
       kids: [
-        makeIdea("Treasure jars",      "Easy",   "20 min", "Low",    "Make mini display jars for shells, leaves, or stones."),
-        makeIdea("Glitter calm jars",  "Easy",   "15 min", "Low",    "Build soothing jars for focus breaks and quiet time."),
-        makeIdea("Puzzle cups",        "Easy",   "25 min", "Medium", "Separate game pieces into colorful grab-and-go jars.")
+        makeIdea("Treasure jars", "Easy", "20 min", "Low", "Make mini display jars for shells, leaves, or stones."),
+        makeIdea("Glitter calm jars", "Easy", "15 min", "Low", "Build soothing jars for focus breaks and quiet time."),
+        makeIdea("Puzzle cups", "Easy", "25 min", "Medium", "Separate game pieces into colorful grab-and-go jars.")
       ],
       gift: [
-        makeIdea("Cookie mix jar",     "Easy",   "20 min", "Low",    "Layer ingredients neatly and add a handwritten recipe tag."),
-        makeIdea("Mini spa set",       "Easy",   "25 min", "Low",    "Package salts, scrubs, or tea lights in a soft-color jar."),
-        makeIdea("Thank-you bundle",   "Easy",   "20 min", "Low",    "Use a decorated jar to carry small notes and treats.")
+        makeIdea("Cookie mix jar", "Easy", "20 min", "Low", "Layer ingredients neatly and add a handwritten recipe tag."),
+        makeIdea("Mini spa set", "Easy", "25 min", "Low", "Package salts, scrubs, or tea lights in a soft-color jar."),
+        makeIdea("Thank-you bundle", "Easy", "20 min", "Low", "Use a decorated jar to carry small notes and treats.")
       ]
     },
     cardboard: {
       storage: [
-        makeIdea("Drawer divider grid","Easy",   "20 min", "High",   "Slot strips together for fast drawer organization."),
-        makeIdea("Magazine files",     "Easy",   "25 min", "High",   "Cut and wrap boxes into sturdy upright files."),
-        makeIdea("Closet sleeves",     "Medium", "45 min", "High",   "Refinish boxes with bold paper to reduce visual clutter.")
+        makeIdea("Drawer divider grid", "Easy", "20 min", "High", "Slot strips together for fast drawer organization."),
+        makeIdea("Magazine files", "Easy", "25 min", "High", "Cut and wrap boxes into sturdy upright files."),
+        makeIdea("Closet sleeves", "Medium", "45 min", "High", "Refinish boxes with bold paper to reduce visual clutter.")
       ],
       decor: [
-        makeIdea("Layered shadow frames","Medium","50 min","Medium", "Stack cardboard depths to build dimensional wall art."),
-        makeIdea("Typography letters", "Easy",   "25 min", "Low",    "Cut oversized letters and wrap them in color blocks."),
-        makeIdea("Geo hanging light",  "Advanced","90 min","Medium", "Build a sculptural pendant from repeated shapes.")
+        makeIdea("Layered shadow frames", "Medium", "50 min", "Medium", "Stack cardboard depths to build dimensional wall art."),
+        makeIdea("Typography letters", "Easy", "25 min", "Low", "Cut oversized letters and wrap them in color blocks."),
+        makeIdea("Geo hanging light", "Advanced", "90 min", "Medium", "Build a sculptural pendant from repeated shapes.")
       ],
       garden: [
-        makeIdea("Seed starter pots",  "Easy",   "15 min", "High",   "Fold plantable starter pots for herbs and flowers."),
-        makeIdea("Tool shed labels",   "Easy",   "20 min", "Low",    "Create bright signs for garden storage."),
-        makeIdea("Brown bin",          "Medium", "35 min", "High",   "Store dry compost materials in a reinforced cardboard tote.")
+        makeIdea("Seed starter pots", "Easy", "15 min", "High", "Fold plantable starter pots for herbs and flowers."),
+        makeIdea("Tool shed labels", "Easy", "20 min", "Low", "Create bright signs for garden storage."),
+        makeIdea("Brown bin", "Medium", "35 min", "High", "Store dry compost materials in a reinforced cardboard tote.")
       ],
       kids: [
-        makeIdea("Play market stand",  "Advanced","100 min","Medium","Turn delivery boxes into a fold-flat pretend shop."),
-        makeIdea("Marble maze board",  "Medium", "45 min", "Low",    "Build a maze with raised walls and painted paths."),
-        makeIdea("Puppet stage",       "Medium", "50 min", "Low",    "Create a storytelling frame with slot-in characters.")
+        makeIdea("Play market stand", "Advanced", "100 min", "Medium", "Turn delivery boxes into a fold-flat pretend shop."),
+        makeIdea("Marble maze board", "Medium", "45 min", "Low", "Build a maze with raised walls and painted paths."),
+        makeIdea("Puppet stage", "Medium", "50 min", "Low", "Create a storytelling frame with slot-in characters.")
       ],
       gift: [
-        makeIdea("Keepsake box",       "Easy",   "30 min", "Medium", "Transform packaging into a memory box with dividers."),
-        makeIdea("Photo frame pair",   "Easy",   "20 min", "Low",    "Wrap cardboard into playful standing frames."),
-        makeIdea("Fold-flat crate",    "Medium", "40 min", "Medium", "Make a reusable gift crate that stores flat.")
+        makeIdea("Keepsake box", "Easy", "30 min", "Medium", "Transform packaging into a memory box with dividers."),
+        makeIdea("Photo frame pair", "Easy", "20 min", "Low", "Wrap cardboard into playful standing frames."),
+        makeIdea("Fold-flat crate", "Medium", "40 min", "Medium", "Make a reusable gift crate that stores flat.")
       ]
     },
     fabric: {
       storage: [
-        makeIdea("Pocket board",       "Medium", "50 min", "High",   "Use fabric scraps to sew a cheerful hanging organizer."),
-        makeIdea("Cord roll",          "Easy",   "20 min", "Low",    "Create a wrap for chargers, pencils, or brushes."),
-        makeIdea("Soft jar covers",    "Easy",   "25 min", "Medium", "Dress containers in fabric to soften busy storage.")
+        makeIdea("Pocket board", "Medium", "50 min", "High", "Use fabric scraps to sew a cheerful hanging organizer."),
+        makeIdea("Cord roll", "Easy", "20 min", "Low", "Create a wrap for chargers, pencils, or brushes."),
+        makeIdea("Soft jar covers", "Easy", "25 min", "Medium", "Dress containers in fabric to soften busy storage.")
       ],
       decor: [
-        makeIdea("Patchwork cushion",  "Medium", "70 min", "Medium", "Combine scraps by tone into a bold pillow cover."),
-        makeIdea("Banner strip set",   "Easy",   "30 min", "Low",    "Create bright hanging banners from layered scraps."),
-        makeIdea("Wrapped bottle vase","Easy",   "20 min", "Low",    "Turn plain bottles into soft-texture decor.")
+        makeIdea("Patchwork cushion", "Medium", "70 min", "Medium", "Combine scraps by tone into a bold pillow cover."),
+        makeIdea("Banner strip set", "Easy", "30 min", "Low", "Create bright hanging banners from layered scraps."),
+        makeIdea("Wrapped bottle vase", "Easy", "20 min", "Low", "Turn plain bottles into soft-texture decor.")
       ],
       garden: [
-        makeIdea("Tool wrap",          "Easy",   "25 min", "Medium", "Organize hand tools in a roll-up fabric case."),
-        makeIdea("Plant hanger straps","Medium", "35 min", "Low",    "Sew or braid bright hangers for indoor planters."),
-        makeIdea("Harvest pouch",      "Medium", "40 min", "Low",    "Make a soft bag for herbs, twine, and snips.")
+        makeIdea("Tool wrap", "Easy", "25 min", "Medium", "Organize hand tools in a roll-up fabric case."),
+        makeIdea("Plant hanger straps", "Medium", "35 min", "Low", "Sew or braid bright hangers for indoor planters."),
+        makeIdea("Harvest pouch", "Medium", "40 min", "Low", "Make a soft bag for herbs, twine, and snips.")
       ],
       kids: [
-        makeIdea("Story dice pouch",   "Easy",   "15 min", "Low",    "Sew a small drawstring bag for game pieces."),
-        makeIdea("Alphabet bunting",   "Medium", "40 min", "Medium", "Make colorful learning flags from fabric offcuts."),
-        makeIdea("Dress-up crowns",    "Easy",   "25 min", "Low",    "Create reversible costume crowns and badges.")
+        makeIdea("Story dice pouch", "Easy", "15 min", "Low", "Sew a small drawstring bag for game pieces."),
+        makeIdea("Alphabet bunting", "Medium", "40 min", "Medium", "Make colorful learning flags from fabric offcuts."),
+        makeIdea("Dress-up crowns", "Easy", "25 min", "Low", "Create reversible costume crowns and badges.")
       ],
       gift: [
-        makeIdea("Reusable wrap cloth","Easy",   "25 min", "High",   "Replace single-use gift wrap with knot-wrap fabric."),
-        makeIdea("Lavender sachets",   "Easy",   "20 min", "Low",    "Sew scented sachets for drawers or closets."),
-        makeIdea("Bottle gift sleeve", "Easy",   "20 min", "Low",    "Turn scraps into a playful bottle bag.")
+        makeIdea("Reusable wrap cloth", "Easy", "25 min", "High", "Replace single-use gift wrap with knot-wrap fabric."),
+        makeIdea("Lavender sachets", "Easy", "20 min", "Low", "Sew scented sachets for drawers or closets."),
+        makeIdea("Bottle gift sleeve", "Easy", "20 min", "Low", "Turn scraps into a playful bottle bag.")
       ]
     },
     mixed: {
       storage: [
-        makeIdea("Entryway reset",     "Medium",   "60 min",  "High",   "Combine jars, cardboard, and fabric into a catch-all hub."),
-        makeIdea("Maker caddy",        "Advanced", "90 min",  "High",   "Build a colorful caddy with compartments for tools and scraps."),
-        makeIdea("Bathroom tray set",  "Medium",   "45 min",  "Medium", "Layer reused materials into a coordinated organizer.")
+        makeIdea("Entryway reset", "Medium", "60 min", "High", "Combine jars, cardboard, and fabric into a catch-all hub."),
+        makeIdea("Maker caddy", "Advanced", "90 min", "High", "Build a colorful caddy with compartments for tools and scraps."),
+        makeIdea("Bathroom tray set", "Medium", "45 min", "Medium", "Layer reused materials into a coordinated organizer.")
       ],
       decor: [
-        makeIdea("Collage wall tile",  "Medium",   "45 min",  "Low",    "Mix caps, fabric, and cardboard into a tactile art tile."),
-        makeIdea("Centerpiece cluster","Easy",     "30 min",  "Low",    "Create a reusable table centerpiece from mixed scraps."),
-        makeIdea("Memory board",       "Medium",   "40 min",  "Medium", "Build a framed board with pockets, pins, and color blocks.")
+        makeIdea("Collage wall tile", "Medium", "45 min", "Low", "Mix caps, fabric, and cardboard into a tactile art tile."),
+        makeIdea("Centerpiece cluster", "Easy", "30 min", "Low", "Create a reusable table centerpiece from mixed scraps."),
+        makeIdea("Memory board", "Medium", "40 min", "Medium", "Build a framed board with pockets, pins, and color blocks.")
       ],
       garden: [
-        makeIdea("Balcony grow station","Advanced","100 min", "High",   "Create a compact garden with planting and storage zones."),
-        makeIdea("Seed-start center",  "Medium",   "50 min",  "High",   "Organize trays, labels, and tools in one reuse setup."),
-        makeIdea("Potting tote",       "Medium",   "40 min",  "Medium", "Make a portable garden tote from mixed materials.")
+        makeIdea("Balcony grow station", "Advanced", "100 min", "High", "Create a compact garden with planting and storage zones."),
+        makeIdea("Seed-start center", "Medium", "50 min", "High", "Organize trays, labels, and tools in one reuse setup."),
+        makeIdea("Potting tote", "Medium", "40 min", "Medium", "Make a portable garden tote from mixed materials.")
       ],
       kids: [
-        makeIdea("Creative supply cart","Advanced","90 min",  "Medium", "Build a rolling-feel station for crafts and pretend play."),
-        makeIdea("Explorer kit",       "Medium",   "40 min",  "Low",    "Create jars, tags, and a carrying base for nature collecting."),
-        makeIdea("Mini city set",      "Advanced", "80 min",  "Medium", "Turn scraps into roads, buildings, and play pieces.")
+        makeIdea("Creative supply cart", "Advanced", "90 min", "Medium", "Build a rolling-feel station for crafts and pretend play."),
+        makeIdea("Explorer kit", "Medium", "40 min", "Low", "Create jars, tags, and a carrying base for nature collecting."),
+        makeIdea("Mini city set", "Advanced", "80 min", "Medium", "Turn scraps into roads, buildings, and play pieces.")
       ],
       gift: [
-        makeIdea("Celebration hamper", "Medium",   "50 min",  "Medium", "Build a reusable gift bundle container from mixed materials."),
-        makeIdea("Keepsake chest",     "Medium",   "55 min",  "Medium", "Layer cardboard and fabric into a more premium memory box."),
-        makeIdea("Desk reset gift",    "Medium",   "45 min",  "High",   "Package a functional organizer set from reuse parts.")
+        makeIdea("Celebration hamper", "Medium", "50 min", "Medium", "Build a reusable gift bundle container from mixed materials."),
+        makeIdea("Keepsake chest", "Medium", "55 min", "Medium", "Layer cardboard and fabric into a more premium memory box."),
+        makeIdea("Desk reset gift", "Medium", "45 min", "High", "Package a functional organizer set from reuse parts.")
       ]
     }
   };
@@ -522,33 +522,33 @@ function getStaticLibrary() {
 
 // ─── Score helpers ─────────────────────────────────────────────────────────
 function summarizeScore(score) {
-  if (score >= 90) return { title: "Studio-quality build", feedback: "This looks polished, intentional, and genuinely useful.",            next: "Photograph the process and turn it into a repeatable template." };
-  if (score >= 75) return { title: "Strong build",         feedback: "The concept works and the finish is close to premium.",               next: "Tighten the edges, alignment, and color consistency." };
-  if (score >= 60) return { title: "Promising build",      feedback: "The idea is solid, but the finishing still feels rough.",             next: "Simplify the design and reinforce the key joints." };
-  return                 { title: "Prototype stage",       feedback: "The project has potential, but it still needs clearer structure.",    next: "Focus on one use case and rebuild with fewer materials." };
+  if (score >= 90) return { title: "Studio-quality build", feedback: "This looks polished, intentional, and genuinely useful.", next: "Photograph the process and turn it into a repeatable template." };
+  if (score >= 75) return { title: "Strong build", feedback: "The concept works and the finish is close to premium.", next: "Tighten the edges, alignment, and color consistency." };
+  if (score >= 60) return { title: "Promising build", feedback: "The idea is solid, but the finishing still feels rough.", next: "Simplify the design and reinforce the key joints." };
+  return { title: "Prototype stage", feedback: "The project has potential, but it still needs clearer structure.", next: "Focus on one use case and rebuild with fewer materials." };
 }
 
 // ─── Streak ────────────────────────────────────────────────────────────────
 function updateStreak(today) {
   if (!state.lastRatedDate) { state.streak = 1; return; }
   const diffDays = Math.round((new Date(today) - new Date(state.lastRatedDate)) / 86400000);
-  if      (diffDays === 1) state.streak += 1;
-  else if (diffDays > 1)  state.streak  = 1;
+  if (diffDays === 1) state.streak += 1;
+  else if (diffDays > 1) state.streak = 1;
 }
 
 // ─── Dashboard ─────────────────────────────────────────────────────────────
 function updateDashboard() {
-  elements.coinCount.textContent    = state.coins;
+  elements.coinCount.textContent = state.coins;
   elements.projectCount.textContent = state.projectsRated;
-  elements.streakCount.textContent  = `${state.streak} day${state.streak === 1 ? "" : "s"}`;
+  elements.streakCount.textContent = `${state.streak} day${state.streak === 1 ? "" : "s"}`;
 
   if (state.history.length === 0) {
     elements.favoriteCategory.textContent = "No data yet";
-    elements.lastScore.textContent        = "No projects rated";
+    elements.lastScore.textContent = "No projects rated";
   } else {
     const lastEntry = state.history[state.history.length - 1];
     elements.favoriteCategory.textContent = titleCase(favoriteCategory());
-    elements.lastScore.textContent        = `${lastEntry.score}/100`;
+    elements.lastScore.textContent = `${lastEntry.score}/100`;
   }
 
   if (state.ownedTemplates.length === 0) {
@@ -572,7 +572,7 @@ function favoriteCategory() {
 // ─── Marketplace ───────────────────────────────────────────────────────────
 function renderMarketplace() {
   elements.marketGrid.innerHTML = templates.map((template) => {
-    const owned     = state.ownedTemplates.includes(template.id);
+    const owned = state.ownedTemplates.includes(template.id);
     const canAfford = state.coins >= template.price;
     return `
       <article class="market-note">
@@ -615,12 +615,12 @@ function loadState() {
     const saved = JSON.parse(localStorage.getItem(storageKey));
     if (saved) {
       return {
-        coins:          saved.coins          ?? 24,
-        projectsRated:  saved.projectsRated  ?? 0,
-        streak:         saved.streak         ?? 0,
-        lastRatedDate:  saved.lastRatedDate  ?? null,
+        coins: saved.coins ?? 24,
+        projectsRated: saved.projectsRated ?? 0,
+        streak: saved.streak ?? 0,
+        lastRatedDate: saved.lastRatedDate ?? null,
         ownedTemplates: Array.isArray(saved.ownedTemplates) ? saved.ownedTemplates : [],
-        history:        Array.isArray(saved.history)        ? saved.history        : []
+        history: Array.isArray(saved.history) ? saved.history : []
       };
     }
   } catch (e) { console.error("Failed to load state", e); }
