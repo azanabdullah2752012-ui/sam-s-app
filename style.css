@@ -733,6 +733,7 @@ button:disabled {
   background: #ffffff; /* Solid fallback */
   padding: 0;
   width: min(90%, 640px);
+  min-height: 300px;
   max-height: 85vh;
   box-shadow: var(--shadow);
   margin: auto;
