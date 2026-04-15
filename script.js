@@ -57,7 +57,12 @@ const elements = {
   generateBtn: document.getElementById("generateBtn"),
   rateBtn: document.getElementById("rateBtn"),
   aiStatus: document.getElementById("aiStatus"),
-  aiFeedbackStatus: document.getElementById("aiFeedbackStatus")
+  aiFeedbackStatus: document.getElementById("aiFeedbackStatus"),
+  tutorialModal: document.getElementById("tutorialModal"),
+  tutorialTitle: document.getElementById("tutorialTitle"),
+  tutorialLoading: document.getElementById("tutorialLoading"),
+  tutorialContent: document.getElementById("tutorialContent"),
+  closeModalBtn: document.getElementById("closeModalBtn")
 };
 
 init();
@@ -69,6 +74,7 @@ function init() {
   renderMarketplace();
 
   if (elements.generateBtn) elements.generateBtn.addEventListener("click", generateIdeas);
+  if (elements.closeModalBtn) elements.closeModalBtn.addEventListener("click", () => elements.tutorialModal.close());
 }
 
 async function callWebLLM(prompt, requireJSON = false) {
@@ -88,7 +94,7 @@ function setLoading(btn, statusEl, message, active) {
     btn.textContent = "...";
   } else {
     btn.disabled = false;
-    btn.textContent = btn.dataset.label || "AI REMIX";
+    btn.textContent = btn.dataset.label || "Take Remix ➔";
     delete btn.dataset.label;
   }
   if (statusEl) statusEl.textContent = active ? message : "";
@@ -96,11 +102,11 @@ function setLoading(btn, statusEl, message, active) {
 
 async function generateIdeas() {
   const customQuery = elements.aiInput ? elements.aiInput.value : "";
-  setLoading(elements.generateBtn, elements.aiStatus, "⌛ Analyzing...", true);
+  setLoading(elements.generateBtn, elements.aiStatus, "⌛ Analyzing materials...", true);
   renderStaticIdeas();
 
   try {
-    const prompt = buildIdeaPrompt(customQuery || "sustainable fashion", "style");
+    const prompt = buildIdeaPrompt(customQuery || "sustainable design", "eco-friendly");
     const raw = await callWebLLM(prompt, true);
     const match = raw.match(/\[[\s\S]*\]/);
     if (match) {
@@ -112,7 +118,6 @@ async function generateIdeas() {
 }
 
 function renderAIIdeas(ideas, material) {
-  const variants = ["bg-mint", "bg-blue", "bg-peach", "bg-lavender"];
   const authors = [
     { name: "J. Chen", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=J" },
     { name: "A. Davis", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=A" },
@@ -121,61 +126,89 @@ function renderAIIdeas(ideas, material) {
   ];
 
   elements.ideas.innerHTML = ideas.map((entry, i) => {
-    const variant = variants[i % variants.length];
     const author = authors[i % authors.length];
     const rating = (4.5 + Math.random() * 0.5).toFixed(1);
     return `
-      <article class="idea-card ${variant}" onclick="alert('${entry.title} Instructions coming soon!')">
-        <div class="card-img" style="background-image: url('https://picsum.photos/seed/${entry.title}/400')"></div>
-        <div class="card-info">
-          <div>
-            <div class="card-title">${escHtml(entry.title)}</div>
-            <p class="card-desc">${escHtml(entry.description)}</p>
-            <div class="tag-row">
-              <span class="pill-tag">${entry.difficulty || "Easy"}</span>
-              <span class="pill-tag">${entry.time || "1h"}</span>
-            </div>
+      <article class="course-card" onclick="window.openTutorial('${escHtml(entry.title)}', '${escHtml(material)}')">
+        <div class="card-img-wrap">
+          <img src="https://picsum.photos/seed/${entry.title}/600/400" alt="${escHtml(entry.title)}">
+        </div>
+        <div class="card-content">
+          <h4>${escHtml(entry.title)}</h4>
+          <p>${escHtml(entry.description)}</p>
+        </div>
+        <div class="card-meta">
+          <div class="author-info">
+            <img src="${author.img}" alt="user">
+            <span>${author.name}</span>
           </div>
-          <div class="card-footer">
-            <div class="author">
-              <img src="${author.img}">
-              <span>${author.name}</span>
-            </div>
-            <div class="rating">★ ${rating}</div>
-          </div>
+          <div class="rating-badge">★ ${rating}</div>
         </div>
       </article>
     `;
   }).join("");
 }
 
+window.openTutorial = async function(title, context) {
+  elements.tutorialTitle.textContent = title;
+  elements.tutorialContent.innerHTML = "";
+  elements.tutorialLoading.style.display = "flex";
+  elements.tutorialModal.showModal();
+
+  try {
+    const prompt = `Write a clean 5-step tutorial for building "${title}" using "${context}". Output as HTML: <h3>Materials</h3><ul>...</ul> <h3>Steps</h3><ol>...</ol>. No markdown.`;
+    const instructions = await callWebLLM(prompt, false);
+    elements.tutorialContent.innerHTML = instructions.replace(/```(?:html)?/gi, "").trim();
+  } catch (error) {
+    elements.tutorialContent.innerHTML = `<p style="color:red">Failed to load: ${error.message}</p>`;
+  } finally {
+    elements.tutorialLoading.style.display = "none";
+  }
+}
+
 function renderStaticIdeas() {
   const library = [
-    { title: "Eco-Fabric Sneakers", description: "Mycelium leather + Recycled soles.", difficulty: "Medium", time: "90m" },
-    { title: "Regenerative Apparel", description: "Sustainable jacket from organic cotton.", difficulty: "Hard", time: "2h" },
-    { title: "Plant-Based Bag", description: "Handbag using Hemp & Pineapple Fiber.", difficulty: "Medium", time: "1h" },
-    { title: "Bio Accessory", description: "Watch strap from recycled timber.", difficulty: "Easy", time: "45m" }
+    { title: "Eco-Fabric Sneakers", description: "Mycelium leather + Recycled soles. High-end footwear." },
+    { title: "Regenerative Jacket", description: "Sustainable apparel from organic cotton." },
+    { title: "Plant-Based Tote", description: "Handbag using Hemp & Pineapple Fiber." },
+    { title: "Biodegradable Watch", description: "Timepiece from recycled metal and timber." }
   ];
-  renderAIIdeas(library, "Static");
+  renderAIIdeas(library, "Sustainable Mix");
 }
 
 function renderMarketplace() {
   elements.marketGrid.innerHTML = templates.map(t => `
-    <div class="recent-item" style="background-image: url('https://picsum.photos/seed/${t.id}/200')" title="${t.name}"></div>
+    <div class="market-item-circle" style="background-image: url('https://picsum.photos/seed/${t.id}/200')" title="${t.name}"></div>
   `).join("");
 }
 
 function buildIdeaPrompt(m, g) {
-  return `Generate JSON array of 4 DIY projects for ${m}. Each: {title, description, difficulty, time}. No markdown.`;
+  return `Generate JSON array of 4 projects for ${m}. Each: {title, description}. No markdown.`;
 }
 
 function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey));
+    if (saved) return saved;
+  } catch (e) { console.error(e); }
   return { coins: 24, projectsRated: 0, streak: 0, lastRatedDate: null, ownedTemplates: [], history: [] };
 }
 
-function updateDashboard() {}
-function renderIdeasEmpty() {}
-function renderRatingEmpty() {}
-function escHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+function saveState() {
+  localStorage.setItem(storageKey, JSON.stringify(state));
+}
 
-async function openTutorial(t, m) { alert("Tutorial for " + t); }
+function updateDashboard() {
+  if (elements.streakCount) elements.streakCount.textContent = `${state.streak}-day`;
+  // Add more dash updates if needed
+}
+
+function renderIdeasEmpty() {
+  elements.ideas.innerHTML = '<p class="muted-text" style="grid-column: 1/-1; text-align:center; padding: 40px;">Select a prompt to see AI ideas.</p>';
+}
+
+function renderRatingEmpty() {}
+
+function escHtml(s) { 
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); 
+}
