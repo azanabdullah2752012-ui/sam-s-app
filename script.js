@@ -81,19 +81,26 @@ function selectedModel() {
 }
 
 // ─── Gemini API call ───────────────────────────────────────────────────
-async function callGemini(parts, maxTokens = 900) {
+async function callGemini(parts, maxTokens = 900, requireJSON = false) {
   const modelId = selectedModel();
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${GEMINI_API_KEY}`;
+
+  const config = {
+    maxOutputTokens: maxTokens,
+    temperature: 0.85
+  };
+  
+  // Enforce JSON if requested so the AI never breaks our parsing!
+  if (requireJSON) {
+    config.responseMimeType = "application/json";
+  }
 
   const response = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       contents: [{ parts }],
-      generationConfig: {
-        maxOutputTokens: maxTokens,
-        temperature: 0.85
-      }
+      generationConfig: config
     })
   });
 
@@ -109,7 +116,16 @@ async function callGemini(parts, maxTokens = 900) {
   throw new Error("No content returned from Gemini");
 }
 
-// ─── Image → base64 ────────────────────────────────────────────────────────
+// ─── Image validation & base64 ─────────────────────────────────────────
+function validateImage(file) {
+  if (!file) return true; // valid if no file
+  const validTypes = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+  if (!validTypes.includes(file.type)) {
+    throw new Error(`Unsupported file type: ${file.name}. Please upload a JPEG, PNG, or WebP photo.`);
+  }
+  return true;
+}
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -154,6 +170,7 @@ async function generateIdeas() {
     
     // 🔥 VISION MAGIC: Let Gemini "look" at the specific trash item uploaded
     if (file) {
+      validateImage(file);
       const imageBase64 = await fileToBase64(file);
       const mimeType = file.type || "image/jpeg";
       parts.push({
@@ -167,7 +184,8 @@ async function generateIdeas() {
 
     parts.push({ text: buildIdeaPrompt(material, goal) });
 
-    const raw = await callGemini(parts, 1000);
+    // Request JSON explicitly using the native Gemini config
+    const raw = await callGemini(parts, 1000, true);
     console.log("[Generate Ideas] raw AI response:", raw);
     const ideas = parseIdeaJSON(raw);
 
@@ -274,6 +292,8 @@ async function rateProject() {
   elements.rating.innerHTML = "<p>Analyzing image and calculating score...</p>";
 
   try {
+    validateImage(file);
+
     const prompt = `You are an expert DIY judge. Look at the attached image of this final physical project that aimed for the goal "${goal}".
 Score it out of 100 based on Craftsmanship, Originality, Functionality, and Sustainability. Give it a score and provide feedback based ONLY on what you see in the image.
 Respond exactly with valid JSON:
@@ -296,7 +316,8 @@ Respond exactly with valid JSON:
     parts.push({ inlineData: { mimeType: mimeType, data: imageBase64 } });
     parts.push({ text: prompt });
 
-    const rawAI = await callGemini(parts, 600);
+    // Force strict JSON mode
+    const rawAI = await callGemini(parts, 600, true);
     console.log("[Rate Project] Raw AI:", rawAI);
     
     // Parse JSON
@@ -323,7 +344,7 @@ Respond exactly with valid JSON:
 
   } catch (error) {
     console.error("AI rating feedback failed:", error);
-    elements.rating.innerHTML = `<p style="color:#e07070">Scoring failed. AI couldn't read the image properly.</p>`;
+    elements.rating.innerHTML = `<p style="color:#e07070">⚠️ ${error.message}</p>`;
     if (elements.aiFeedbackStatus) elements.aiFeedbackStatus.textContent = "";
   } finally {
     setLoading(elements.rateBtn, elements.aiFeedbackStatus, "", false);
