@@ -1,6 +1,13 @@
 // ─── Config ────────────────────────────────────────────────────────────────
-// Google Gemini API Key
-const GEMINI_API_KEY = "AIzaSyANW0sZNF1bo7zjTc9JkUBhOYxmNGeyNDA";
+// Dynamic API Key System (Prevents GitHub from deleting your keys)
+function getApiKey() {
+  let key = localStorage.getItem("gemini_api_key");
+  if (!key) {
+    key = prompt("🔒 Please enter your Google Gemini API Key to enable AI Magic.\n\nYou can get a free one at aistudio.google.com");
+    if (key) localStorage.setItem("gemini_api_key", key.trim());
+  }
+  return key;
+}
 
 const AI_MODELS = [
   { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash (Stable Vision)" },
@@ -83,7 +90,13 @@ function selectedModel() {
 // ─── Gemini API call ───────────────────────────────────────────────────
 async function callGemini(parts, maxTokens = 900, requireJSON = false) {
   const modelId = selectedModel();
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${GEMINI_API_KEY}`;
+  const apiKey = getApiKey();
+  
+  if (!apiKey) {
+    throw new Error("No API key provided. AI features are disabled.");
+  }
+
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
 
   const config = {
     maxOutputTokens: maxTokens,
