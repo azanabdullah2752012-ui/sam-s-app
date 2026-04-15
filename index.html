@@ -3,198 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio</title>
+  <title>Eco Remix Studio | Premium AI Remixing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
-  <div class="bg-shape bg-shape-a" aria-hidden="true"></div>
-  <div class="bg-shape bg-shape-b" aria-hidden="true"></div>
-  <div class="bg-shape bg-shape-c" aria-hidden="true"></div>
+  <!-- Ethereal Background Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 
   <div class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">E</div>
-        <div>
-          <p class="eyebrow">Creative dashboard</p>
-          <h1>Eco Remix Studio</h1>
-          <p class="subtitle">A bright board for turning scrap materials into projects people actually want to make.</p>
-        </div>
-      </div>
-
-      <div class="top-stats">
-        <article class="stat stat-blue">
-          <span>Coins</span>
-          <strong id="coinCount">24</strong>
-        </article>
-        <article class="stat stat-peach">
-          <span>Builds</span>
-          <strong id="projectCount">0</strong>
-        </article>
-        <article class="stat stat-yellow">
-          <span>Streak</span>
-          <strong id="streakCount">0 days</strong>
-        </article>
-      </div>
-    </header>
-
-    <main class="layout">
-      <section class="hero white-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Studio board</p>
-            <h2>Make waste feel playful, useful, and worth keeping.</h2>
-          </div>
-          <a class="pill" href="#idea-lab">Start now</a>
-        </div>
-
-        <p class="hero-copy">
-          Upload a material, pick a goal, and get colorful idea cards with difficulty, time, and impact.
-          When you finish a project, score it and earn coins to unlock better templates.
-        </p>
-
-        <div class="hero-notes">
-          <article class="note note-peach">
-            <strong>Idea Lab</strong>
-            <p>Generate sticky-note style project prompts from your material and goal.</p>
-          </article>
-          <article class="note note-yellow">
-            <strong>Build Score</strong>
-            <p>Rate craftsmanship, originality, function, and sustainability.</p>
-          </article>
-          <article class="note note-cyan">
-            <strong>Template Shop</strong>
-            <p>Unlock reusable plans with the coins you earn from finished builds.</p>
-          </article>
-        </div>
-      </section>
-
-      <aside class="profile white-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Maker profile</p>
-            <h3>Your snapshot</h3>
-          </div>
-        </div>
-
-        <div class="profile-stack">
-          <article class="profile-card pc-violet">
-            <span>Favorite category</span>
-            <strong id="favoriteCategory">No data yet</strong>
-          </article>
-          <article class="profile-card pc-sky">
-            <span>Latest score</span>
-            <strong id="lastScore">No projects rated</strong>
-          </article>
-          <article class="profile-card pc-mint">
-            <span>Unlocked templates</span>
-            <div id="ownedTemplates" class="chip-row">
-              <span class="chip muted-chip">Nothing yet</span>
-            </div>
-          </article>
-        </div>
-      </aside>
-
-      <section class="workspace white-card" id="idea-lab">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Workspace A</p>
-            <h3>Idea Lab</h3>
-          </div>
-          <div class="actions">
-            <button id="generateBtn" class="btn primary-btn">Generate Ideas</button>
-          </div>
-          <div id="aiStatus" class="loading-message"></div>
-          <div id="webllmProgress" class="progress-container" style="display: none; margin-top: 10px;">
-            <small id="webllmText" style="color: #64748b;">Loading Edge AI...</small>
-            <div class="progress-bar" style="height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 4px;">
-              <div id="webllmFill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); transition: width 0.2s ease;"></div>
+    <div class="main-board">
+      <!-- Navigation -->
+      <nav class="nav">
+        <div class="nav-left">
+          <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/>
+              <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="currentColor"/>
+            </svg>
+            <div class="logo-text">
+              <span>ECO REMIX</span>
+              <strong>STUDIO</strong>
             </div>
           </div>
         </div>
-
-        <div class="controls-grid">
-          <label class="control peach-surface">
-            <span>Upload material photo</span>
-            <input type="file" id="imageInput" accept="image/jpeg, image/png, image/webp">
-          </label>
-
-          <label class="control yellow-surface">
-            <span>Material type</span>
-            <select id="materialType">
-              <option value="plastic-bottle">Plastic bottle</option>
-              <option value="container">Container or jar</option>
-              <option value="cardboard">Cardboard</option>
-              <option value="fabric">Fabric scrap</option>
-              <option value="mixed">Mixed materials</option>
-            </select>
-          </label>
-
-          <label class="control cyan-surface">
-            <span>Goal</span>
-            <select id="projectGoal">
-              <option value="storage">Storage</option>
-              <option value="decor">Decor</option>
-              <option value="garden">Garden</option>
-              <option value="kids">Kids and play</option>
-              <option value="gift">Giftable</option>
-            </select>
-          </label>
+        <div class="nav-center">
+          <a href="#" class="nav-link active">Home</a>
+          <a href="#" class="nav-link">Create</a>
+          <a href="#" class="nav-link">My Remixes</a>
+          <a href="#" class="nav-link">Community</a>
+          <a href="#" class="nav-link">Studio</a>
         </div>
-
-        <div class="preview-area">
-          <div id="materialPreview" class="preview-card">
-            <p>Add a material image and it appears here.</p>
+        <div class="nav-right">
+          <button class="icon-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </button>
+          <div class="user-avatar">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User">
           </div>
         </div>
+      </nav>
 
-        <div id="ideas" class="masonry" aria-live="polite"></div>
-      </section>
+      <div class="content-wrapper">
+        <!-- Main Area -->
+        <div class="main-content">
+          <header class="hero">
+            <h1>GENERATE YOUR SUSTAINABLE CREATION</h1>
+            <div class="search-container">
+              <input type="text" id="aiInput" placeholder="Describe your eco-conscious vision...">
+              <button id="generateBtn" class="ai-remix-btn">AI REMIX</button>
+            </div>
+            
+            <div id="webllmProgress" class="progress-container" style="display: none;">
+              <small id="webllmText">Loading AI Brain...</small>
+              <div id="webllmFill"></div>
+            </div>
+          </header>
 
-      <section class="workspace white-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Workspace B</p>
-            <h3>Rate My Build</h3>
-          </div>
-          <div class="btn-group">
-            <button id="rateBtn" class="action action-warm" type="button">Score Build</button>
-            <span id="aiFeedbackStatus" class="ai-status"></span>
-          </div>
+          <section class="ideas-section">
+            <h3>AI-GENERATED IDEA CARDS</h3>
+            <div id="ideas" class="ideas-grid">
+              <!-- Cards dynamically injected here -->
+            </div>
+          </section>
         </div>
 
-        <div class="controls-grid">
-          <label class="control violet-surface">
-            <span>Upload final build</span>
-            <input type="file" id="finalInput" accept="image/jpeg, image/png, image/webp">
-          </label>
-        </div>
-
-        <div class="result-grid">
-          <div id="finalPreview" class="preview-card compact">
-            <p>Your final project preview shows here.</p>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-top">
+            <div class="quick-nav">
+              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> Materials</button>
+              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg> Style</button>
+              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Impact</button>
+              <button class="side-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> Palettes</button>
+            </div>
           </div>
-          <div id="rating" class="score-card" aria-live="polite"></div>
-        </div>
-      </section>
 
-      <section class="shop white-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Marketplace</p>
-            <h3>Template Shop</h3>
+          <div class="recent-remixes">
+            <h4>Recent Remixes</h4>
+            <div id="marketGrid" class="recent-grid">
+              <!-- Reusing marketGrid for the small circles seen in image -->
+            </div>
           </div>
-          <span class="pill muted-pill">Persistent local unlocks</span>
-        </div>
-
-        <div id="marketGrid" class="masonry"></div>
-      </section>
-    </main>
+          
+          <!-- Hidden old stats for logic -->
+          <div style="display:none">
+            <span id="coinCount">0</span>
+            <span id="projectCount">0</span>
+            <span id="streakCount">0</span>
+            <span id="favoriteCategory"></span>
+            <span id="lastScore"></span>
+            <div id="ownedTemplates"></div>
+            <select id="materialType"><option value="mixed"></option></select>
+            <select id="projectGoal"><option value="storage"></option></select>
+            <input type="file" id="imageInput">
+            <input type="file" id="finalInput">
+            <div id="materialPreview"></div>
+            <div id="finalPreview"></div>
+            <div id="rating"></div>
+            <button id="rateBtn"></button>
+            <span id="aiFeedbackStatus"></span>
+          </div>
+        </aside>
+      </div>
+    </div>
   </div>
 
+  <!-- Tutorial Modal -->
   <dialog id="tutorialModal" class="tutorial-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -204,7 +123,7 @@
       <div class="modal-body">
         <div id="tutorialLoading" class="tutorial-loader" style="display: none;">
           <div class="spinner"></div>
-          <p>🤖 Llama 3.2 is writing the instructions...</p>
+          <p>Writing instructions...</p>
         </div>
         <div id="tutorialContent" class="tutorial-text"></div>
       </div>
