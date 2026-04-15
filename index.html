@@ -3,137 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | AI-Powered DIY</title>
+  <title>Eco Remix Studio | Authentic AI Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   
   <div class="app-container">
-    <!-- Top Nav -->
     <header class="navbar">
       <div class="nav-content">
         <div class="logo-area">
           <div class="brand-icon">🌱</div>
-          <span class="brand-name">Eco Study</span>
+          <span class="brand-name">Eco Remix Studio</span>
         </div>
         <nav class="nav-links">
-          <a href="#" class="nav-link">Favorite</a>
-          <a href="#" class="nav-link">Shop</a>
-          <a href="#" class="nav-link">Pricing</a>
-          <a href="#" class="nav-link">History</a>
-          <a href="#" class="nav-link active">Dashboard</a>
-          <a href="#" class="nav-link">Blog</a>
+          <a href="#" class="nav-link active">Home</a>
+          <a href="#" class="nav-link">Create</a>
+          <a href="#" class="nav-link">My Remixes</a>
         </nav>
         <div class="nav-actions">
           <div class="user-pill">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User">
             <span>User Name</span>
           </div>
-          <button class="primary-action">Start Studying</button>
         </div>
       </div>
     </header>
 
-    <!-- Main Layout -->
     <div class="layout-wrapper">
-      <!-- Left Content -->
       <main class="main-content">
-        <!-- Hero Section -->
         <section class="hero-section">
           <div class="hero-text">
             <h1>Tomorrow is for the Taking</h1>
-            <p>Whether you want to learn millions of experience or our community is here to build a help desk and. Follow our tutorial to find out how everyday and more.</p>
-            <button class="hero-btn" id="generateBtn">Take Remix ➔</button>
+            <p>Describe your vision or use the workshop tools in the sidebar to define your materials and project goals.</p>
+            <button class="hero-btn" id="generateBtn">AI REMIX ➔</button>
             <div id="aiStatus" class="ai-status"></div>
             
             <div id="webllmProgress" class="model-progress" style="display: none;">
-              <small id="webllmText">Readying Studio...</small>
+              <small id="webllmText">Starting AI Brain...</small>
               <div class="progress-track"><div id="webllmFill"></div></div>
             </div>
           </div>
           <div class="hero-illustration">
-            <img src="https://cdni.iconscout.com/illustration/premium/thumb/eco-friendly-lifestyle-5660875-4716496.png" alt="Eco Illustration">
+            <img src="https://cdni.iconscout.com/illustration/premium/thumb/eco-friendly-lifestyle-5660875-4716496.png" alt="Eco">
           </div>
         </section>
 
-        <!-- Search / Idea Lab Input -->
         <section class="search-area">
           <div class="input-group">
-            <input type="text" id="aiInput" placeholder="What are you remaking today? (e.g. Cardboard Sneakers)">
+            <input type="text" id="aiInput" placeholder="Add custom details (e.g. 'with neon accents' or 'for a classroom')">
           </div>
         </section>
 
-        <!-- Courses / AI Ideas Section -->
         <section class="courses-section">
           <div class="section-header">
-            <h2>Remixes</h2>
-            <div class="filter-tabs">
-              <button class="tab-btn active">All</button>
-              <button class="tab-btn">Dress</button>
-              <button class="tab-btn">Programming</button>
-              <button class="tab-btn">Marketing</button>
-            </div>
+            <h2>Remix Ideas</h2>
           </div>
-          <div id="ideas" class="course-grid">
-            <!-- AI Ideas render here -->
-          </div>
+          <div id="ideas" class="course-grid"></div>
         </section>
       </main>
 
-      <!-- Right Sidebar -->
       <aside class="sidebar">
-        <!-- Streak / Calendar Module -->
-        <section class="side-module streak-module">
-          <h3>You're on a <span id="streakCount">0-day</span> streak</h3>
-          <p class="date-label">June 2024</p>
-          <div class="calendar-row">
-            <div class="cal-day"><span>16</span></div>
-            <div class="cal-day"><span>17</span></div>
-            <div class="cal-day"><span>18</span></div>
-            <div class="cal-day active"><span>19</span></div>
-            <div class="cal-day"><span>20</span></div>
-            <div class="cal-day"><span>21</span></div>
-            <div class="cal-day"><span>22</span></div>
-          </div>
-          <div class="streak-timeline">
-            <div class="timeline-item"><span class="dot"></span> 09:00 Visual Research Session <span class="tag">Brief</span></div>
-            <div class="timeline-item"><span class="dot"></span> 10:30 Idea Lab Generation <span class="tag orange">Busy</span></div>
-            <div class="timeline-item active"><span class="dot"></span> 14:00 Hands-on Design Workshop</div>
-            <div class="timeline-item"><span class="dot"></span> 15:30 AI Feedback & Scoring</div>
-            <div class="timeline-item"><span class="dot"></span> 17:00 Marketplace Updates <span class="tag blue">New</span></div>
+        <!-- Dashboard Stats -->
+        <section class="side-module">
+          <h3>My Studio</h3>
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="stat-label">Coins</span>
+              <span id="coinCount" class="stat-val">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Streak</span>
+              <span id="streakCount" class="stat-val">0-day</span>
+            </div>
           </div>
         </section>
 
-        <!-- Best of the Week / Marketplace -->
-        <section class="side-module marketplace-module">
-          <div class="module-header">
-            <h3>Best of the week</h3>
-            <a href="#" class="see-all">See all reviews</a>
+        <!-- Workshop Tools (Restored Functional Elements) -->
+        <section class="side-module workshop-tools">
+          <h3>Workshop Tools</h3>
+          <div class="tool-group">
+            <label>Material Preference</label>
+            <select id="materialType" class="premium-select">
+              <option value="mixed">Mixed Recyclables</option>
+              <option value="cardboard">Cardboard</option>
+              <option value="plastic-bottle">Plastic Bottles</option>
+              <option value="glass-jar">Glass Jars</option>
+              <option value="tin-can">Tin Cans</option>
+              <option value="old-fabric">Old Fabric</option>
+            </select>
           </div>
-          <div id="marketGrid" class="market-list">
-            <!-- Circular Marketplace items render here -->
+          <div class="tool-group">
+            <label>Project Goal</label>
+            <select id="projectGoal" class="premium-select">
+              <option value="storage">Storage & Org</option>
+              <option value="decor">Home Decor</option>
+              <option value="garden">Garden & Outdoor</option>
+              <option value="gift">Gifts & Kits</option>
+              <option value="fashion">Eco-Fashion</option>
+            </select>
           </div>
-          
-          <div class="promo-card">
-            <div class="promo-content">
-              <span>Ready to level up?</span>
-              <button class="promo-btn">Join The Pro Remix</button>
-            </div>
-            <div class="promo-img">🚀</div>
+
+          <div class="upload-stack">
+            <label class="custom-file-upload">
+              <input type="file" id="imageInput">
+              📸 Upload Material Photo
+            </label>
+            <div id="materialPreview" class="preview-mini"></div>
+            
+            <label class="custom-file-upload secondary">
+              <input type="file" id="finalInput">
+              ✅ Upload Final Build
+            </label>
+            <div id="finalPreview" class="preview-mini"></div>
+          </div>
+        </section>
+
+        <!-- Marketplace (Restored functional logic) -->
+        <section class="side-module">
+          <h3>Templates Lounge</h3>
+          <div id="marketGrid" class="market-list-vertical">
+            <!-- Proper Marketplace cards will render here -->
           </div>
         </section>
       </aside>
     </div>
   </div>
 
-  <!-- Tutorial Modal (Hidden logic module) -->
   <dialog id="tutorialModal" class="tutorial-modal">
     <div class="modal-wrapper">
       <header class="modal-header">
-        <h2 id="tutorialTitle">Building your project</h2>
+        <h2 id="tutorialTitle">Instructions</h2>
         <button id="closeModalBtn" class="close-btn">✕</button>
       </header>
       <div id="tutorialLoading" class="modal-loading" style="display:none">
@@ -144,19 +146,12 @@
     </div>
   </dialog>
 
-  <!-- Functional Hidden Elements -->
+  <!-- Legacy Hidden Logic modules (if any) -->
   <div style="display:none">
-    <span id="coinCount">0</span>
     <span id="projectCount">0</span>
     <span id="favoriteCategory"></span>
     <span id="lastScore"></span>
     <div id="ownedTemplates"></div>
-    <select id="materialType"><option value="mixed"></option></select>
-    <select id="projectGoal"><option value="storage"></option></select>
-    <input type="file" id="imageInput">
-    <input type="file" id="finalInput">
-    <div id="materialPreview"></div>
-    <div id="finalPreview"></div>
     <div id="rating"></div>
     <button id="rateBtn"></button>
     <span id="aiFeedbackStatus"></span>

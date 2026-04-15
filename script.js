@@ -29,21 +29,17 @@ async function initWebLLM() {
 const storageKey = "eco-remix-studio-state";
 
 const templates = [
-  { id: "sneakers", name: "Eco Sneakers", description: "Recycled sole footwear.", category: "Fashion", price: 8 },
-  { id: "jacket", name: "Bio Jacket", description: "Mycelium leather coat.", category: "Apparel", price: 10 },
-  { id: "bag", name: "Hemp Tote", description: "Fibrous sustainable bag.", category: "Accessory", price: 6 },
-  { id: "watch", name: "Wood Watch", description: "Recycled timber timepiece.", category: "Accessory", price: 12 }
+  { id: "toy-storage", name: "Toy Storage Cubes", description: "Stackable bins with labels.", category: "Storage", price: 8 },
+  { id: "wall-art", name: "Mosaic Wall Art", description: "Art piece from caps and lids.", category: "Decor", price: 10 },
+  { id: "bird-feeder", name: "Bottle Bird Feeder", description: "Weather-friendly feeder plan.", category: "Garden", price: 6 },
+  { id: "desk-dock", name: "Desk Dock Organizer", description: "Phone and pen stand from jars.", category: "Workspace", price: 12 }
 ];
 
 const state = loadState();
 
 const elements = {
   coinCount: document.getElementById("coinCount"),
-  projectCount: document.getElementById("projectCount"),
   streakCount: document.getElementById("streakCount"),
-  favoriteCategory: document.getElementById("favoriteCategory"),
-  lastScore: document.getElementById("lastScore"),
-  ownedTemplates: document.getElementById("ownedTemplates"),
   imageInput: document.getElementById("imageInput"),
   finalInput: document.getElementById("finalInput"),
   aiInput: document.getElementById("aiInput"),
@@ -52,12 +48,9 @@ const elements = {
   materialPreview: document.getElementById("materialPreview"),
   finalPreview: document.getElementById("finalPreview"),
   ideas: document.getElementById("ideas"),
-  rating: document.getElementById("rating"),
   marketGrid: document.getElementById("marketGrid"),
   generateBtn: document.getElementById("generateBtn"),
-  rateBtn: document.getElementById("rateBtn"),
   aiStatus: document.getElementById("aiStatus"),
-  aiFeedbackStatus: document.getElementById("aiFeedbackStatus"),
   tutorialModal: document.getElementById("tutorialModal"),
   tutorialTitle: document.getElementById("tutorialTitle"),
   tutorialLoading: document.getElementById("tutorialLoading"),
@@ -70,11 +63,13 @@ init();
 function init() {
   updateDashboard();
   renderIdeasEmpty();
-  renderRatingEmpty();
   renderMarketplace();
 
   if (elements.generateBtn) elements.generateBtn.addEventListener("click", generateIdeas);
   if (elements.closeModalBtn) elements.closeModalBtn.addEventListener("click", () => elements.tutorialModal.close());
+
+  elements.imageInput?.addEventListener("change", (e) => renderPreview(e.target, elements.materialPreview));
+  elements.finalInput?.addEventListener("change", (e) => renderPreview(e.target, elements.finalPreview));
 }
 
 async function callWebLLM(prompt, requireJSON = false) {
@@ -94,7 +89,7 @@ function setLoading(btn, statusEl, message, active) {
     btn.textContent = "...";
   } else {
     btn.disabled = false;
-    btn.textContent = btn.dataset.label || "Take Remix ➔";
+    btn.textContent = btn.dataset.label || "AI REMIX ➔";
     delete btn.dataset.label;
   }
   if (statusEl) statusEl.textContent = active ? message : "";
@@ -102,19 +97,29 @@ function setLoading(btn, statusEl, message, active) {
 
 async function generateIdeas() {
   const customQuery = elements.aiInput ? elements.aiInput.value : "";
-  setLoading(elements.generateBtn, elements.aiStatus, "⌛ Analyzing materials...", true);
-  renderStaticIdeas();
+  const material = elements.materialType.value;
+  const goal = elements.projectGoal.value;
+
+  setLoading(elements.generateBtn, elements.aiStatus, "⌛ Analyzing Workshop Input...", true);
+  renderStaticIdeas(material, goal);
 
   try {
-    const prompt = buildIdeaPrompt(customQuery || "sustainable design", "eco-friendly");
+    const prompt = `You are an eco-DIY expert. Provide 4 ideas for ${material} targeting ${goal}. ${customQuery ? "User preference: " + customQuery : ""}
+    Respond with JSON array: [{title, description}]. No markdown.`;
+    
     const raw = await callWebLLM(prompt, true);
     const match = raw.match(/\[[\s\S]*\]/);
     if (match) {
       const ideas = JSON.parse(match[0]);
-      renderAIIdeas(ideas, "Remix");
+      renderAIIdeas(ideas, material);
+      if (window.confetti) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     }
-  } catch (e) { console.error(e); }
-  finally { setLoading(elements.generateBtn, null, "", false); }
+  } catch (e) { 
+    console.error(e); 
+    if (elements.aiStatus) elements.aiStatus.textContent = "AI engine error. Showing local presets.";
+  } finally { 
+    setLoading(elements.generateBtn, null, "", false); 
+  }
 }
 
 function renderAIIdeas(ideas, material) {
@@ -149,49 +154,86 @@ function renderAIIdeas(ideas, material) {
   }).join("");
 }
 
-window.openTutorial = async function(title, context) {
+window.openTutorial = async function(title, material) {
   elements.tutorialTitle.textContent = title;
   elements.tutorialContent.innerHTML = "";
   elements.tutorialLoading.style.display = "flex";
   elements.tutorialModal.showModal();
 
   try {
-    const prompt = `Write a clean 5-step tutorial for building "${title}" using "${context}". Output as HTML: <h3>Materials</h3><ul>...</ul> <h3>Steps</h3><ol>...</ol>. No markdown.`;
+    const prompt = `Expert DIY guide for "${title}" using "${material}". HTML output (h3/p/ul/ol). No markdown fences.`;
     const instructions = await callWebLLM(prompt, false);
     elements.tutorialContent.innerHTML = instructions.replace(/```(?:html)?/gi, "").trim();
   } catch (error) {
-    elements.tutorialContent.innerHTML = `<p style="color:red">Failed to load: ${error.message}</p>`;
+    elements.tutorialContent.innerHTML = `<p style="color:red">WebLLM failed to load. Please refresh. Error: ${error.message}</p>`;
   } finally {
     elements.tutorialLoading.style.display = "none";
   }
 }
 
-function renderStaticIdeas() {
+function renderStaticIdeas(material, goal) {
   const library = [
-    { title: "Eco-Fabric Sneakers", description: "Mycelium leather + Recycled soles. High-end footwear." },
-    { title: "Regenerative Jacket", description: "Sustainable apparel from organic cotton." },
-    { title: "Plant-Based Tote", description: "Handbag using Hemp & Pineapple Fiber." },
-    { title: "Biodegradable Watch", description: "Timepiece from recycled metal and timber." }
+    { title: `${material} ${goal} Concept`, description: `A sustainable way to use ${material} for ${goal.replace("-"," ")} purposes.` },
+    { title: `Recycled ${material} Kit`, description: `Step-by-step assembly of ${material} components.` },
+    { title: `Modern ${material} Decor`, description: `Aesthetic styling of raw ${material} pieces.` },
+    { title: `Functional ${material} Build`, description: `Heavy-duty use logic for repurposed ${material}.` }
   ];
-  renderAIIdeas(library, "Sustainable Mix");
+  renderAIIdeas(library, material);
 }
 
 function renderMarketplace() {
-  elements.marketGrid.innerHTML = templates.map(t => `
-    <div class="market-item-circle" style="background-image: url('https://picsum.photos/seed/${t.id}/200')" title="${t.name}"></div>
-  `).join("");
+  if (!elements.marketGrid) return;
+  elements.marketGrid.innerHTML = templates.map(t => {
+    const owned = state.ownedTemplates.includes(t.id);
+    const canAfford = state.coins >= t.price;
+    return `
+      <div class="market-item-panel">
+        <img class="market-thumb" src="https://picsum.photos/seed/${t.id}/100" alt="thumb">
+        <div class="market-details">
+          <strong>${escHtml(t.name)}</strong>
+          <span>${escHtml(t.category)} • ${t.price}c</span>
+        </div>
+        <button class="unlock-buy-btn" 
+                onclick="window.handleMarketAction('${t.id}')"
+                ${!owned && !canAfford ? 'disabled' : ''}>
+          ${owned ? 'Open' : 'Unlock'}
+        </button>
+      </div>
+    `;
+  }).join("");
 }
 
-function buildIdeaPrompt(m, g) {
-  return `Generate JSON array of 4 projects for ${m}. Each: {title, description}. No markdown.`;
+window.handleMarketAction = function(tid) {
+  const t = templates.find(item => item.id === tid);
+  if (!t) return;
+  if (state.ownedTemplates.includes(tid)) {
+    window.openTutorial(t.name, t.category);
+  } else if (state.coins >= t.price) {
+    state.coins -= t.price;
+    state.ownedTemplates.push(tid);
+    saveState();
+    updateDashboard();
+    renderMarketplace();
+    alert(`Unlocked: ${t.name}!`);
+  }
+}
+
+function renderPreview(input, container) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      container.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
 }
 
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey));
     if (saved) return saved;
-  } catch (e) { console.error(e); }
-  return { coins: 24, projectsRated: 0, streak: 0, lastRatedDate: null, ownedTemplates: [], history: [] };
+  } catch (e) {}
+  return { coins: 100, streak: 5, ownedTemplates: [] };
 }
 
 function saveState() {
@@ -199,15 +241,13 @@ function saveState() {
 }
 
 function updateDashboard() {
+  if (elements.coinCount) elements.coinCount.textContent = state.coins;
   if (elements.streakCount) elements.streakCount.textContent = `${state.streak}-day`;
-  // Add more dash updates if needed
 }
 
 function renderIdeasEmpty() {
-  elements.ideas.innerHTML = '<p class="muted-text" style="grid-column: 1/-1; text-align:center; padding: 40px;">Select a prompt to see AI ideas.</p>';
+  elements.ideas.innerHTML = '<p style="grid-column: 1/-1; text-align:center; opacity:0.5; padding: 60px;">Your creations will appear here.</p>';
 }
-
-function renderRatingEmpty() {}
 
 function escHtml(s) { 
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); 
