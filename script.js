@@ -3,8 +3,8 @@
 const GEMINI_API_KEY = "AIzaSyANW0sZNF1bo7zjTc9JkUBhOYxmNGeyNDA";
 
 const AI_MODELS = [
-  { id: "gemini-1.5-flash", label: "Gemini 1.5 Flash (Vision+Speed)" },
-  { id: "gemini-1.5-pro",   label: "Gemini 1.5 Pro (Precision)"    }
+  { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash (Stable Vision)" },
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Preview Vision)" }
 ];
 
 const AI_ENABLED = true;
