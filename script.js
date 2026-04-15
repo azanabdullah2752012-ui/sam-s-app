@@ -1,19 +1,13 @@
 // ─── Config ────────────────────────────────────────────────────────────────
-// 🔑 Get a free key at https://openrouter.ai/keys — paste it here:
-const OPENROUTER_API_KEY = "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";
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1/chat/completions";
-// Set to false to always skip AI and show built-in ideas instantly
-const AI_ENABLED = OPENROUTER_API_KEY.length > 20 && !OPENROUTER_API_KEY.includes("YOUR_KEY");
+// Google Gemini API Key
+const GEMINI_API_KEY = "AIzaSyANW0sZNF1bo7zjTc9JkUBhOYxmNGeyNDA";
 
-// ✅ All model IDs verified live as of April 2026 via OpenRouter API
 const AI_MODELS = [
-  { id: "meta-llama/llama-3.3-70b-instruct:free", label: "Llama 3.3 70B (Meta)" },
-  { id: "google/gemma-3-27b-it:free", label: "Gemma 3 27B (Google)" },
-  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron Super 120B (NVIDIA)" },
-  { id: "openai/gpt-oss-120b:free", label: "GPT OSS 120B (OpenAI)" },
-  { id: "qwen/qwen3-next-80b-a3b-instruct:free", label: "Qwen3 80B (Alibaba)" },
-  { id: "google/gemma-4-31b-it:free", label: "Gemma 4 31B (Google)" }
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Vision+Speed)" },
+  { id: "gemini-2.5-pro",   label: "Gemini 2.5 Pro (Precision)"    }
 ];
+
+const AI_ENABLED = true;
 
 // ─── Storage & Templates ───────────────────────────────────────────────────
 const storageKey = "eco-remix-studio-state";
@@ -86,31 +80,33 @@ function selectedModel() {
   return elements.modelSelect ? elements.modelSelect.value : AI_MODELS[0].id;
 }
 
-// ─── OpenRouter API call ───────────────────────────────────────────────────
-async function callOpenRouter(messages, maxTokens = 900) {
-  const response = await fetch(OPENROUTER_BASE, {
+// ─── Gemini API call ───────────────────────────────────────────────────
+async function callGemini(parts, maxTokens = 900) {
+  const modelId = selectedModel();
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${GEMINI_API_KEY}`;
+
+  const response = await fetch(endpoint, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://eco-remix-studio.app",
-      "X-Title": "Eco Remix Studio"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: selectedModel(),
-      messages,
-      max_tokens: maxTokens,
-      temperature: 0.85
+      contents: [{ parts }],
+      generationConfig: {
+        maxOutputTokens: maxTokens,
+        temperature: 0.85
+      }
     })
   });
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`OpenRouter error ${response.status}: ${err}`);
+    throw new Error(`Gemini error ${response.status}: ${err}`);
   }
 
   const data = await response.json();
-  return data.choices[0].message.content.trim();
+  if (data.candidates && data.candidates.length > 0) {
+      return data.candidates[0].content.parts[0].text.trim();
+  }
+  throw new Error("No content returned from Gemini");
 }
 
 // ─── Image → base64 ────────────────────────────────────────────────────────
@@ -147,35 +143,43 @@ async function generateIdeas() {
 
   console.log("[Generate Ideas] clicked — material:", material, "goal:", goal);
 
-  // Always show static ideas instantly — no waiting, no ugly error flash
+  // Always show static ideas instantly — no waiting!
   setLoading(elements.generateBtn, elements.aiStatus, "", true);
   renderStaticIdeas(material, goal);
 
-  // Then try AI upgrade in the background (if key looks valid)
-  if (!AI_ENABLED) {
-    console.log("[Generate Ideas] AI_ENABLED=false, showing built-in ideas.");
-    setLoading(elements.generateBtn, null, "", false);
-    return;
-  }
-
-  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Enhancing with ${getModelLabel()}…`;
+  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Enhancing with ${getModelLabel()}...`;
 
   try {
-    const messages = [{ role: "user", content: buildIdeaPrompt(material, goal) }];
-    const raw = await callOpenRouter(messages, 900);
+    let parts = [];
+    
+    // 🔥 VISION MAGIC: Let Gemini "look" at the specific trash item uploaded
+    if (file) {
+      const imageBase64 = await fileToBase64(file);
+      const mimeType = file.type || "image/jpeg";
+      parts.push({
+        inlineData: {
+          mimeType: mimeType,
+          data: imageBase64
+        }
+      });
+      parts.push({ text: `Looking at this exact picture of the user's material (plus assuming it's a ${material.replace("-", " ")})...` });
+    }
+
+    parts.push({ text: buildIdeaPrompt(material, goal) });
+
+    const raw = await callGemini(parts, 1000);
     console.log("[Generate Ideas] raw AI response:", raw);
     const ideas = parseIdeaJSON(raw);
 
     if (ideas && ideas.length > 0) {
-      renderAIIdeas(ideas);  // Upgrade to AI cards if successful
-      if (elements.aiStatus) elements.aiStatus.textContent = "";
+      renderAIIdeas(ideas);  // Upgrade to tailored AI vision cards!
+      if (elements.aiStatus) elements.aiStatus.textContent = "✨ Vision AI Complete!";
     } else {
-      console.warn("[Generate Ideas] AI returned non-JSON, keeping static ideas.");
+      console.warn("[Generate Ideas] AI returned non-JSON.");
       if (elements.aiStatus) elements.aiStatus.textContent = "";
     }
   } catch (error) {
-    // AI failed — static ideas are already shown, just log silently
-    console.error("[Generate Ideas] AI unavailable:", error.message);
+    console.error("[Generate Ideas] AI Vision failed:", error.message);
     if (elements.aiStatus) elements.aiStatus.textContent = "";
   } finally {
     setLoading(elements.generateBtn, null, "", false);
@@ -289,38 +293,31 @@ async function rateProject() {
   updateDashboard();
   renderMarketplace();
 
-  // Get AI feedback asynchronously
+  // Get AI feedback asynchronously via Gemini
   elements.rateBtn.dataset.label = "Score Build";
   setLoading(elements.rateBtn, elements.aiFeedbackStatus, `🤖 ${getModelLabel()} is writing your feedback…`, true);
 
   try {
     const prompt = buildRatingPrompt(rubric, score, elements.projectGoal.value);
-    let messages;
+    let parts = [];
 
-    try {
+    // Vision rating! Gemini looks at the final build photos to grade it.
+    if (file) {
       const imageBase64 = await fileToBase64(file);
-      const imageMime = file.type || "image/jpeg";
-      messages = [
-        {
-          role: "user",
-          content: [
-            { type: "image_url", image_url: { url: `data:${imageMime};base64,${imageBase64}` } },
-            { type: "text", text: prompt }
-          ]
-        }
-      ];
-    } catch {
-      messages = [{ role: "user", content: prompt }];
+      const mimeType = file.type || "image/jpeg";
+      parts.push({ inlineData: { mimeType: mimeType, data: imageBase64 } });
+      parts.push({ text: "Look closely at this image of the final built physical project: " });
     }
+    parts.push({ text: prompt });
 
-    const aiFeedback = await callOpenRouter(messages, 300);
-    const aiNext = await callOpenRouter([{ role: "user", content: buildNextStepPrompt(rubric, score) }], 150);
+    const aiFeedback = await callGemini(parts, 300);
+    const aiNext = await callGemini([{ text: buildNextStepPrompt(rubric, score) }], 150);
 
     elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, aiFeedback, aiNext);
   } catch (error) {
     console.error("AI rating feedback failed:", error);
     elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, staticSummary.feedback, staticSummary.next);
-    showAIError(elements.aiFeedbackStatus, error.message);
+    if (elements.aiFeedbackStatus) elements.aiFeedbackStatus.textContent = "";
   } finally {
     setLoading(elements.rateBtn, elements.aiFeedbackStatus, "", false);
     elements.rateBtn.textContent = "Score Build";
@@ -377,8 +374,7 @@ function escHtml(str) {
 
 function showAIError(el, msg) {
   if (!el) return;
-  el.textContent = `⚠️ AI unavailable — showing local results. (${msg})`;
-  el.style.color = "#e07070";
+  el.textContent = ``;
 }
 
 // ─── Static library (fallback) ─────────────────────────────────────────────
