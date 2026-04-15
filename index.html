@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eco Remix Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-shape bg-shape-a" aria-hidden="true"></div>
+  <div class="bg-shape bg-shape-b" aria-hidden="true"></div>
+  <div class="bg-shape bg-shape-c" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">E</div>
+        <div>
+          <p class="eyebrow">Creative dashboard</p>
+          <h1>Eco Remix Studio</h1>
+          <p class="subtitle">A bright board for turning scrap materials into projects people actually want to make.</p>
+        </div>
+      </div>
+
+      <div class="top-stats">
+        <article class="stat stat-blue">
+          <span>Coins</span>
+          <strong id="coinCount">24</strong>
+        </article>
+        <article class="stat stat-peach">
+          <span>Builds</span>
+          <strong id="projectCount">0</strong>
+        </article>
+        <article class="stat stat-yellow">
+          <span>Streak</span>
+          <strong id="streakCount">0 days</strong>
+        </article>
+      </div>
+      <!-- AI Model selector row -->
+      <div class="model-bar">
+        <span class="model-label">🤖 AI Model</span>
+        <select id="modelSelect" class="model-select"></select>
+        <span class="model-hint">Free · via OpenRouter</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="hero white-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Studio board</p>
+            <h2>Make waste feel playful, useful, and worth keeping.</h2>
+          </div>
+          <a class="pill" href="#idea-lab">Start now</a>
+        </div>
+
+        <p class="hero-copy">
+          Upload a material, pick a goal, and get colorful idea cards with difficulty, time, and impact.
+          When you finish a project, score it and earn coins to unlock better templates.
+        </p>
+
+        <div class="hero-notes">
+          <article class="note note-peach">
+            <strong>Idea Lab</strong>
+            <p>Generate sticky-note style project prompts from your material and goal.</p>
+          </article>
+          <article class="note note-yellow">
+            <strong>Build Score</strong>
+            <p>Rate craftsmanship, originality, function, and sustainability.</p>
+          </article>
+          <article class="note note-cyan">
+            <strong>Template Shop</strong>
+            <p>Unlock reusable plans with the coins you earn from finished builds.</p>
+          </article>
+        </div>
+      </section>
+
+      <aside class="profile white-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Maker profile</p>
+            <h3>Your snapshot</h3>
+          </div>
+        </div>
+
+        <div class="profile-stack">
+          <article class="profile-card pc-violet">
+            <span>Favorite category</span>
+            <strong id="favoriteCategory">No data yet</strong>
+          </article>
+          <article class="profile-card pc-sky">
+            <span>Latest score</span>
+            <strong id="lastScore">No projects rated</strong>
+          </article>
+          <article class="profile-card pc-mint">
+            <span>Unlocked templates</span>
+            <div id="ownedTemplates" class="chip-row">
+              <span class="chip muted-chip">Nothing yet</span>
+            </div>
+          </article>
+        </div>
+      </aside>
+
+      <section class="workspace white-card" id="idea-lab">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Workspace A</p>
+            <h3>Idea Lab</h3>
+          </div>
+          <div class="btn-group">
+            <button id="generateBtn" class="action action-blue" type="button">Generate Ideas</button>
+            <span id="aiStatus" class="ai-status"></span>
+          </div>
+        </div>
+
+        <div class="controls-grid">
+          <label class="control peach-surface">
+            <span>Upload material photo</span>
+            <input type="file" id="imageInput" accept="image/*">
+          </label>
+
+          <label class="control yellow-surface">
+            <span>Material type</span>
+            <select id="materialType">
+              <option value="plastic-bottle">Plastic bottle</option>
+              <option value="container">Container or jar</option>
+              <option value="cardboard">Cardboard</option>
+              <option value="fabric">Fabric scrap</option>
+              <option value="mixed">Mixed materials</option>
+            </select>
+          </label>
+
+          <label class="control cyan-surface">
+            <span>Goal</span>
+            <select id="projectGoal">
+              <option value="storage">Storage</option>
+              <option value="decor">Decor</option>
+              <option value="garden">Garden</option>
+              <option value="kids">Kids and play</option>
+              <option value="gift">Giftable</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="preview-area">
+          <div id="materialPreview" class="preview-card">
+            <p>Add a material image and it appears here.</p>
+          </div>
+        </div>
+
+        <div id="ideas" class="masonry" aria-live="polite"></div>
+      </section>
+
+      <section class="workspace white-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Workspace B</p>
+            <h3>Rate My Build</h3>
+          </div>
+          <div class="btn-group">
+            <button id="rateBtn" class="action action-warm" type="button">Score Build</button>
+            <span id="aiFeedbackStatus" class="ai-status"></span>
+          </div>
+        </div>
+
+        <div class="controls-grid">
+          <label class="control violet-surface">
+            <span>Upload final build</span>
+            <input type="file" id="finalInput" accept="image/*">
+          </label>
+
+          <label class="control sky-surface">
+            <span>Craftsmanship</span>
+            <input type="range" min="1" max="5" value="3" id="craftsmanshipRange">
+          </label>
+
+          <label class="control mint-surface">
+            <span>Originality</span>
+            <input type="range" min="1" max="5" value="3" id="originalityRange">
+          </label>
+
+          <label class="control peach-surface">
+            <span>Functionality</span>
+            <input type="range" min="1" max="5" value="3" id="functionalityRange">
+          </label>
+
+          <label class="control yellow-surface">
+            <span>Sustainability</span>
+            <input type="range" min="1" max="5" value="3" id="sustainabilityRange">
+          </label>
+        </div>
+
+        <div class="result-grid">
+          <div id="finalPreview" class="preview-card compact">
+            <p>Your final project preview shows here.</p>
+          </div>
+          <div id="rating" class="score-card" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="shop white-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Marketplace</p>
+            <h3>Template Shop</h3>
+          </div>
+          <span class="pill muted-pill">Persistent local unlocks</span>
+        </div>
+
+        <div id="marketGrid" class="masonry"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
