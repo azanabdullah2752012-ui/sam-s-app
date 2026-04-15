@@ -75,7 +75,6 @@ init();
 
 // ─── Init ──────────────────────────────────────────────────────────────────
 function init() {
-  populateModelSelect();
   updateDashboard();
   renderIdeasEmpty();
   renderRatingEmpty();
@@ -188,9 +187,9 @@ function parseIdeaJSON(raw) {
   return null;
 }
 
-function renderAIIdeas(ideas) {
+function renderAIIdeas(ideas, material) {
   elements.ideas.innerHTML = ideas.map((entry, i) => `
-    <article class="idea-note">
+    <article class="idea-note" data-title="${escHtml(entry.title)}" data-material="${escHtml(material)}" style="cursor: pointer;">
       <div class="ai-badge">✨ AI</div>
       <strong>${escHtml(entry.title || "Untitled")}</strong>
       <div class="meta-row">
@@ -199,14 +198,18 @@ function renderAIIdeas(ideas) {
         <span class="meta-chip">${escHtml(entry.impact || "")} impact</span>
       </div>
       <p>${escHtml(entry.description || "")}</p>
+      <div class="click-hint" style="font-size:0.75rem; color:#617eff; font-weight:700; margin-top:8px;">▶ Click for instructions</div>
     </article>
   `).join("");
+
+  elements.ideas.querySelectorAll(".idea-note").forEach(card => {
+    card.addEventListener("click", () => openTutorial(card.dataset.title, card.dataset.material));
+  });
 }
 
 function renderStaticIdeas(material, goal) {
   const ideaLibrary = getStaticLibrary();
   const materialBank = ideaLibrary[material] || ideaLibrary.mixed;
-  // Try exact goal, then first available goal, then mixed fallback
   const selectedIdeas = materialBank[goal]
     || Object.values(materialBank)[0]
     || Object.values(ideaLibrary.mixed)[0]
@@ -218,7 +221,7 @@ function renderStaticIdeas(material, goal) {
   }
 
   elements.ideas.innerHTML = selectedIdeas.map((entry) => `
-    <article class="idea-note">
+    <article class="idea-note" data-title="${escHtml(entry.title)}" data-material="${escHtml(material)}" style="cursor: pointer;">
       <strong>${entry.title}</strong>
       <div class="meta-row">
         <span class="meta-chip">${entry.difficulty}</span>
@@ -226,8 +229,13 @@ function renderStaticIdeas(material, goal) {
         <span class="meta-chip">${entry.impact} impact</span>
       </div>
       <p>${entry.description}</p>
+      <div class="click-hint" style="font-size:0.75rem; color:#617eff; font-weight:700; margin-top:8px;">▶ Click for instructions</div>
     </article>
   `).join("");
+
+  elements.ideas.querySelectorAll(".idea-note").forEach(card => {
+    card.addEventListener("click", () => openTutorial(card.dataset.title, card.dataset.material));
+  });
 }
 
 // ─── Rate My Build (AI feedback) ──────────────────────────────────────────
@@ -563,8 +571,8 @@ function renderMarketplace() {
         <p>${template.description}</p>
         <div class="market-foot">
           <span>${owned ? "Unlocked and saved." : "Permanent local unlock."}</span>
-          <button class="buy-btn" data-id="${template.id}" ${owned || !canAfford ? "disabled" : ""}>
-            ${owned ? "Owned" : canAfford ? "Unlock" : "Need coins"}
+          <button class="buy-btn" data-id="${template.id}" ${!owned && !canAfford ? "disabled" : ""}>
+            ${owned ? "View Instructions" : canAfford ? "Unlock" : "Need coins"}
           </button>
         </div>
       </article>
@@ -572,7 +580,17 @@ function renderMarketplace() {
   }).join("");
 
   elements.marketGrid.querySelectorAll(".buy-btn").forEach((btn) => {
-    btn.addEventListener("click", () => buyTemplate(btn.dataset.id));
+    btn.addEventListener("click", () => {
+      const template = templates.find((t) => t.id === btn.dataset.id);
+      if (!template) return;
+      if (state.ownedTemplates.includes(template.id)) {
+        // Open Tutorial
+        openTutorial(template.name, template.category);
+      } else {
+        // Buy
+        buyTemplate(template.id);
+      }
+    });
   });
 }
 
@@ -628,4 +646,46 @@ function renderPreview(input, target, label) {
 // ─── Utility ───────────────────────────────────────────────────────────────
 function titleCase(value) {
   return String(value).split(" ").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
+// ─── Interactive Tutorials ──────────────────────────────────────────────────
+const tutorialModal = document.getElementById("tutorialModal");
+const tutorialTitle = document.getElementById("tutorialTitle");
+const tutorialLoading = document.getElementById("tutorialLoading");
+const tutorialContent = document.getElementById("tutorialContent");
+const closeModalBtn = document.getElementById("closeModalBtn");
+
+if (closeModalBtn) {
+  closeModalBtn.addEventListener("click", () => {
+    tutorialModal.close();
+  });
+}
+
+async function openTutorial(title, context) {
+  tutorialTitle.textContent = title;
+  tutorialContent.innerHTML = "";
+  tutorialLoading.style.display = "flex";
+  tutorialModal.showModal();
+
+  try {
+    const prompt = `You are a DIY expert. Write a simple, easy-to-read 5-step tutorial on how to build "${title}" (Context: ${context}).
+Format the response using basic HTML, like so:
+<h3>Materials Needed</h3>
+<ul><li>Item 1</li></ul>
+<h3>Steps</h3>
+<ol><li>Step 1</li></ol>
+Keep it concise, formatting ONLY with standard HTML tags (no markdown backticks, no markdown headers).`;
+
+    const instructions = await callWebLLM(prompt, false);
+    
+    // Strip markdown fences just in case Llama outputs them anyway
+    const cleanedHTML = instructions.replace(/```(?:html)?/gi, "").replace(/```/g, "").trim();
+    
+    tutorialContent.innerHTML = cleanedHTML;
+  } catch (error) {
+    console.error("Tutorial AI failed:", error);
+    tutorialContent.innerHTML = `<p style="color:#e07070">⚠️ AI failed to generate tutorial: ${error.message}</p>`;
+  } finally {
+    tutorialLoading.style.display = "none";
+  }
 }

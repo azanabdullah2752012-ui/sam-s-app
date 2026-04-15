@@ -725,3 +725,106 @@ button:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+/* ─── Tutorial Modal ────────────────────────────────────────────── */
+.tutorial-modal {
+  border: none;
+  border-radius: 28px;
+  background: var(--white);
+  padding: 0;
+  width: min(90%, 640px);
+  max-height: 85vh;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.tutorial-modal::backdrop {
+  background: rgba(31, 36, 83, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 85vh;
+}
+
+.modal-header {
+  padding: 24px 32px;
+  background: linear-gradient(135deg, rgba(237,243,255,0.9), rgba(255,253,249,0.9));
+  border-bottom: 2px solid rgba(103,215,255,0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+}
+
+.modal-header h2 {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0 8px;
+  font-family: inherit;
+}
+
+.modal-body {
+  padding: 32px;
+  overflow-y: auto;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.tutorial-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(103,215,255, 0.3);
+  border-top-color: #617eff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin { 
+  to { transform: rotate(360deg); } 
+}
+
+.tutorial-text h3 {
+  font-family: "Baloo 2", cursive;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+.tutorial-text p {
+  color: #444a73;
+}
+.tutorial-text ul, .tutorial-text ol {
+  padding-left: 24px;
+}
+.tutorial-text li {
+  margin-bottom: 12px;
+  color: #444a73;
+}
+

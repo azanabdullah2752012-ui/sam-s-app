@@ -195,6 +195,22 @@
     </main>
   </div>
 
+  <dialog id="tutorialModal" class="tutorial-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="tutorialTitle">Project Tutorial</h2>
+        <button id="closeModalBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="tutorialLoading" class="tutorial-loader" style="display: none;">
+          <div class="spinner"></div>
+          <p>🤖 Llama 3.2 is writing the instructions...</p>
+        </div>
+        <div id="tutorialContent" class="tutorial-text"></div>
+      </div>
+    </div>
+  </dialog>
+
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script type="module" src="script.js"></script>
 </body>
