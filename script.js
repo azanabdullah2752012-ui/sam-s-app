@@ -1,18 +1,30 @@
-// ─── Config ────────────────────────────────────────────────────────────────
-// Dynamic API Key System (Prevents GitHub from deleting your keys)
-function getApiKey() {
-  let key = localStorage.getItem("gemini_api_key");
-  if (!key) {
-    key = prompt("🔒 Please enter your Google Gemini API Key to enable AI Magic.\n\nYou can get a free one at aistudio.google.com");
-    if (key) localStorage.setItem("gemini_api_key", key.trim());
-  }
-  return key;
-}
+import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
 
-const AI_MODELS = [
-  { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash (Stable Vision)" },
-  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Preview Vision)" }
-];
+// ─── WebLLM In-Browser AI Engine ──────────────────────────────────────────
+let engine = null;
+
+async function initWebLLM() {
+  if (engine) return engine;
+  
+  const progressContainer = document.getElementById("webllmProgress");
+  const progressText = document.getElementById("webllmText");
+  const progressFill = document.getElementById("webllmFill");
+
+  if (progressContainer) progressContainer.style.display = "block";
+
+  const initProgressCallback = (initProgress) => {
+    if (progressText) progressText.textContent = initProgress.text;
+    if (progressFill) progressFill.style.width = Math.round(initProgress.progress * 100) + "%";
+  };
+
+  engine = await CreateMLCEngine(
+    "Llama-3.2-1B-Instruct-q4f32_1-MLC",
+    { initProgressCallback }
+  );
+
+  if (progressContainer) progressContainer.style.display = "none";
+  return engine;
+}
 
 const AI_ENABLED = true;
 
@@ -75,77 +87,19 @@ function init() {
   elements.rateBtn.addEventListener("click", rateProject);
 }
 
-// ─── Model Select ──────────────────────────────────────────────────────────
-function populateModelSelect() {
-  if (!elements.modelSelect) return;
-  elements.modelSelect.innerHTML = AI_MODELS.map((m) =>
-    `<option value="${m.id}">${m.label}</option>`
-  ).join("");
-}
-
-function selectedModel() {
-  return elements.modelSelect ? elements.modelSelect.value : AI_MODELS[0].id;
-}
-
-// ─── Gemini API call ───────────────────────────────────────────────────
-async function callGemini(parts, maxTokens = 900, requireJSON = false) {
-  const modelId = selectedModel();
-  const apiKey = getApiKey();
+async function callWebLLM(prompt, requireJSON = false) {
+  const llm = await initWebLLM();
+  const messages = [
+    { role: "system", content: requireJSON ? "You are a DIY expert. Output ONLY valid JSON containing exactly what is requested." : "You are a DIY expert." },
+    { role: "user", content: prompt }
+  ];
   
-  if (!apiKey) {
-    throw new Error("No API key provided. AI features are disabled.");
-  }
-
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
-
-  const config = {
-    maxOutputTokens: maxTokens,
-    temperature: 0.85
-  };
+  const reply = await llm.chat.completions.create({
+    messages,
+    response_format: requireJSON ? { type: "json_object" } : undefined
+  });
   
-  // Enforce JSON if requested so the AI never breaks our parsing!
-  if (requireJSON) {
-    config.responseMimeType = "application/json";
-  }
-
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts }],
-      generationConfig: config
-    })
-  });
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Gemini error ${response.status}: ${err}`);
-  }
-
-  const data = await response.json();
-  if (data.candidates && data.candidates.length > 0) {
-      return data.candidates[0].content.parts[0].text.trim();
-  }
-  throw new Error("No content returned from Gemini");
-}
-
-// ─── Image validation & base64 ─────────────────────────────────────────
-function validateImage(file) {
-  if (!file) return true; // valid if no file
-  const validTypes = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
-  if (!validTypes.includes(file.type)) {
-    throw new Error(`Unsupported file type: ${file.name}. Please upload a JPEG, PNG, or WebP photo.`);
-  }
-  return true;
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(",")[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+  return reply.choices[0].message.content;
 }
 
 // ─── Set loading state ─────────────────────────────────────────────────────
@@ -176,41 +130,27 @@ async function generateIdeas() {
   setLoading(elements.generateBtn, elements.aiStatus, "", true);
   renderStaticIdeas(material, goal);
 
-  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Enhancing with ${getModelLabel()}...`;
+  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Booting Llama 3.2 (Local Edge) ...`;
 
   try {
-    let parts = [];
-    
-    // 🔥 VISION MAGIC: Let Gemini "look" at the specific trash item uploaded
-    if (file) {
-      validateImage(file);
-      const imageBase64 = await fileToBase64(file);
-      const mimeType = file.type || "image/jpeg";
-      parts.push({
-        inlineData: {
-          mimeType: mimeType,
-          data: imageBase64
-        }
-      });
-      parts.push({ text: `I have attached an image of my scrap material. IGNORE MY PREVIOUS MATERIAL SELECTION of "${material.replace("-", " ")}". Analyze this image to figure out what the object actually is, and base all your ideas heavily on the exact visual shape, color, and properties of the item in the image.` });
-    }
-
-    parts.push({ text: buildIdeaPrompt(material, goal) });
-
-    // Request JSON explicitly using the native Gemini config
-    const raw = await callGemini(parts, 1000, true);
+    const prompt = buildIdeaPrompt(material, goal);
+    const raw = await callWebLLM(prompt, true);
     console.log("[Generate Ideas] raw AI response:", raw);
-    const ideas = parseIdeaJSON(raw);
+    
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error("No JSON in AI response");
+    const ideas = JSON.parse(match[0]);
 
     if (ideas && ideas.length > 0) {
-      renderAIIdeas(ideas);  // Upgrade to tailored AI vision cards!
-      if (elements.aiStatus) elements.aiStatus.textContent = "✨ Vision AI Complete!";
+      renderAIIdeas(ideas);  
+      if (elements.aiStatus) elements.aiStatus.textContent = "✨ Local AI Complete!";
+      if (window.confetti) confetti({ particleCount: 60, spread: 55, origin: { y: 0.6 } });
     } else {
       console.warn("[Generate Ideas] AI returned non-JSON.");
       if (elements.aiStatus) elements.aiStatus.textContent = "";
     }
   } catch (error) {
-    console.error("[Generate Ideas] AI Vision failed:", error.message);
+    console.error("[Generate Ideas] Edge AI failed:", error.message);
     if (elements.aiStatus) elements.aiStatus.textContent = "";
   } finally {
     setLoading(elements.generateBtn, null, "", false);
@@ -301,19 +241,18 @@ async function rateProject() {
 
   // Set loading
   elements.rateBtn.dataset.label = "Score Build";
-  setLoading(elements.rateBtn, elements.aiFeedbackStatus, `🤖 ${getModelLabel()} is grading your physical build…`, true);
-  elements.rating.innerHTML = "<p>Analyzing image and calculating score...</p>";
+  setLoading(elements.rateBtn, elements.aiFeedbackStatus, `🤖 Llama 3.2 is grading your physical build…`, true);
+  elements.rating.innerHTML = "<p>Analyzing attributes and calculating score...</p>";
 
   try {
-    validateImage(file);
-
-    const prompt = `You are an expert DIY judge. Look at the attached image of this final physical project that aimed for the goal "${goal}".
-Score it out of 100 based on Craftsmanship, Originality, Functionality, and Sustainability. Give it a score and provide feedback based ONLY on what you see in the image.
+    const prompt = `You are an expert DIY judge. A maker built a "${goal}" project using "${elements.materialType?.value || "recycled materials"}".
+There is no image attached, so assume the Craftsmanship is decent, but evaluate it conceptually.
+Score it out of 100 based on Craftsmanship, Originality, Functionality, and Sustainability.
 Respond exactly with valid JSON:
 {
   "score": 85,
-  "feedback": "2 sentences of encouraging feedback about what I built.",
-  "next_step": "1 concrete suggestion to improve it next time.",
+  "feedback": "2 sentences of encouraging feedback.",
+  "next_step": "1 concrete suggestion to improve it.",
   "breakdown": [
     {"name": "Craftsmanship", "value": 4},
     {"name": "Originality", "value": 5},
@@ -322,15 +261,7 @@ Respond exactly with valid JSON:
   ]
 }`;
 
-    const imageBase64 = await fileToBase64(file);
-    const mimeType = file.type || "image/jpeg";
-    
-    let parts = [];
-    parts.push({ inlineData: { mimeType: mimeType, data: imageBase64 } });
-    parts.push({ text: prompt });
-
-    // Force strict JSON mode
-    const rawAI = await callGemini(parts, 600, true);
+    const rawAI = await callWebLLM(prompt, true);
     console.log("[Rate Project] Raw AI:", rawAI);
     
     // Parse JSON
@@ -353,6 +284,10 @@ Respond exactly with valid JSON:
     renderMarketplace();
 
     const staticSummary = summarizeScore(score);
+    if (score > 75 && window.confetti) {
+       confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 }, startVelocity: 45 });
+    }
+    
     elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, result.feedback, result.next_step);
 
   } catch (error) {
@@ -401,8 +336,7 @@ function buildScoreHTML(score, earnedCoins, rubric, staticSummary, feedbackText,
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 function getModelLabel() {
-  const found = AI_MODELS.find((m) => m.id === selectedModel());
-  return found ? found.label : selectedModel();
+  return "Llama 3.2 1B (Local Edge)";
 }
 
 function escHtml(str) {

@@ -110,9 +110,15 @@
             <p class="eyebrow">Workspace A</p>
             <h3>Idea Lab</h3>
           </div>
-          <div class="btn-group">
-            <button id="generateBtn" class="action action-blue" type="button">Generate Ideas</button>
-            <span id="aiStatus" class="ai-status"></span>
+          <div class="actions">
+            <button id="generateBtn" class="btn primary-btn">Generate Ideas</button>
+          </div>
+          <div id="aiStatus" class="loading-message"></div>
+          <div id="webllmProgress" class="progress-container" style="display: none; margin-top: 10px;">
+            <small id="webllmText" style="color: #64748b;">Loading Edge AI...</small>
+            <div class="progress-bar" style="height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 4px;">
+              <div id="webllmFill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7); transition: width 0.2s ease;"></div>
+            </div>
           </div>
         </div>
 
@@ -195,6 +201,7 @@
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
