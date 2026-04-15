@@ -104,17 +104,17 @@ async function callWebLLM(prompt, requireJSON = false) {
 // ─── Set loading state ─────────────────────────────────────────────────────
 function setLoading(btn, statusEl, message, active) {
   if (active) {
-    // Save the original label before changing it
     if (!btn.dataset.label) btn.dataset.label = btn.textContent.trim();
     btn.disabled = true;
-    btn.textContent = "Thinking…";
+    btn.innerHTML = `<span class="ai-loading">✨ Thinking…</span>`;
   } else {
     btn.disabled = false;
-    // Restore from saved label — don't use btn.textContent which is already "Thinking…"
     btn.textContent = btn.dataset.label || btn.textContent;
     delete btn.dataset.label;
   }
-  if (statusEl) statusEl.textContent = active ? message : "";
+  if (statusEl) {
+    statusEl.innerHTML = active ? `<span class="ai-loading">${message}</span>` : "";
+  }
 }
 
 // ─── Generate Ideas ───────────────────────────────────────────────────────
@@ -141,7 +141,7 @@ async function generateIdeas() {
     const ideas = JSON.parse(match[0]);
 
     if (ideas && ideas.length > 0) {
-      renderAIIdeas(ideas);  
+      renderAIIdeas(ideas, material);  
       if (elements.aiStatus) elements.aiStatus.textContent = "✨ Local AI Complete!";
       if (window.confetti) confetti({ particleCount: 60, spread: 55, origin: { y: 0.6 } });
     } else {
@@ -324,21 +324,35 @@ function buildNextStepPrompt(rubric, score) {
 function buildScoreHTML(score, earnedCoins, rubric, staticSummary, feedbackText, nextText) {
   const isLoading = feedbackText === "Generating AI feedback…";
   return `
-    <div class="score-head">
-      <strong class="score-number">${score}/100</strong>
-      <span class="price-chip">+${earnedCoins} coins</span>
+    <div class="score-head" style="margin-bottom: 24px;">
+      <div style="display:flex; align-items: baseline; gap: 16px;">
+        <strong class="score-number">${score}</strong>
+        <span style="font-size: 1.5rem; color: var(--muted); font-weight: 700;">/ 100</span>
+      </div>
+      <div class="price-chip" style="background:#fef3c7; color:#92400e; border: 1px solid #fde68a;">+${earnedCoins} coins</div>
     </div>
-    <div class="score-grid">
+    
+    <div class="score-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px;">
       ${rubric.map((item) => `
-        <div class="score-box">
-          <span>${item.name}</span>
-          <strong>${item.value}/5</strong>
+        <div class="score-box" style="margin:0; text-align:left;">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">${item.name}</span>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--ink);">${item.value}<span style="font-size: 0.9rem; color: var(--muted);"> / 5</span></div>
         </div>
       `).join("")}
     </div>
-    <p class="score-copy"><strong>${staticSummary.title}:</strong> ${isLoading ? '<span class="ai-loading">✨ Generating AI feedback…</span>' : escHtml(feedbackText)}</p>
-    <p class="score-copy"><strong>Next move:</strong> ${nextText === "…" ? '<span class="ai-loading">✨ Thinking…</span>' : escHtml(nextText)}</p>
-    ${!isLoading ? '<p class="ai-tag">🤖 Feedback by ' + getModelLabel() + '</p>' : ''}
+
+    <div style="background: rgba(99, 102, 241, 0.05); padding: 24px; border-radius: 20px; border: 1px solid rgba(99, 102, 241, 0.1);">
+      <p class="score-copy" style="margin: 0 0 16px 0;">
+        <strong style="color:var(--primary);">${staticSummary.title}:</strong> 
+        ${isLoading ? '<span class="ai-loading">✨ Generating AI feedback…</span>' : escHtml(feedbackText)}
+      </p>
+      <p class="score-copy" style="margin: 0;">
+        <strong style="color:var(--primary);">Mentor Advice:</strong> 
+        ${nextText === "…" ? '<span class="ai-loading">✨ Thinking…</span>' : escHtml(nextText)}
+      </p>
+    </div>
+    
+    ${!isLoading ? '<p style="font-size: 0.7rem; color: var(--muted); margin-top: 16px; font-weight: 600;">🤖 Evaluation by ' + getModelLabel() + '</p>' : ''}
   `;
 }
 
@@ -628,11 +642,22 @@ function saveState() {
 
 // ─── Empty states ──────────────────────────────────────────────────────────
 function renderIdeasEmpty() {
-  elements.ideas.innerHTML = '<div class="empty-state">Your colorful AI idea cards will appear here.</div>';
+  elements.ideas.innerHTML = `
+    <div class="empty-state" style="text-align:center; padding: 60px 40px; border: 2px dashed #e2e8f0; border-radius: 24px;">
+      <div style="font-size: 3rem; margin-bottom: 20px;">💡</div>
+      <h3 style="margin-bottom: 12px; color: var(--ink);">Ready for your next remix?</h3>
+      <p style="color: var(--muted); max-width: 300px; margin: 0 auto;">Select your materials and hit generate to see AI-powered DIY blueprints appear here.</p>
+    </div>
+  `;
 }
 
 function renderRatingEmpty() {
-  elements.rating.innerHTML = "<p>Upload a finished project and this panel becomes a scoring board.</p>";
+  elements.rating.innerHTML = `
+    <div style="text-align:center; padding: 40px; color: var(--muted);">
+      <div style="font-size: 2.5rem; margin-bottom: 16px;">🏆</div>
+      <p>Your skill score and AI mentor feedback will appear here after you upload your finished project.</p>
+    </div>
+  `;
 }
 
 // ─── Preview ───────────────────────────────────────────────────────────────
