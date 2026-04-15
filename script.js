@@ -1,8 +1,9 @@
 // ─── Config ────────────────────────────────────────────────────────────────
-// ⚠️  IMPORTANT: Replace this key with a fresh one from https://openrouter.ai/keys
-//    The current key returns 401 (expired/revoked). Grab a new free key and paste it here.
+// 🔑 Get a free key at https://openrouter.ai/keys — paste it here:
 const OPENROUTER_API_KEY = "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";
 const OPENROUTER_BASE = "https://openrouter.ai/api/v1/chat/completions";
+// Set to false to always skip AI and show built-in ideas instantly
+const AI_ENABLED = OPENROUTER_API_KEY.length > 20 && !OPENROUTER_API_KEY.includes("YOUR_KEY");
 
 // ✅ All model IDs verified live as of April 2026 via OpenRouter API
 const AI_MODELS = [
@@ -138,39 +139,44 @@ function setLoading(btn, statusEl, message, active) {
   if (statusEl) statusEl.textContent = active ? message : "";
 }
 
-// ─── Generate Ideas (AI) ───────────────────────────────────────────────────
+// ─── Generate Ideas ───────────────────────────────────────────────────────
 async function generateIdeas() {
   const file = elements.imageInput.files[0];
   const material = elements.materialType.value;
   const goal = elements.projectGoal.value;
 
-  console.log("[Generate Ideas] clicked — file:", file ? file.name : "none", "material:", material, "goal:", goal);
+  console.log("[Generate Ideas] clicked — material:", material, "goal:", goal);
 
-  // Image is optional — we can still generate great ideas from material + goal alone
-  setLoading(elements.generateBtn, elements.aiStatus, `🤖 Asking ${getModelLabel()} for creative ideas…`, true);
-  elements.ideas.innerHTML = '<div class="empty-state ai-thinking">✨ AI is crafting your ideas…</div>';
+  // Always show static ideas instantly — no waiting, no ugly error flash
+  setLoading(elements.generateBtn, elements.aiStatus, "", true);
+  renderStaticIdeas(material, goal);
+
+  // Then try AI upgrade in the background (if key looks valid)
+  if (!AI_ENABLED) {
+    console.log("[Generate Ideas] AI_ENABLED=false, showing built-in ideas.");
+    setLoading(elements.generateBtn, null, "", false);
+    return;
+  }
+
+  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Enhancing with ${getModelLabel()}…`;
 
   try {
-    // Text-only prompt — confirmed free models don't support vision/image input
     const messages = [{ role: "user", content: buildIdeaPrompt(material, goal) }];
-
     const raw = await callOpenRouter(messages, 900);
     console.log("[Generate Ideas] raw AI response:", raw);
     const ideas = parseIdeaJSON(raw);
 
     if (ideas && ideas.length > 0) {
-      renderAIIdeas(ideas);
+      renderAIIdeas(ideas);  // Upgrade to AI cards if successful
       if (elements.aiStatus) elements.aiStatus.textContent = "";
     } else {
-      console.warn("[Generate Ideas] Could not parse AI JSON, falling back to static library.");
-      renderStaticIdeas(material, goal);
+      console.warn("[Generate Ideas] AI returned non-JSON, keeping static ideas.");
+      if (elements.aiStatus) elements.aiStatus.textContent = "";
     }
   } catch (error) {
-    console.error("[Generate Ideas] AI call failed:", error);
-    // Show brief error notice, then immediately show static ideas (don't leave screen stuck)
-    elements.ideas.innerHTML = `<div class="empty-state" style="color:#e07070">⚠️ AI unavailable — your API key may be expired. Showing built-in ideas.<br><small>${escHtml(error.message)}</small></div>`;
-    setTimeout(() => renderStaticIdeas(material, goal), 1800);
-    showAIError(elements.aiStatus, error.message);
+    // AI failed — static ideas are already shown, just log silently
+    console.error("[Generate Ideas] AI unavailable:", error.message);
+    if (elements.aiStatus) elements.aiStatus.textContent = "";
   } finally {
     setLoading(elements.generateBtn, null, "", false);
   }
