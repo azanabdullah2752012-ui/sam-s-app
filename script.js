@@ -53,6 +53,7 @@ const elements = {
   ownedTemplates: document.getElementById("ownedTemplates"),
   imageInput: document.getElementById("imageInput"),
   finalInput: document.getElementById("finalInput"),
+  aiInput: document.getElementById("aiInput"),
   materialType: document.getElementById("materialType"),
   projectGoal: document.getElementById("projectGoal"),
   materialPreview: document.getElementById("materialPreview"),
@@ -60,13 +61,8 @@ const elements = {
   ideas: document.getElementById("ideas"),
   rating: document.getElementById("rating"),
   marketGrid: document.getElementById("marketGrid"),
-  craftsmanshipRange: document.getElementById("craftsmanshipRange"),
-  originalityRange: document.getElementById("originalityRange"),
-  functionalityRange: document.getElementById("functionalityRange"),
-  sustainabilityRange: document.getElementById("sustainabilityRange"),
   generateBtn: document.getElementById("generateBtn"),
   rateBtn: document.getElementById("rateBtn"),
-  modelSelect: document.getElementById("modelSelect"),
   aiStatus: document.getElementById("aiStatus"),
   aiFeedbackStatus: document.getElementById("aiFeedbackStatus")
 };
@@ -123,37 +119,34 @@ async function generateIdeas() {
   const material = elements.materialType.value;
   const goal = elements.projectGoal.value;
 
-  console.log("[Generate Ideas] clicked — material:", material, "goal:", goal);
+async function generateIdeas() {
+  const customQuery = elements.aiInput ? elements.aiInput.value : "";
+  const material = elements.materialType.value;
+  const goal = elements.projectGoal.value;
 
-  // Always show static ideas instantly — no waiting!
   setLoading(elements.generateBtn, elements.aiStatus, "", true);
   renderStaticIdeas(material, goal);
 
-  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Booting Llama 3.2 (Local Edge) ...`;
+  if (elements.aiStatus) elements.aiStatus.textContent = `🤖 Analyzing textures...`;
 
   try {
-    const prompt = buildIdeaPrompt(material, goal);
+    const prompt = buildIdeaPrompt(customQuery || material, goal);
     const raw = await callWebLLM(prompt, true);
-    console.log("[Generate Ideas] raw AI response:", raw);
-    
     const match = raw.match(/\[[\s\S]*\]/);
     if (!match) throw new Error("No JSON in AI response");
     const ideas = JSON.parse(match[0]);
 
     if (ideas && ideas.length > 0) {
       renderAIIdeas(ideas, material);  
-      if (elements.aiStatus) elements.aiStatus.textContent = "✨ Local AI Complete!";
+      if (elements.aiStatus) elements.aiStatus.textContent = "✨ AI Remix Complete";
       if (window.confetti) confetti({ particleCount: 60, spread: 55, origin: { y: 0.6 } });
-    } else {
-      console.warn("[Generate Ideas] AI returned non-JSON.");
-      if (elements.aiStatus) elements.aiStatus.textContent = "";
     }
   } catch (error) {
     console.error("[Generate Ideas] Edge AI failed:", error.message);
-    if (elements.aiStatus) elements.aiStatus.textContent = "";
   } finally {
     setLoading(elements.generateBtn, null, "", false);
   }
+}
 }
 
 function buildIdeaPrompt(material, goal) {
@@ -188,54 +181,55 @@ function parseIdeaJSON(raw) {
 }
 
 function renderAIIdeas(ideas, material) {
-  elements.ideas.innerHTML = ideas.map((entry, i) => `
-    <article class="idea-note" data-title="${escHtml(entry.title)}" data-material="${escHtml(material)}" style="cursor: pointer;">
-      <div class="ai-badge">✨ AI</div>
-      <strong>${escHtml(entry.title || "Untitled")}</strong>
-      <div class="meta-row">
-        <span class="meta-chip">${escHtml(entry.difficulty || "")}</span>
-        <span class="meta-chip">${escHtml(entry.time || "")}</span>
-        <span class="meta-chip">${escHtml(entry.impact || "")} impact</span>
-      </div>
-      <p>${escHtml(entry.description || "")}</p>
-      <div class="click-hint" style="font-size:0.75rem; color:#617eff; font-weight:700; margin-top:8px;">▶ Click for instructions</div>
-    </article>
-  `).join("");
+  const variants = ["bg-mint", "bg-blue", "bg-peach", "bg-lavender"];
+  const authors = [
+    { name: "J. Chen", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=J" },
+    { name: "A. Davis", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=A" },
+    { name: "E. Lee", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=E" },
+    { name: "M. Smith", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=M" }
+  ];
 
-  elements.ideas.querySelectorAll(".idea-note").forEach(card => {
+  elements.ideas.innerHTML = ideas.map((entry, i) => {
+    const variant = variants[i % variants.length];
+    const author = authors[i % authors.length];
+    const rating = (4.5 + Math.random() * 0.5).toFixed(1);
+    const imgId = 100 + i;
+    
+    return `
+      <article class="idea-card ${variant}" data-title="${escHtml(entry.title)}" data-material="${escHtml(material)}">
+        <div class="card-img" style="background-image: url('https://picsum.photos/seed/${entry.title}/400')"></div>
+        <div class="card-info">
+          <div>
+            <div class="card-title">${escHtml(entry.title || "Untitled")}</div>
+            <p class="card-desc">${escHtml(entry.description || "")}</p>
+            <div class="tag-row">
+              <span class="pill-tag">${escHtml(entry.difficulty || "Easy")}</span>
+              <span class="pill-tag">${escHtml(entry.time || "30m")}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="author">
+              <img src="${author.img}" alt="user">
+              <span>${author.name}</span>
+            </div>
+            <div class="rating">★ ${rating}</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  elements.ideas.querySelectorAll(".idea-card").forEach(card => {
     card.addEventListener("click", () => openTutorial(card.dataset.title, card.dataset.material));
   });
 }
 
 function renderStaticIdeas(material, goal) {
   const ideaLibrary = getStaticLibrary();
-  const materialBank = ideaLibrary[material] || ideaLibrary.mixed;
-  const selectedIdeas = materialBank[goal]
-    || Object.values(materialBank)[0]
-    || Object.values(ideaLibrary.mixed)[0]
-    || [];
+  const materialBank = ideaLibrary[material] || ideaLibrary.cardboard;
+  const selectedIdeas = materialBank[goal] || Object.values(materialBank)[0] || [];
 
-  if (selectedIdeas.length === 0) {
-    elements.ideas.innerHTML = '<div class="empty-state">No ideas found for this combination. Try a different material or goal.</div>';
-    return;
-  }
-
-  elements.ideas.innerHTML = selectedIdeas.map((entry) => `
-    <article class="idea-note" data-title="${escHtml(entry.title)}" data-material="${escHtml(material)}" style="cursor: pointer;">
-      <strong>${entry.title}</strong>
-      <div class="meta-row">
-        <span class="meta-chip">${entry.difficulty}</span>
-        <span class="meta-chip">${entry.time}</span>
-        <span class="meta-chip">${entry.impact} impact</span>
-      </div>
-      <p>${entry.description}</p>
-      <div class="click-hint" style="font-size:0.75rem; color:#617eff; font-weight:700; margin-top:8px;">▶ Click for instructions</div>
-    </article>
-  `).join("");
-
-  elements.ideas.querySelectorAll(".idea-note").forEach(card => {
-    card.addEventListener("click", () => openTutorial(card.dataset.title, card.dataset.material));
-  });
+  renderAIIdeas(selectedIdeas.slice(0, 4), material);
 }
 
 // ─── Rate My Build (AI feedback) ──────────────────────────────────────────
@@ -381,33 +375,16 @@ function makeIdea(title, difficulty, time, impact, description) {
 
 function getStaticLibrary() {
   return {
-    "plastic-bottle": {
+    "mixed": {
       storage: [
-        makeIdea("Snap desk pods", "Easy", "30 min", "Low", "Cut bottle bodies into bright pods for pens, chargers, and scissors."),
-        makeIdea("Bathroom bins", "Medium", "45 min", "Medium", "Wrap bottles in paper or fabric to build a coordinated shelf organizer."),
-        makeIdea("Cable drop station", "Medium", "35 min", "Low", "Use bottle bottoms to keep charging cables upright and easy to grab.")
-      ],
-      decor: [
-        makeIdea("Petal lamp", "Advanced", "90 min", "High", "Shape translucent plastic petals into a bold hanging lamp."),
-        makeIdea("Sun catcher chain", "Easy", "25 min", "Low", "Paint bottle rings and hang them as bright moving window art."),
-        makeIdea("Bottle bloom garland", "Medium", "50 min", "Medium", "Turn plastic flowers into a cheerful room installation.")
-      ],
-      garden: [
-        makeIdea("Self-watering planter", "Easy", "30 min", "High", "Split a bottle into a wick planter that keeps herbs alive longer."),
-        makeIdea("Hanging herb rail", "Medium", "55 min", "High", "Mount bottles sideways to create a compact balcony garden."),
-        makeIdea("Seedling domes", "Easy", "20 min", "High", "Use clear bottle tops as mini greenhouses for new plants.")
-      ],
-      kids: [
-        makeIdea("Rocket kit", "Medium", "40 min", "Medium", "Create a play rocket set with bottle bodies and cardboard fins."),
-        makeIdea("Color sorting game", "Easy", "20 min", "Low", "Build a tactile game for sorting caps, beads, or pom-poms."),
-        makeIdea("Mini bowling set", "Easy", "25 min", "Low", "Weight bottle bases and turn them into indoor play pins.")
-      ],
-      gift: [
-        makeIdea("Gift capsules", "Easy", "25 min", "Low", "Turn bottle middles into transparent packaging for notes or treats."),
-        makeIdea("Message keepsake", "Medium", "35 min", "Low", "Decorate a bottle as a memory holder for handwritten notes."),
-        makeIdea("Seed favors", "Easy", "20 min", "Low", "Package small seed gifts in reworked bottle pods.")
+        makeIdea("Eco-Fabric Sneakers", "Medium", "90 min", "High", "Mycelium leather + Recycled soles. A high-end sustainable footwear concept."),
+        makeIdea("Regenerative Apparel", "Advanced", "120 min", "High", "Sustainable jacket from organic cotton and algae dye."),
+        makeIdea("Plant-Based Fashion Bag", "Medium", "60 min", "High", "Handbag using Hemp & Pineapple Fiber with aesthetic design."),
+        makeIdea("Biodegradable Accessory", "Easy", "45 min", "Low", "Watch strap from recycled metal and wood tags.")
       ]
-    },
+    }
+  };
+}
     container: {
       storage: [
         makeIdea("Pantry color set", "Easy", "30 min", "Medium", "Turn mixed jars into a cleaner pantry system with matching labels."),
@@ -570,42 +547,15 @@ function favoriteCategory() {
 
 // ─── Marketplace ───────────────────────────────────────────────────────────
 function renderMarketplace() {
-  elements.marketGrid.innerHTML = templates.map((template) => {
-    const owned = state.ownedTemplates.includes(template.id);
-    const canAfford = state.coins >= template.price;
+  elements.marketGrid.innerHTML = templates.slice(0, 4).map((template, i) => {
     return `
-      <article class="market-note">
-        <div class="market-head">
-          <div>
-            <strong>${template.name}</strong>
-            <p>${template.category}</p>
-          </div>
-          <span class="price-chip">${template.price} coins</span>
-        </div>
-        <p>${template.description}</p>
-        <div class="market-foot">
-          <span>${owned ? "Unlocked and saved." : "Permanent local unlock."}</span>
-          <button class="buy-btn" data-id="${template.id}" ${!owned && !canAfford ? "disabled" : ""}>
-            ${owned ? "View Instructions" : canAfford ? "Unlock" : "Need coins"}
-          </button>
-        </div>
-      </article>
+      <div class="recent-item" 
+           style="background-image: url('https://picsum.photos/seed/${template.id}/200')" 
+           title="${template.name}"
+           onclick="alert('Interactive Dashboard: Click an Idea Card to see WebLLM generate instructions!')">
+      </div>
     `;
   }).join("");
-
-  elements.marketGrid.querySelectorAll(".buy-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const template = templates.find((t) => t.id === btn.dataset.id);
-      if (!template) return;
-      if (state.ownedTemplates.includes(template.id)) {
-        // Open Tutorial
-        openTutorial(template.name, template.category);
-      } else {
-        // Buy
-        buyTemplate(template.id);
-      }
-    });
-  });
 }
 
 function buyTemplate(templateId) {
