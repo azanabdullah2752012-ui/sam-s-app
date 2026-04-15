@@ -162,7 +162,7 @@ async function generateIdeas() {
           data: imageBase64
         }
       });
-      parts.push({ text: `Looking at this exact picture of the user's material (plus assuming it's a ${material.replace("-", " ")})...` });
+      parts.push({ text: `I have attached an image of my scrap material. IGNORE MY PREVIOUS MATERIAL SELECTION of "${material.replace("-", " ")}". Analyze this image to figure out what the object actually is, and base all your ideas heavily on the exact visual shape, color, and properties of the item in the image.` });
     }
 
     parts.push({ text: buildIdeaPrompt(material, goal) });
@@ -262,61 +262,68 @@ function renderStaticIdeas(material, goal) {
 // ─── Rate My Build (AI feedback) ──────────────────────────────────────────
 async function rateProject() {
   const file = elements.finalInput.files[0];
+  const goal = elements.projectGoal.value;
   if (!file) {
     elements.rating.innerHTML = "<p>Upload the final build before scoring it.</p>";
     return;
   }
 
-  const rubric = [
-    { name: "Craftsmanship", value: Number(elements.craftsmanshipRange.value) },
-    { name: "Originality", value: Number(elements.originalityRange.value) },
-    { name: "Functionality", value: Number(elements.functionalityRange.value) },
-    { name: "Sustainability", value: Number(elements.sustainabilityRange.value) }
-  ];
-
-  const total = rubric.reduce((sum, item) => sum + item.value, 0);
-  const score = Math.round((total / 20) * 100);
-  const earnedCoins = Math.max(12, Math.round(score * 0.35));
-  const today = new Date().toISOString().slice(0, 10);
-
-  // Show instant score UI first
-  const staticSummary = summarizeScore(score);
-  elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, "Generating AI feedback…", "…");
-
-  // Update state immediately
-  state.coins += earnedCoins;
-  state.projectsRated += 1;
-  updateStreak(today);
-  state.lastRatedDate = today;
-  state.history.push({ goal: elements.projectGoal.value, score, date: today });
-  saveState();
-  updateDashboard();
-  renderMarketplace();
-
-  // Get AI feedback asynchronously via Gemini
+  // Set loading
   elements.rateBtn.dataset.label = "Score Build";
-  setLoading(elements.rateBtn, elements.aiFeedbackStatus, `🤖 ${getModelLabel()} is writing your feedback…`, true);
+  setLoading(elements.rateBtn, elements.aiFeedbackStatus, `🤖 ${getModelLabel()} is grading your physical build…`, true);
+  elements.rating.innerHTML = "<p>Analyzing image and calculating score...</p>";
 
   try {
-    const prompt = buildRatingPrompt(rubric, score, elements.projectGoal.value);
-    let parts = [];
+    const prompt = `You are an expert DIY judge. Look at the attached image of this final physical project that aimed for the goal "${goal}".
+Score it out of 100 based on Craftsmanship, Originality, Functionality, and Sustainability. Give it a score and provide feedback based ONLY on what you see in the image.
+Respond exactly with valid JSON:
+{
+  "score": 85,
+  "feedback": "2 sentences of encouraging feedback about what I built.",
+  "next_step": "1 concrete suggestion to improve it next time.",
+  "breakdown": [
+    {"name": "Craftsmanship", "value": 4},
+    {"name": "Originality", "value": 5},
+    {"name": "Functionality", "value": 4},
+    {"name": "Sustainability", "value": 4}
+  ]
+}`;
 
-    // Vision rating! Gemini looks at the final build photos to grade it.
-    if (file) {
-      const imageBase64 = await fileToBase64(file);
-      const mimeType = file.type || "image/jpeg";
-      parts.push({ inlineData: { mimeType: mimeType, data: imageBase64 } });
-      parts.push({ text: "Look closely at this image of the final built physical project: " });
-    }
+    const imageBase64 = await fileToBase64(file);
+    const mimeType = file.type || "image/jpeg";
+    
+    let parts = [];
+    parts.push({ inlineData: { mimeType: mimeType, data: imageBase64 } });
     parts.push({ text: prompt });
 
-    const aiFeedback = await callGemini(parts, 300);
-    const aiNext = await callGemini([{ text: buildNextStepPrompt(rubric, score) }], 150);
+    const rawAI = await callGemini(parts, 600);
+    console.log("[Rate Project] Raw AI:", rawAI);
+    
+    // Parse JSON
+    const match = rawAI.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON in AI response");
+    const result = JSON.parse(match[0]);
+    
+    const score = result.score || 70;
+    const earnedCoins = Math.max(12, Math.round(score * 0.35));
+    const rubric = result.breakdown || [];
+    
+    const today = new Date().toISOString().slice(0, 10);
+    state.coins += earnedCoins;
+    state.projectsRated += 1;
+    updateStreak(today);
+    state.lastRatedDate = today;
+    state.history.push({ goal: goal, score, date: today });
+    saveState();
+    updateDashboard();
+    renderMarketplace();
 
-    elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, aiFeedback, aiNext);
+    const staticSummary = summarizeScore(score);
+    elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, result.feedback, result.next_step);
+
   } catch (error) {
     console.error("AI rating feedback failed:", error);
-    elements.rating.innerHTML = buildScoreHTML(score, earnedCoins, rubric, staticSummary, staticSummary.feedback, staticSummary.next);
+    elements.rating.innerHTML = `<p style="color:#e07070">Scoring failed. AI couldn't read the image properly.</p>`;
     if (elements.aiFeedbackStatus) elements.aiFeedbackStatus.textContent = "";
   } finally {
     setLoading(elements.rateBtn, elements.aiFeedbackStatus, "", false);
