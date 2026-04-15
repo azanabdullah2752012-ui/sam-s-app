@@ -1,11 +1,17 @@
 // ─── Config ────────────────────────────────────────────────────────────────
+// ⚠️  IMPORTANT: Replace this key with a fresh one from https://openrouter.ai/keys
+//    The current key returns 401 (expired/revoked). Grab a new free key and paste it here.
 const OPENROUTER_API_KEY = "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";
 const OPENROUTER_BASE    = "https://openrouter.ai/api/v1/chat/completions";
 
+// ✅ All model IDs verified live as of April 2026 via OpenRouter API
 const AI_MODELS = [
-  { id: "google/gemma-3-27b-it:free",                 label: "Gemma 3 27B (Google)"      },
-  { id: "nvidia/nemotron-super-49b-v1:free",          label: "Nemotron Super 49B (NVIDIA)" },
-  { id: "qwen/qwen3-235b-a22b:free",                  label: "Qwen 3 235B (Alibaba)"      }
+  { id: "meta-llama/llama-3.3-70b-instruct:free",  label: "Llama 3.3 70B (Meta)"       },
+  { id: "google/gemma-3-27b-it:free",               label: "Gemma 3 27B (Google)"       },
+  { id: "nvidia/nemotron-3-super-120b-a12b:free",   label: "Nemotron Super 120B (NVIDIA)" },
+  { id: "openai/gpt-oss-120b:free",                 label: "GPT OSS 120B (OpenAI)"      },
+  { id: "qwen/qwen3-next-80b-a3b-instruct:free",    label: "Qwen3 80B (Alibaba)"        },
+  { id: "google/gemma-4-31b-it:free",               label: "Gemma 4 31B (Google)"       }
 ];
 
 // ─── Storage & Templates ───────────────────────────────────────────────────
@@ -118,8 +124,17 @@ function fileToBase64(file) {
 
 // ─── Set loading state ─────────────────────────────────────────────────────
 function setLoading(btn, statusEl, message, active) {
-  btn.disabled = active;
-  btn.textContent = active ? "Thinking…" : btn.dataset.label || btn.textContent;
+  if (active) {
+    // Save the original label before changing it
+    if (!btn.dataset.label) btn.dataset.label = btn.textContent.trim();
+    btn.disabled = true;
+    btn.textContent = "Thinking…";
+  } else {
+    btn.disabled = false;
+    // Restore from saved label — don't use btn.textContent which is already "Thinking…"
+    btn.textContent = btn.dataset.label || btn.textContent;
+    delete btn.dataset.label;
+  }
   if (statusEl) statusEl.textContent = active ? message : "";
 }
 
@@ -131,21 +146,15 @@ async function generateIdeas() {
 
   console.log("[Generate Ideas] clicked — file:", file ? file.name : "none", "material:", material, "goal:", goal);
 
-  if (!file) {
-    elements.ideas.innerHTML = '<div class="empty-state">Upload a material image first so the board has something to remix.</div>';
-    return;
-  }
-
-  // Store original button label
-  elements.generateBtn.dataset.label = "Generate Ideas";
+  // Image is optional — we can still generate great ideas from material + goal alone
   setLoading(elements.generateBtn, elements.aiStatus, `🤖 Asking ${getModelLabel()} for creative ideas…`, true);
   elements.ideas.innerHTML = '<div class="empty-state ai-thinking">✨ AI is crafting your ideas…</div>';
 
   try {
-    // Use text-only prompt — the free models don't support vision/image input
+    // Text-only prompt — confirmed free models don't support vision/image input
     const messages = [{ role: "user", content: buildIdeaPrompt(material, goal) }];
 
-    const raw   = await callOpenRouter(messages, 900);
+    const raw  = await callOpenRouter(messages, 900);
     console.log("[Generate Ideas] raw AI response:", raw);
     const ideas = parseIdeaJSON(raw);
 
@@ -158,12 +167,12 @@ async function generateIdeas() {
     }
   } catch (error) {
     console.error("[Generate Ideas] AI call failed:", error);
-    elements.ideas.innerHTML = `<div class="empty-state" style="color:#e07070">⚠️ AI unavailable — showing local ideas instead.<br><small>${escHtml(error.message)}</small></div>`;
-    setTimeout(() => renderStaticIdeas(material, goal), 1500);
+    // Show brief error notice, then immediately show static ideas (don't leave screen stuck)
+    elements.ideas.innerHTML = `<div class="empty-state" style="color:#e07070">⚠️ AI unavailable — your API key may be expired. Showing built-in ideas.<br><small>${escHtml(error.message)}</small></div>`;
+    setTimeout(() => renderStaticIdeas(material, goal), 1800);
     showAIError(elements.aiStatus, error.message);
   } finally {
     setLoading(elements.generateBtn, null, "", false);
-    elements.generateBtn.textContent = "Generate Ideas";
   }
 }
 
