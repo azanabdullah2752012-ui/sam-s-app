@@ -1,6 +1,6 @@
 // ─── Config ────────────────────────────────────────────────────────────────
 // 🔑 Get a free key at https://openrouter.ai/keys — paste it here:
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = "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";
 const OPENROUTER_BASE = "https://openrouter.ai/api/v1/chat/completions";
 // Set to false to always skip AI and show built-in ideas instantly
 const AI_ENABLED = OPENROUTER_API_KEY.length > 20 && !OPENROUTER_API_KEY.includes("YOUR_KEY");
