@@ -730,20 +730,27 @@ button:disabled {
 .tutorial-modal {
   border: none;
   border-radius: 28px;
-  background: #ffffff; /* Solid fallback */
+  background: #ffffff !important;
+  color: #1f2453 !important;
   padding: 0;
-  width: min(90%, 640px);
-  min-height: 300px;
-  max-height: 85vh;
-  box-shadow: var(--shadow);
-  margin: auto;
-  z-index: 9999;
+  width: min(90%, 640px) !important;
+  min-height: 300px !important;
+  max-height: 85vh !important;
+  box-shadow: 0 24px 70px rgba(78, 88, 161, 0.4) !important;
+  z-index: 999999 !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .tutorial-modal[open] {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
-  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
