@@ -161,11 +161,11 @@ window.openTutorial = async function(title, material) {
   elements.tutorialModal.showModal();
 
   try {
-    const prompt = `Expert DIY guide for "${title}" using "${material}". HTML output (h3/p/ul/ol). No markdown fences.`;
+    const prompt = `Write a step-by-step tutorial for "${title}" using "${material}". Use HTML (h3/p/ul). No markdown fences.`;
     const instructions = await callWebLLM(prompt, false);
     elements.tutorialContent.innerHTML = instructions.replace(/```(?:html)?/gi, "").trim();
   } catch (error) {
-    elements.tutorialContent.innerHTML = `<p style="color:red">WebLLM failed to load. Please refresh. Error: ${error.message}</p>`;
+    elements.tutorialContent.innerHTML = `<p style="color:red">Failed: ${error.message}</p>`;
   } finally {
     elements.tutorialLoading.style.display = "none";
   }
@@ -173,10 +173,10 @@ window.openTutorial = async function(title, material) {
 
 function renderStaticIdeas(material, goal) {
   const library = [
-    { title: `${material} ${goal} Concept`, description: `A sustainable way to use ${material} for ${goal.replace("-"," ")} purposes.` },
-    { title: `Recycled ${material} Kit`, description: `Step-by-step assembly of ${material} components.` },
-    { title: `Modern ${material} Decor`, description: `Aesthetic styling of raw ${material} pieces.` },
-    { title: `Functional ${material} Build`, description: `Heavy-duty use logic for repurposed ${material}.` }
+    { title: `${material} ${goal} Project`, description: `Simple way to use ${material} for ${goal.replace("-"," ")} purposes.` },
+    { title: `Recycled ${material} Kit`, description: `Step-by-step tutorial for ${material} components.` },
+    { title: `Modern ${material} Item`, description: `Aesthetic styling of raw ${material} pieces.` },
+    { title: `Practical ${material} Build`, description: `Heavy-duty use for repurposed ${material}.` }
   ];
   renderAIIdeas(library, material);
 }

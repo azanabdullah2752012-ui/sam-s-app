@@ -3,150 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | Authentic AI Workshop</title>
+  <title>Eco Remix Studio | Simple AI Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   
   <div class="app-container">
+    <!-- Clean Header -->
     <header class="navbar">
       <div class="nav-content">
         <div class="logo-area">
           <div class="brand-icon">🌱</div>
           <span class="brand-name">Eco Remix Studio</span>
         </div>
-        <nav class="nav-links">
-          <a href="#" class="nav-link active">Home</a>
-          <a href="#" class="nav-link">Create</a>
-          <a href="#" class="nav-link">My Remixes</a>
-        </nav>
-        <div class="nav-actions">
-          <div class="user-pill">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User">
-            <span>User Name</span>
-          </div>
+        <div class="stats-pill">
+          <span>Coins: <strong id="coinCount">0</strong></span>
+          <span class="divider">|</span>
+          <span>Streak: <strong id="streakCount">0-day</strong></span>
         </div>
       </div>
     </header>
 
-    <div class="layout-wrapper">
-      <main class="main-content">
-        <section class="hero-section">
-          <div class="hero-text">
-            <h1>Tomorrow is for the Taking</h1>
-            <p>Describe your vision or use the workshop tools in the sidebar to define your materials and project goals.</p>
-            <button class="hero-btn" id="generateBtn">AI REMIX ➔</button>
-            <div id="aiStatus" class="ai-status"></div>
-            
-            <div id="webllmProgress" class="model-progress" style="display: none;">
-              <small id="webllmText">Starting AI Brain...</small>
-              <div class="progress-track"><div id="webllmFill"></div></div>
+    <main class="single-column-flow">
+      <!-- 1. Hero & AI Input -->
+      <section class="hero-minimal">
+        <h1>Tomorrow is for the Taking</h1>
+        <p>A simple space to turn your recyclables into high-end creations.</p>
+        
+        <div class="main-input-group">
+          <input type="text" id="aiInput" placeholder="Describe your vision (optional)...">
+          <button id="generateBtn" class="primary-hero-btn">AI REMIX ➔</button>
+        </div>
+        
+        <div id="aiStatus" class="ai-status-msg"></div>
+        <div id="webllmProgress" class="progress-wrap" style="display: none;">
+          <small id="webllmText">Readying Studio...</small>
+          <div class="p-bar"><div id="webllmFill"></div></div>
+        </div>
+      </section>
+
+      <!-- 2. The Workshop (Functional Selection) -->
+      <section class="simple-workshop">
+        <div class="workshop-card">
+          <div class="tool-row">
+            <div class="tool-cell">
+              <label>Material</label>
+              <select id="materialType">
+                <option value="mixed">Mixed Recyclables</option>
+                <option value="cardboard">Cardboard</option>
+                <option value="plastic-bottle">Plastic Bottles</option>
+                <option value="glass-jar">Glass Jars</option>
+                <option value="old-fabric">Old Fabric</option>
+              </select>
+            </div>
+            <div class="tool-cell">
+              <label>Goal</label>
+              <select id="projectGoal">
+                <option value="storage">Storage & Org</option>
+                <option value="decor">Home Decor</option>
+                <option value="garden">Garden & Outdoor</option>
+                <option value="fashion">Eco-Fashion</option>
+              </select>
+            </div>
+            <div class="tool-cell">
+              <label>Material Photo</label>
+              <label class="file-trigger">
+                <input type="file" id="imageInput">
+                <span>📸 Upload</span>
+              </label>
+            </div>
+            <div class="tool-cell">
+              <label>Final Build</label>
+              <label class="file-trigger secondary">
+                <input type="file" id="finalInput">
+                <span>✅ Finish</span>
+              </label>
             </div>
           </div>
-          <div class="hero-illustration">
-            <img src="https://cdni.iconscout.com/illustration/premium/thumb/eco-friendly-lifestyle-5660875-4716496.png" alt="Eco">
+          <div class="previews-row">
+            <div id="materialPreview"></div>
+            <div id="finalPreview"></div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="search-area">
-          <div class="input-group">
-            <input type="text" id="aiInput" placeholder="Add custom details (e.g. 'with neon accents' or 'for a classroom')">
-          </div>
-        </section>
+      <!-- 3. AI Results -->
+      <section class="results-area">
+        <h2 class="section-title">Your Remix Ideas</h2>
+        <div id="ideas" class="clean-grid"></div>
+      </section>
 
-        <section class="courses-section">
-          <div class="section-header">
-            <h2>Remix Ideas</h2>
-          </div>
-          <div id="ideas" class="course-grid"></div>
-        </section>
-      </main>
-
-      <aside class="sidebar">
-        <!-- Dashboard Stats -->
-        <section class="side-module">
-          <h3>My Studio</h3>
-          <div class="stats-row">
-            <div class="stat-item">
-              <span class="stat-label">Coins</span>
-              <span id="coinCount" class="stat-val">0</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Streak</span>
-              <span id="streakCount" class="stat-val">0-day</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Workshop Tools (Restored Functional Elements) -->
-        <section class="side-module workshop-tools">
-          <h3>Workshop Tools</h3>
-          <div class="tool-group">
-            <label>Material Preference</label>
-            <select id="materialType" class="premium-select">
-              <option value="mixed">Mixed Recyclables</option>
-              <option value="cardboard">Cardboard</option>
-              <option value="plastic-bottle">Plastic Bottles</option>
-              <option value="glass-jar">Glass Jars</option>
-              <option value="tin-can">Tin Cans</option>
-              <option value="old-fabric">Old Fabric</option>
-            </select>
-          </div>
-          <div class="tool-group">
-            <label>Project Goal</label>
-            <select id="projectGoal" class="premium-select">
-              <option value="storage">Storage & Org</option>
-              <option value="decor">Home Decor</option>
-              <option value="garden">Garden & Outdoor</option>
-              <option value="gift">Gifts & Kits</option>
-              <option value="fashion">Eco-Fashion</option>
-            </select>
-          </div>
-
-          <div class="upload-stack">
-            <label class="custom-file-upload">
-              <input type="file" id="imageInput">
-              📸 Upload Material Photo
-            </label>
-            <div id="materialPreview" class="preview-mini"></div>
-            
-            <label class="custom-file-upload secondary">
-              <input type="file" id="finalInput">
-              ✅ Upload Final Build
-            </label>
-            <div id="finalPreview" class="preview-mini"></div>
-          </div>
-        </section>
-
-        <!-- Marketplace (Restored functional logic) -->
-        <section class="side-module">
-          <h3>Templates Lounge</h3>
-          <div id="marketGrid" class="market-list-vertical">
-            <!-- Proper Marketplace cards will render here -->
-          </div>
-        </section>
-      </aside>
-    </div>
+      <!-- 4. Marketplace Lounge -->
+      <section class="marketplace-area">
+        <h2 class="section-title">Premium Templates</h2>
+        <div id="marketGrid" class="horizontal-market-scroll">
+          <!-- Marketplace items render here -->
+        </div>
+      </section>
+    </main>
   </div>
 
-  <dialog id="tutorialModal" class="tutorial-modal">
-    <div class="modal-wrapper">
-      <header class="modal-header">
+  <dialog id="tutorialModal" class="simple-modal">
+    <div class="modal-inner">
+      <header class="modal-top">
         <h2 id="tutorialTitle">Instructions</h2>
-        <button id="closeModalBtn" class="close-btn">✕</button>
+        <button id="closeModalBtn">✕</button>
       </header>
-      <div id="tutorialLoading" class="modal-loading" style="display:none">
-        <div class="loader-spinner"></div>
-        <p>Expert AI is drafting your steps...</p>
+      <div id="tutorialLoading" class="loading-state" style="display:none">
+        <div class="loader"></div>
+        <p>AI is writing...</p>
       </div>
       <div id="tutorialContent" class="modal-body"></div>
     </div>
   </dialog>
 
-  <!-- Legacy Hidden Logic modules (if any) -->
+  <!-- Hidden state trackers -->
   <div style="display:none">
     <span id="projectCount">0</span>
     <span id="favoriteCategory"></span>
