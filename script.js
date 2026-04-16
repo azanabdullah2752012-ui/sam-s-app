@@ -20,7 +20,6 @@ async function initEngine() {
   try {
     engine = await CreateMLCEngine(modelId, { initProgressCallback });
     if (progressText) progressText.textContent = "AI Helper Ready! ⭐";
-    // Enable review button now that engine is ready
     document.getElementById("reviewBtn").disabled = false;
   } catch (err) {
     if (progressText) progressText.textContent = "Oops! AI is resting. Refresh!";
@@ -30,69 +29,333 @@ async function initEngine() {
 
 const storageKey = "eco-workshop-fun-state-v4";
 
-// ─── Curated Project Library (PRACTICAL & INSTANT) ──────────────────
+// ─── Curated Project Library (PRECISE & DETAILED) ──────────────────
 const PROJECT_LIBRARY = {
   "cardboard-storage": [
-    { title: "Desk Organizer 📁", description: "Keep your pens and papers neat!", materials: ["Box lids", "Tape", "Scissors"], steps: ["Cut dividers", "Tape them inside", "Paint it!"] },
-    { title: "Shoe Rack 👟", description: "Stack your kicks in style.", materials: ["Large boxes", "Glue gun"], steps: ["Stack boxes", "Glue triangles", "Arrange shoes"] }
+    { 
+      title: "Super-Sort Desk Organizer 📁", 
+      description: "Keep your pens, markers, and secret notes perfectly neat!", 
+      materials: ["Large cereal box", "3-4 toilet paper rolls", "Tape or Glue", "Colored paper"], 
+      steps: [
+        "Cut the top flaps off your cereal box to make it open.",
+        "Cut the box at an angle so the back is tall and the front is short.",
+        "Measure your toilet paper rolls to fit inside the front area.",
+        "Glue the rolls inside the front of the box to hold pens.",
+        "Decorate the outside with stickers or colored paper.",
+        "Fill your new organizer with your favorite craft supplies!"
+      ] 
+    },
+    { 
+      title: "Stackable Shoe Tower 👟", 
+      description: "Clear the floor by building a skyscraper for your shoes.", 
+      materials: ["4-5 similar sized boxes", "Strong packing tape", "Markers"], 
+      steps: [
+        "Check that all your boxes are clean and empty.",
+        "Tape the bottom flaps of each box shut very tightly.",
+        "Cut the top flaps off completely so the boxes are open on top.",
+        "Stack the boxes on their sides to see how high you want it.",
+        "Tape the boxes together side-by-side or in a tall tower.",
+        "Slide your shoes into their new cardboard cubbies!"
+      ] 
+    }
   ],
   "cardboard-decor": [
-    { title: "Magic TV Box 📺", description: "Put on your own TV show!", materials: ["Large box", "Saran wrap"], steps: ["Cut screen hole", "Add knobs", "Jump inside!"] },
-    { title: "Wall Art 🖼️", description: "Make a 3D cardboard picture.", materials: ["Scraps", "Glue"], steps: ["Draw shapes", "Layer them up", "Colors!"] }
+    { 
+      title: "DIY Cardboard Cinema 📺", 
+      description: "Put on your own TV show or puppet play for the family!", 
+      materials: ["Large packing box", "Scissors", "Plastic wrap", "Flashlight"], 
+      steps: [
+        "Find a box big enough for you or your puppets to sit behind.",
+        "Draw a large rectangle on the front and cut it out for the 'screen'.",
+        "Tape clear plastic wrap over the hole to look like real glass.",
+        "Cut a smaller hole in the back to shine a flashlight through.",
+        "Draw buttons and a volume knob on the front with markers.",
+        "Grab some popcorn and start your first broadcast!"
+      ] 
+    },
+    { 
+      title: "Layered 3D Wall Art 🖼️", 
+      description: "Make a popping masterpiece that jumps off your wall.", 
+      materials: ["Scrap cardboard pieces", "Glue", "Safety scissors", "Bright paint"], 
+      steps: [
+        "Draw simple shapes like stars, hearts, or robots on your scraps.",
+        "Carefully cut out at least 10 different shapes.",
+        "Paint each shape a different bright, fun color.",
+        "Glue a small 'spacer' piece of cardboard to the back of each shape.",
+        "Glue your shapes onto a large flat piece of cardboard in a cool pattern.",
+        "Wait 10 minutes for the glue to dry, then hang up your art!"
+      ] 
+    }
   ],
   "cardboard-garden": [
-    { title: "Seed Starter 🌱", description: "Grow tiny plants in boxes.", materials: ["Small boxes", "Dirt"], steps: ["Poke tiny holes", "Fill with soil", "Plant a seed"] }
+    { 
+      title: "Magic Seed Starters 🌱", 
+      description: "Watch life begin in these eco-friendly starter boxes.", 
+      materials: ["Egg carton or small boxes", "Potting soil", "Water", "Seeds"], 
+      steps: [
+        "Separate your egg carton into individual little cups.",
+        "Use a pencil to poke a tiny drainage hole in the bottom of each.",
+        "Fill each cup almost to the top with soft potting soil.",
+        "Press your finger 1 inch into the dirt to make a home for the seed.",
+        "Drop in a seed and cover it gently with a 'blanket' of soil.",
+        "Give it a tiny drink of water and put it in a sunny window!"
+      ] 
+    }
   ],
   "cardboard-fashion": [
-    { title: "Knight Armor 🛡️", description: "The ultimate cardboard shield.", materials: ["Box flabs", "String"], steps: ["Cut shield shape", "Add handle", "Engrave a crest"] }
+    { 
+      title: "Hero's Shield & Armor 🛡️", 
+      description: "Prepare for adventure with your own custom battle gear.", 
+      materials: ["Large cardboard sheet", "Utility tape", "String or Elastic"], 
+      steps: [
+        "Draw a large shield shape on your cardboard and cut it out.",
+        "Cut two long strips of cardboard to act as arm handles.",
+        "Tape the handle strips to the back of the shield in a 'U' shape.",
+        "Draw a cool crest or your initials on the front of the shield.",
+        "Make a matching chest plate by cutting a hole for your head in a box.",
+        "Grab your gear and go save the day!"
+      ] 
+    }
   ],
   "plastic-bottle-storage": [
-    { title: "Piggy Bank 🐷", description: "Save your coins in a bottle.", materials: ["Plastic bottle", "Pink paint"], steps: ["Cut coin slot", "Add paper ears", "Add 4 legs"] }
+    { 
+      title: "Piggy Bank Buddy 🐷", 
+      description: "A cute little friend to help you save your pocket money.", 
+      materials: ["Water bottle", "4 bottle caps", "Pink paper", "Glue"], 
+      steps: [
+        "Make sure your bottle is completely dry inside.",
+        "Glue the 4 bottle caps to the side of the bottle to act as legs.",
+        "Cut a thin coin slot in the top using safety scissors.",
+        "Cut out two pink paper triangles and glue them near the cap for ears.",
+        "Draw two dots on the bottle cap for the pig's nose.",
+        "Start filling your buddy with coins and watch your savings grow!"
+      ] 
+    }
   ],
   "plastic-bottle-decor": [
-    { title: "Light-Up Fairy Jar ✨", description: "Glowing bottle magic.", materials: ["Clean bottle", "Fairy lights"], steps: ["Dry bottle well", "Insert lights", "Add stickers"] }
+    { 
+      title: "Glow-in-the-Dark Fairy Jar ✨", 
+      description: "Capture some magic in a bottle to light up your room.", 
+      materials: ["Plastic bottle", "Glitter", "Led fairy lights", "Ribbon"], 
+      steps: [
+        "Remove any labels from your bottle using warm soapy water.",
+        "Pour a small amount of glitter inside and shake it around.",
+        "Carefully thread your battery-powered fairy lights into the bottle.",
+        "Tape the battery pack to the back of the bottle so it's hidden.",
+        "Tie a big, pretty ribbon around the neck of the bottle.",
+        "Turn on the lights at night and enjoy the fairy glow!"
+      ] 
+    }
   ],
   "plastic-bottle-garden": [
-    { title: "Self-Watering Garden 💧", description: "Water once, grow forever!", materials: ["Plastic bottle", "String", "Soil"], steps: ["Cut bottle in half", "Add string to top", "Invert top into bottom"] }
+    { 
+      title: "Self-Watering Herb Pot 💧", 
+      description: "The smart way to grow plants without forgetting to water them.", 
+      materials: ["Plastic bottle", "Cotton string", "Soil", "Small plant"], 
+      steps: [
+        "Cut your bottle in half (have a parent help if it's tricky!).",
+        "Poke a hole in the bottle cap using a screwdriver or nail.",
+        "Thread a 6-inch cotton string through the hole in the cap.",
+        "Fill the bottom half of the bottle with 2 inches of water.",
+        "Put the top half (with cap) upside down into the bottom half.",
+        "Fill the top with soil and your plant—the string will drink for you!"
+      ] 
+    }
   ],
   "plastic-bottle-fashion": [
-    { title: "Bottle Jewelery 💍", description: "Make rings from bottle caps.", materials: ["Caps", "Glue", "Ribbon"], steps: ["Clean caps", "Glue to ribbon", "Wear it!"] }
+    { 
+      title: "Cap Jewelry & Rings 💍", 
+      description: "Turn trash into treasure with these shiny bottle cap rings.", 
+      materials: ["Bottle caps", "Glue", "Ribbon or Pipe cleaner"], 
+      steps: [
+        "Collect 5-10 colorful caps from different juice bottles.",
+        "Wash and dry the caps thoroughly.",
+        "Glue a small gem or a sticker into the center of each cap.",
+        "Twist a pipe cleaner into a circle that fits your finger.",
+        "Glue the pipe cleaner ring to the back of your favorite cap.",
+        "Wait for the glue to harden and show off your new sparkle!"
+      ] 
+    }
   ],
   "old-fabric-storage": [
-    { title: "Soft Storage Basket 🧺", description: "Made from an old t-shirt.", materials: ["Old Shirt", "Needle"], steps: ["Cut into strips", "Braid the strips", "Coil and sew"] }
+    { 
+      title: "No-Sew T-Shirt Basket 🧺", 
+      description: "Turn that old shirt into a soft home for your toys.", 
+      materials: ["Old T-Shirt", "Scissors", "Cardboard box"], 
+      steps: [
+        "Find an old shirt that is too small for you.",
+        "Cut the shirt into long horizontal strips about 1 inch wide.",
+        "Gently pull on the strips to make them curl into 'yarn'.",
+        "Wrap the shirt-yarn around an old cardboard box.",
+        "Tuck the ends under the loops to stay in place.",
+        "Use your soft new basket to hold your building blocks!"
+      ] 
+    }
   ],
   "old-fabric-decor": [
-    { title: "Pillow Friend ☁️", description: "Turn a sock into a buddy.", materials: ["Old sock", "Stuffing"], steps: ["Fill the sock", "Tie the top", "Add button eyes"] }
+    { 
+      title: "Sock Monster Buddy ☁️", 
+      description: "Make a new best friend from a lonely, single sock.", 
+      materials: ["Old sock", "Rice or Stuffing", "Buttons", "Rubber band"], 
+      steps: [
+        "Find a clean sock that has lost its partner.",
+        "Fill the sock halfway with rice, beans, or soft cotton.",
+        "Tie a rubber band around the middle to make a head and body.",
+        "Glue button eyes or draw a silly mouth with markers.",
+        "Tie a second rubber band near the top to make 'ears'.",
+        "Give your new monster buddy a name and a hug!"
+      ] 
+    }
   ],
   "old-fabric-garden": [
-    { title: "Hanging Herb Pocket 🌱", description: "Plants on your wall!", materials: ["Jeans scrap", "Nails"], steps: ["Sew a pocket", "Add soil", "Hang on a hook"] }
+    { 
+      title: "Hanging Denim Planters 🌱", 
+      description: "Super strong plant pockets made from your old jeans.", 
+      materials: ["Old jeans", "Strong glue or Staples", "Soil"], 
+      steps: [
+        "Cut the back pocket out of your old, worn-out jeans.",
+        "Make sure to leave a little extra fabric around the edges.",
+        "Glue or staple the edges to a piece of wood or a fence.",
+        "Fill the pocket with a little bit of potting soil.",
+        "Tuck a small succulent or herb plant into the pocket.",
+        "Water gently and watch your wall turn green!"
+      ] 
+    }
   ],
   "old-fabric-fashion": [
-    { title: "T-Shirt Tote Bag 🛍️", description: "No sewing needed!", materials: ["Old T-Shirt", "Scissors"], steps: ["Cut off sleeves", "Fringe the bottom", "Tie knots!"] }
+    { 
+      title: "Fringe Tote Bag 🛍️", 
+      description: "A cool bag for the beach or park, made in minutes.", 
+      materials: ["Old T-shirt", "Sharp scissors"], 
+      steps: [
+        "Lay your shirt flat and cut off the sleeves.",
+        "Cut a large 'U' shape around the neck to make the handles.",
+        "Cut 3-inch long fringes along the very bottom of the shirt.",
+        "Tie the front fringe pieces to the back fringe pieces in double knots.",
+        "Turn the bag inside out so the knots are hidden on the bottom.",
+        "Load it up with your favorite snacks and books!"
+      ] 
+    }
   ],
   "glass-jar-storage": [
-    { title: "Rainbow Pencil Pot ✏️", description: "Desk storage that shines.", materials: ["Clean jar", "Acrylic paint"], steps: ["Paint patterns", "Let it dry", "Fill with pens"] }
+    { 
+      title: "Rainbow Desk Jar ✏️", 
+      description: "A bright and sparkly home for all your school supplies.", 
+      materials: ["Clean glass jar", "Acrylic paint", "Sponge"], 
+      steps: [
+        "Make sure your jar is clean and completely dry.",
+        "Dab small spots of different paint colors all over the jar.",
+        "Let the first coat dry for about 20 minutes.",
+        "Add a second layer of paint to make the colors really pop.",
+        "Paint your name on the front with a thinner brush.",
+        "Place all your pens and pencils inside for a tidy desk!"
+      ] 
+    }
   ],
   "glass-jar-decor": [
-    { title: "Nature Lantern 🕯️", description: "The forest in a jar.", materials: ["Jar", "Leaves", "Glue"], steps: ["Glue leaves outside", "Add a battery candle", "Watch it glow"] }
+    { 
+      title: "Magical Forest Lantern 🕯️", 
+      description: "Bring the beauty of the woods inside your room.", 
+      materials: ["Glass Jar", "Dried leaves", "Clear glue", "Battery candle"], 
+      steps: [
+        "Collect some pretty leaves from your backyard.",
+        "Paint a thin layer of clear glue onto the outside of the jar.",
+        "Press the leaves firmly onto the glue and let them dry.",
+        "Wrap a piece of twine around the neck for a rustic look.",
+        "Place a battery-operated candle at the bottom.",
+        "Switch it on at bedtime for a cozy, forest feel!"
+      ] 
+    }
   ],
   "glass-jar-garden": [
-    { title: "Tiny Terrarium 🌲", description: "A mini forest in a jar.", materials: ["Glass Jar", "Moss", "Dirt"], steps: ["Add pebbles", "Add dirt", "Plant your moss"] }
+    { 
+      title: "Mini Moss Terrarium 🌲", 
+      description: "A tiny world in a bottle that stays green all year.", 
+      materials: ["Glass Jar", "Small pebbles", "Charcoal", "Moss"], 
+      steps: [
+        "Place 1 inch of small pebbles at the bottom for drainage.",
+        "Add a thin layer of crushed charcoal to keep it fresh.",
+        "Layer 2 inches of potting soil on top of the charcoal.",
+        "Carefully place bits of moss and tiny rocks inside.",
+        "Mist the inside with a spray bottle of water.",
+        "Put the lid on and place it in indirect sunlight!"
+      ] 
+    }
   ],
   "glass-jar-fashion": [
-    { title: "Glitter Amulet ✨", description: "Jar of pure luck.", materials: ["Small vial/jar", "Glitter"], steps: ["Fill with color", "Seal the lid", "Wear on string"] }
+    { 
+      title: "Glitter Luck Amulet ✨", 
+      description: "A tiny sparkle jar to wear on your favorite necklace.", 
+      materials: ["Mini glass vial", "Fine glitter", "Clear oil or Water"], 
+      steps: [
+        "Find a very small glass jar or vial with a cork.",
+        "Fill it 3/4 full with clear baby oil or water.",
+        "Add a pinch of your favorite color glitter.",
+        "Apply a tiny drop of glue to the cork and seal it tight.",
+        "Tie a piece of jewelry cord around the neck of the vial.",
+        "Wear your splash of magic wherever you go!"
+      ] 
+    }
   ],
   "tin-can-storage": [
-    { title: "Office Caddy 📎", description: "Industrial desk help.", materials: ["Tin can", "Magnets"], steps: ["Wrap in paper", "Glue magnets", "Stick to fridge!"] }
+    { 
+      title: "Magnetic Pencil Caddy 📎", 
+      description: "Keep your workspace clear with this industrial organizer.", 
+      materials: ["Clean tin can", "Strong magnets", "Washi tape"], 
+      steps: [
+        "Carefully check that the edges of the can aren't sharp.",
+        "Wrap colorful washi tape around the can in layers.",
+        "Glue two strong magnets to the side of the can.",
+        "Wait 30 minutes for the glue to be completely dry.",
+        "Snap the can onto your fridge or a metal desk leg.",
+        "Toss in your pens, clips, and scissors!"
+      ] 
+    }
   ],
   "tin-can-decor": [
-    { title: "Robot Friend 🤖", description: "Art from old cans.", materials: ["Cans", "Nuts/Bolts"], steps: ["Clean cans", "Glue legs/arms", "Draw a face"] }
+    { 
+      title: "Tin-Bot 5000 🤖", 
+      description: "Create a metal friend using can scraps and bolts.", 
+      materials: ["1 large can", "2 small cans", "Strong glue", "Googly eyes"], 
+      steps: [
+        "Use the large can as the 'body' of your robot.",
+        "Glue the two smaller cans to the bottom for legs.",
+        "Glue nuts or bottle caps all over for 'buttons'.",
+        "Add two large googly eyes to the front of the 'head'.",
+        "Give your robot 'arms' using bent pipe cleaners.",
+        "Write your robot's name on its chest with a marker!"
+      ] 
+    }
   ],
   "tin-can-garden": [
-    { title: "Tin Planter 🪴", description: "Simple garden home.", materials: ["Tin can", "Hammer", "Nail"], steps: ["Poke drainage holes", "Decorate", "Add your plant"] }
+    { 
+      title: "Painted Flower Planter 🪴", 
+      description: "A colorful home for your flowers that helps the planet.", 
+      materials: ["Clean tin can", "Hammer", "Nail", "Outdoor paint"], 
+      steps: [
+        "Have a parent help you poke 3-4 holes in the bottom with a nail.",
+        "Paint the outside of the can with bright colors or patterns.",
+        "Let the paint dry completely in the sun.",
+        "Fill the bottom with small rocks, then add soil.",
+        "Plant a colorful flower or some tasty herbs.",
+        "Give it a drink and place it on your balcony or porch!"
+      ] 
+    }
   ],
   "tin-can-fashion": [
-    { title: "Sound Cuffs 👂", description: "Communication cups.", materials: ["Cans", "String"], steps: ["Poke hole in bottoms", "Add string", "Talk to a friend!"] }
+    { 
+      title: "Space-Talker Cups 👂", 
+      description: "The classic way to talk to your friends across the yard.", 
+      materials: ["2 tin cans", "Long piece of string", "Nail"], 
+      steps: [
+        "Punch a small hole in the center of the bottom of both cans.",
+        "Thread one end of the string through the hole of the first can.",
+        "Tie a big knot inside the can so the string can't pull out.",
+        "Do the same thing with the other can and the other end of string.",
+        "Walk apart until the string is very tight and straight.",
+        "Have one friend talk while the other listens—it's magic!"
+      ] 
+    }
   ]
 };
 
@@ -153,7 +416,6 @@ function generateIdeas() {
   const key = `${mat}-${goal}`;
   let ideas = PROJECT_LIBRARY[key] || [];
 
-  // Local Search Filter
   if (search) {
     ideas = ideas.filter(p => p.title.toLowerCase().includes(search) || p.description.toLowerCase().includes(search));
   }
@@ -189,7 +451,6 @@ async function handleReviewClick() {
     return;
   }
 
-  // Wake up brain ONLY now
   elements.reviewResult.style.display = "block";
   elements.reviewResult.innerHTML = "<div class='modal-loader'><div class='spinner'></div> <p>Checking out your magic work... ⭐</p></div>";
   
