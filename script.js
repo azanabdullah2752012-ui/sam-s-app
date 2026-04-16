@@ -408,6 +408,8 @@ function init() {
 }
 
 // ─── Instant Curated Idea Generation ──────────────────────────────────────
+let currentActiveProject = null;
+
 function generateIdeas() {
   const mat = elements.materialType.value;
   const goal = elements.projectGoal.value;
@@ -431,7 +433,7 @@ function renderExpertPlans(plans) {
     return;
   }
   elements.ideas.innerHTML = plans.map(plan => `
-    <article class="course-card" onclick="window.openPlanner(${JSON.stringify(plan).replace(/"/g, '&quot;')})">
+    <article class="course-card" onclick='window.openPlanner(${JSON.stringify(plan).replace(/'/g, "&apos;")})'>
       <div class="card-img-wrap">
         <img src="https://picsum.photos/seed/${plan.title}/600/400" alt="plan">
       </div>
@@ -482,6 +484,7 @@ async function handleReviewClick() {
 
 // ─── Shared Logic ────────────────────────────────────────────────────────
 window.openPlanner = function(plan) {
+  currentActiveProject = plan;
   elements.tutorialTitle.textContent = plan.title;
   elements.tutorialModal.showModal();
   const projectId = `project-${plan.title.replace(/\s+/g, '-').toLowerCase()}`;
@@ -494,10 +497,31 @@ window.openPlanner = function(plan) {
 
 window.saveProgress = function(pid, type, index, checked) {
   if (!state.progress[pid]) state.progress[pid] = { materials: [], steps: [] };
-  const list = state.progress[pid][type];
+  const projectState = state.progress[pid];
+  const list = projectState[type];
+  
   if (checked) { if (!list.includes(index)) list.push(index); }
-  else { state.progress[pid][type] = list.filter(i => i !== index); }
+  else { projectState[type] = list.filter(i => i !== index); }
+  
   saveState();
+
+  // Check for completion!
+  if (currentActiveProject) {
+    const totalItems = (currentActiveProject.materials?.length || 0) + (currentActiveProject.steps?.length || 0);
+    const checkedItems = (projectState.materials?.length || 0) + (projectState.steps?.length || 0);
+    
+    if (checkedItems === totalItems && totalItems > 0) {
+      if (window.confetti) {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        // Add a "Well Done" message temporarily
+        const msg = document.createElement("div");
+        msg.style.textAlign = "center";
+        msg.style.padding = "20px";
+        msg.innerHTML = "<h2 style='font-family:Fredoka; color:#72efdd;'>🌟 You Finished! Amazing Work! 🌟</h2>";
+        elements.tutorialContent.appendChild(msg);
+      }
+    }
+  }
 }
 
 window.accessToolkit = function(tid) {
