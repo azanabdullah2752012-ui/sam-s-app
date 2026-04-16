@@ -205,6 +205,50 @@ h1, h2, h3 {
 .fun-modal { border: none; border-radius: 40px; padding: 0; width: min(92%, 850px); box-shadow: 0 40px 100px rgba(0,0,0,0.2); }
 .modal-head { padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; background: #f8fbff; }
 
+.modal-body { padding: 40px; max-height: 75vh; overflow-y: auto; }
+
+.modal-body h3 {
+  margin: 32px 0 20px;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+.planner-item {
+  display: flex;
+  align-items: center; /* Better vertical alignment */
+  gap: 20px;
+  margin-bottom: 20px; /* Better step spacing */
+  padding: 20px 24px;
+  background: #f8fbff;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.planner-item:hover {
+  background: #f0f7ff;
+  border-color: var(--btn-blue);
+  transform: translateX(4px);
+}
+
+.planner-item input[type="checkbox"] {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  accent-color: var(--btn-blue);
+  flex-shrink: 0;
+}
+
+.planner-item label {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  color: #444;
+}
+
 @media (max-width: 768px) {
   .hero-card h1 { font-size: 2.2rem; }
   .action-row { flex-direction: column; align-items: stretch; }
