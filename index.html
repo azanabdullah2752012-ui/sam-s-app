@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | Fun AI Workshop</title>
+  <title>Eco Remix Studio | Magical Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   
+  <!-- Fun Animated Blobs -->
+  <div class="blob-bg">
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+    <div class="blob three"></div>
+  </div>
+
   <div class="app-container">
-    <!-- Super Clean Header -->
     <header class="navbar">
       <div class="nav-content">
         <div class="logo-area">
@@ -28,7 +34,6 @@
     </header>
 
     <main class="single-column-flow">
-      <!-- 1. Fun Hero -->
       <section class="hero-minimal fun-mode">
         <h1>Tomorrow is for the Taking</h1>
         <p>Turn your recyclables into magic creations! ✨</p>
@@ -40,12 +45,11 @@
         
         <div id="aiStatus" class="ai-status-msg"></div>
         <div id="webllmProgress" class="progress-wrap" style="display: none;">
-          <small id="webllmText">Starting AI Brain...</small>
+          <small id="webllmText">Starting Studio Brain...</small>
           <div class="p-bar"><div id="webllmFill"></div></div>
         </div>
       </section>
 
-      <!-- 2. Simple Workshop -->
       <section class="simple-workshop">
         <div class="workshop-card fun-card">
           <div class="tool-row">
@@ -68,17 +72,17 @@
               </select>
             </div>
             <div class="tool-cell">
-              <label>Photo</label>
+              <label>Material Photo</label>
               <label class="file-trigger fun-trigger">
                 <input type="file" id="imageInput">
-                <span>📸 Snap</span>
+                <span>📸 Snap Pick</span>
               </label>
             </div>
             <div class="tool-cell">
-              <label>Done?</label>
+              <label>Final Result</label>
               <label class="file-trigger secondary fun-trigger-blue">
                 <input type="file" id="finalInput">
-                <span>✅ Finish</span>
+                <span>✅ Showcase</span>
               </label>
             </div>
           </div>
@@ -89,13 +93,11 @@
         </div>
       </section>
 
-      <!-- 3. Results -->
       <section class="results-area">
         <h2 class="section-title">Magical Remixes</h2>
         <div id="ideas" class="clean-grid"></div>
       </section>
 
-      <!-- 4. Marketplace -->
       <section class="marketplace-area">
         <h2 class="section-title">Premium Blueprints</h2>
         <div id="marketGrid" class="horizontal-market-scroll"></div>
@@ -111,13 +113,12 @@
       </header>
       <div id="tutorialLoading" class="loading-state" style="display:none">
         <div class="loader-fun"></div>
-        <p>AI is writing points...</p>
+        <p>Expert AI is drafting points...</p>
       </div>
       <div id="tutorialContent" class="modal-body points-mode"></div>
     </div>
   </dialog>
 
-  <!-- State logic -->
   <div style="display:none">
     <span id="projectCount">0</span>
     <span id="favoriteCategory"></span>
