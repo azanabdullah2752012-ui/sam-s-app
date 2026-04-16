@@ -89,7 +89,7 @@ function setLoading(btn, statusEl, message, active) {
     btn.textContent = "...";
   } else {
     btn.disabled = false;
-    btn.textContent = btn.dataset.label || "AI REMIX ➔";
+    btn.textContent = btn.dataset.label || "REMIX MAGIC ✨";
     delete btn.dataset.label;
   }
   if (statusEl) statusEl.textContent = active ? message : "";
@@ -100,19 +100,19 @@ async function generateIdeas() {
   const material = elements.materialType.value;
   const goal = elements.projectGoal.value;
 
-  setLoading(elements.generateBtn, elements.aiStatus, "⌛ Analyzing Workshop Input...", true);
+  setLoading(elements.generateBtn, elements.aiStatus, "⌛ Cooking up ideas...", true);
   renderStaticIdeas(material, goal);
 
   try {
-    const prompt = `You are an eco-DIY expert. Provide 4 ideas for ${material} targeting ${goal}. ${customQuery ? "User preference: " + customQuery : ""}
-    Respond with JSON array: [{title, description}]. No markdown.`;
+    const prompt = `Goal: Give 4 FUN eco-reconstruction ideas for ${material} targeting ${goal}. ${customQuery ? "User want: " + customQuery : ""}
+    Output JSON ONLY: [{title, description}]. No intro.`;
     
     const raw = await callWebLLM(prompt, true);
     const match = raw.match(/\[[\s\S]*\]/);
     if (match) {
       const ideas = JSON.parse(match[0]);
       renderAIIdeas(ideas, material);
-      if (window.confetti) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      if (window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
     }
   } catch (e) { 
     console.error(e); 
@@ -123,35 +123,17 @@ async function generateIdeas() {
 }
 
 function renderAIIdeas(ideas, material) {
-  const authors = [
-    { name: "J. Chen", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=J" },
-    { name: "A. Davis", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=A" },
-    { name: "E. Lee", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=E" },
-    { name: "M. Smith", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=M" }
-  ];
-
-  elements.ideas.innerHTML = ideas.map((entry, i) => {
-    const author = authors[i % authors.length];
-    const rating = (4.5 + Math.random() * 0.5).toFixed(1);
-    return `
-      <article class="course-card" onclick="window.openTutorial('${escHtml(entry.title)}', '${escHtml(material)}')">
-        <div class="card-img-wrap">
-          <img src="https://picsum.photos/seed/${entry.title}/600/400" alt="${escHtml(entry.title)}">
-        </div>
-        <div class="card-content">
-          <h4>${escHtml(entry.title)}</h4>
-          <p>${escHtml(entry.description)}</p>
-        </div>
-        <div class="card-meta">
-          <div class="author-info">
-            <img src="${author.img}" alt="user">
-            <span>${author.name}</span>
-          </div>
-          <div class="rating-badge">★ ${rating}</div>
-        </div>
-      </article>
-    `;
-  }).join("");
+  elements.ideas.innerHTML = ideas.map((entry, i) => `
+    <article class="course-card" onclick="window.openTutorial('${escHtml(entry.title)}', '${escHtml(material)}')">
+      <div class="card-img-wrap">
+        <img src="https://picsum.photos/seed/${entry.title}/600/400" alt="${escHtml(entry.title)}">
+      </div>
+      <div class="card-content">
+        <h4>${escHtml(entry.title)}</h4>
+        <p>${escHtml(entry.description)}</p>
+      </div>
+    </article>
+  `).join("");
 }
 
 window.openTutorial = async function(title, material) {
@@ -161,11 +143,28 @@ window.openTutorial = async function(title, material) {
   elements.tutorialModal.showModal();
 
   try {
-    const prompt = `Write a step-by-step tutorial for "${title}" using "${material}". Use HTML (h3/p/ul). No markdown fences.`;
+    // FORCE HEADINGS AND LISTS
+    const prompt = `Write a FUN tutorial for "${title}" using "${material}". 
+    CRITICAL: YOU MUST USE HTML LIST TAGS (<ul>, <li>) FOR ALL POINTS. 
+    USE <h3> FOR SUB-HEADINGS. 
+    Structure it as:
+    <h3>What you need</h3>
+    <ul><li>..</li></ul>
+    <h3>Steps to take</h3>
+    <ol><li>..</li></ol>
+    NO plain paragraphs. Points ONLY.`;
+    
     const instructions = await callWebLLM(prompt, false);
-    elements.tutorialContent.innerHTML = instructions.replace(/```(?:html)?/gi, "").trim();
+    // Cleanup any potential markdown leaks
+    let clean = instructions.replace(/```(?:html)?/gi, "").trim();
+    // Simple check: if no list tags, try to wrap points
+    if (!clean.includes('<li>')) {
+      clean = clean.split('\n').filter(l => l.trim().length > 0).map(l => `<li>${l}</li>`).join('');
+      clean = `<ul>${clean}</ul>`;
+    }
+    elements.tutorialContent.innerHTML = clean;
   } catch (error) {
-    elements.tutorialContent.innerHTML = `<p style="color:red">Failed: ${error.message}</p>`;
+    elements.tutorialContent.innerHTML = `<p style="color:red">WebLLM error. Try again! Details: ${error.message}</p>`;
   } finally {
     elements.tutorialLoading.style.display = "none";
   }
@@ -173,10 +172,10 @@ window.openTutorial = async function(title, material) {
 
 function renderStaticIdeas(material, goal) {
   const library = [
-    { title: `${material} ${goal} Project`, description: `Simple way to use ${material} for ${goal.replace("-"," ")} purposes.` },
-    { title: `Recycled ${material} Kit`, description: `Step-by-step tutorial for ${material} components.` },
-    { title: `Modern ${material} Item`, description: `Aesthetic styling of raw ${material} pieces.` },
-    { title: `Practical ${material} Build`, description: `Heavy-duty use for repurposed ${material}.` }
+    { title: `Super ${material} ${goal}`, description: `A fun way to use ${material} for ${goal.replace("-"," ")}!` },
+    { title: `Cool ${material} Build`, description: `Make something epic with your ${material} scraps.` },
+    { title: `Magical ${material} Kit`, description: `Simple and fun assembly of ${material}.` },
+    { title: `Epic ${material} Design`, description: `A stylish use for repurposed ${material}.` }
   ];
   renderAIIdeas(library, material);
 }
@@ -188,7 +187,7 @@ function renderMarketplace() {
     const canAfford = state.coins >= t.price;
     return `
       <div class="market-item-panel">
-        <img class="market-thumb" src="https://picsum.photos/seed/${t.id}/100" alt="thumb">
+        <img class="market-thumb" src="https://picsum.photos/seed/${t.id}/150" alt="thumb">
         <div class="market-details">
           <strong>${escHtml(t.name)}</strong>
           <span>${escHtml(t.category)} • ${t.price}c</span>
@@ -196,7 +195,7 @@ function renderMarketplace() {
         <button class="unlock-buy-btn" 
                 onclick="window.handleMarketAction('${t.id}')"
                 ${!owned && !canAfford ? 'disabled' : ''}>
-          ${owned ? 'Open' : 'Unlock'}
+          ${owned ? 'Open' : 'Unlock'} 🔓
         </button>
       </div>
     `;
@@ -214,7 +213,6 @@ window.handleMarketAction = function(tid) {
     saveState();
     updateDashboard();
     renderMarketplace();
-    alert(`Unlocked: ${t.name}!`);
   }
 }
 
@@ -246,7 +244,7 @@ function updateDashboard() {
 }
 
 function renderIdeasEmpty() {
-  elements.ideas.innerHTML = '<p style="grid-column: 1/-1; text-align:center; opacity:0.5; padding: 60px;">Your creations will appear here.</p>';
+  elements.ideas.innerHTML = '<p style="grid-column: 1/-1; text-align:center; opacity:0.5; padding: 60px;">Magical ideas will fly here soon!</p>';
 }
 
 function escHtml(s) { 

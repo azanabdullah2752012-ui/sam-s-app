@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | Simple AI Workshop</title>
+  <title>Eco Remix Studio | Fun AI Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   
   <div class="app-container">
-    <!-- Clean Header -->
+    <!-- Super Clean Header -->
     <header class="navbar">
       <div class="nav-content">
         <div class="logo-area">
-          <div class="brand-icon">🌱</div>
+          <div class="brand-icon">🎨</div>
           <span class="brand-name">Eco Remix Studio</span>
         </div>
         <div class="stats-pill">
@@ -28,56 +28,55 @@
     </header>
 
     <main class="single-column-flow">
-      <!-- 1. Hero & AI Input -->
-      <section class="hero-minimal">
+      <!-- 1. Fun Hero -->
+      <section class="hero-minimal fun-mode">
         <h1>Tomorrow is for the Taking</h1>
-        <p>A simple space to turn your recyclables into high-end creations.</p>
+        <p>Turn your recyclables into magic creations! ✨</p>
         
         <div class="main-input-group">
-          <input type="text" id="aiInput" placeholder="Describe your vision (optional)...">
-          <button id="generateBtn" class="primary-hero-btn">AI REMIX ➔</button>
+          <input type="text" id="aiInput" placeholder="Add a secret ingredient (e.g. 'extra glitter')">
+          <button id="generateBtn" class="primary-hero-btn fun-btn">REMIX MAGIC ✨</button>
         </div>
         
         <div id="aiStatus" class="ai-status-msg"></div>
         <div id="webllmProgress" class="progress-wrap" style="display: none;">
-          <small id="webllmText">Readying Studio...</small>
+          <small id="webllmText">Starting AI Brain...</small>
           <div class="p-bar"><div id="webllmFill"></div></div>
         </div>
       </section>
 
-      <!-- 2. The Workshop (Functional Selection) -->
+      <!-- 2. Simple Workshop -->
       <section class="simple-workshop">
-        <div class="workshop-card">
+        <div class="workshop-card fun-card">
           <div class="tool-row">
             <div class="tool-cell">
-              <label>Material</label>
+              <label>Select Material</label>
               <select id="materialType">
-                <option value="mixed">Mixed Recyclables</option>
+                <option value="mixed">Mixed Stuff</option>
                 <option value="cardboard">Cardboard</option>
                 <option value="plastic-bottle">Plastic Bottles</option>
-                <option value="glass-jar">Glass Jars</option>
                 <option value="old-fabric">Old Fabric</option>
               </select>
             </div>
             <div class="tool-cell">
-              <label>Goal</label>
+              <label>What's the Goal?</label>
               <select id="projectGoal">
-                <option value="storage">Storage & Org</option>
-                <option value="decor">Home Decor</option>
-                <option value="garden">Garden & Outdoor</option>
-                <option value="fashion">Eco-Fashion</option>
+                <option value="storage">Storage Box</option>
+                <option value="decor">Cool Decor</option>
+                <option value="garden">Garden Fun</option>
+                <option value="fashion">Eco Wear</option>
               </select>
             </div>
             <div class="tool-cell">
-              <label>Material Photo</label>
-              <label class="file-trigger">
+              <label>Photo</label>
+              <label class="file-trigger fun-trigger">
                 <input type="file" id="imageInput">
-                <span>📸 Upload</span>
+                <span>📸 Snap</span>
               </label>
             </div>
             <div class="tool-cell">
-              <label>Final Build</label>
-              <label class="file-trigger secondary">
+              <label>Done?</label>
+              <label class="file-trigger secondary fun-trigger-blue">
                 <input type="file" id="finalInput">
                 <span>✅ Finish</span>
               </label>
@@ -90,37 +89,35 @@
         </div>
       </section>
 
-      <!-- 3. AI Results -->
+      <!-- 3. Results -->
       <section class="results-area">
-        <h2 class="section-title">Your Remix Ideas</h2>
+        <h2 class="section-title">Magical Remixes</h2>
         <div id="ideas" class="clean-grid"></div>
       </section>
 
-      <!-- 4. Marketplace Lounge -->
+      <!-- 4. Marketplace -->
       <section class="marketplace-area">
-        <h2 class="section-title">Premium Templates</h2>
-        <div id="marketGrid" class="horizontal-market-scroll">
-          <!-- Marketplace items render here -->
-        </div>
+        <h2 class="section-title">Premium Blueprints</h2>
+        <div id="marketGrid" class="horizontal-market-scroll"></div>
       </section>
     </main>
   </div>
 
-  <dialog id="tutorialModal" class="simple-modal">
+  <dialog id="tutorialModal" class="simple-modal fun-modal">
     <div class="modal-inner">
       <header class="modal-top">
-        <h2 id="tutorialTitle">Instructions</h2>
+        <h2 id="tutorialTitle">Magic Instructions</h2>
         <button id="closeModalBtn">✕</button>
       </header>
       <div id="tutorialLoading" class="loading-state" style="display:none">
-        <div class="loader"></div>
-        <p>AI is writing...</p>
+        <div class="loader-fun"></div>
+        <p>AI is writing points...</p>
       </div>
-      <div id="tutorialContent" class="modal-body"></div>
+      <div id="tutorialContent" class="modal-body points-mode"></div>
     </div>
   </dialog>
 
-  <!-- Hidden state trackers -->
+  <!-- State logic -->
   <div style="display:none">
     <span id="projectCount">0</span>
     <span id="favoriteCategory"></span>
