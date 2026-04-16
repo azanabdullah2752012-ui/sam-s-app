@@ -8,27 +8,34 @@ async function initEngine() {
   if (engine) return engine;
   
   const progressContainer = document.getElementById("webllmProgress");
-  const progressText = document.getElementById("webllmText");
+  const progressText = document.getElementById("aiStatus"); // Use aiStatus directly for better feedback
   const progressFill = document.getElementById("webllmFill");
 
   if (progressContainer) progressContainer.style.display = "block";
 
   const initProgressCallback = (initProgress) => {
-    if (progressText) progressText.textContent = initProgress.text;
+    if (progressText) progressText.textContent = `Waking up the Magic Brain... ${Math.round(initProgress.progress * 100)}%`;
     if (progressFill) progressFill.style.width = Math.round(initProgress.progress * 100) + "%";
   };
 
-  engine = await CreateMLCEngine(modelId, { initProgressCallback });
-  if (progressContainer) progressContainer.style.display = "none";
+  try {
+    engine = await CreateMLCEngine(modelId, { initProgressCallback });
+    if (progressText) progressText.textContent = "Your Magic Brain is Awake! ✨";
+    enableActionButtons();
+  } catch (err) {
+    console.error(err);
+    if (progressText) progressText.textContent = "Oops! The Magic Brain is tired. Refresh the page!";
+  }
+
   return engine;
 }
 
-const storageKey = "eco-workshop-fun-state-v2";
+const storageKey = "eco-workshop-fun-state-v3";
 
 const templates = [
-  { id: "planner", name: "Project Planner 📝", category: "Plan", price: 10, type: "interactive", default: { title: "Your Magic Plan", materials: ["Paper", "Colored Pens"], steps: ["Dream it up", "Draw it out"] } },
-  { id: "checklist", name: "Stuff You Need 📦", category: "Logistics", price: 5, type: "interactive", default: { title: "Maker Box Checklist", items: ["Measure your area", "Clean your materials", "Get your tape ready"] } },
-  { id: "tracker", name: "Step-by-Step Tracker ✅", category: "Execution", price: 8, type: "interactive", default: { title: "Doing Great! Tracker", steps: ["Start", "Middle", "Finish!"] } }
+  { id: "planner", name: "Project Planner 📝", category: "Plan", price: 10, type: "interactive", default: { title: "Your Magic Plan", materials: ["Paper", "Colored Chips"], steps: ["Imagine", "Build"] } },
+  { id: "checklist", name: "Stuff You Need 📦", category: "Maker Stuff", price: 5, type: "interactive", default: { title: "Stuff Finder", items: ["Look for boxes", "Clean the jars", "Find the glue"] } },
+  { id: "tracker", name: "Step-by-Step Tracker ✅", category: "Doing It!", price: 8, type: "interactive", default: { title: "Doing Great!", steps: ["Step 1", "Step 2", "Step 3"] } }
 ];
 
 const state = loadState();
@@ -44,6 +51,7 @@ const elements = {
   reviewBtn: document.getElementById("reviewBtn"),
   reviewResult: document.getElementById("reviewResult"),
   ideas: document.getElementById("ideas"),
+  resultsSection: document.getElementById("resultsSection"),
   marketGrid: document.getElementById("marketGrid"),
   generateBtn: document.getElementById("generateBtn"),
   aiStatus: document.getElementById("aiStatus"),
@@ -61,11 +69,25 @@ function init() {
   renderIdeasEmpty();
   renderMarketplace();
 
+  // START ENGINE AUTOMATICALLY
+  initEngine();
+
   if (elements.generateBtn) elements.generateBtn.addEventListener("click", generateIdeas);
   if (elements.reviewBtn) elements.reviewBtn.addEventListener("click", analyzeImage);
   if (elements.closeModalBtn) elements.closeModalBtn.addEventListener("click", () => elements.tutorialModal.close());
 
   elements.imageInput?.addEventListener("change", (e) => renderPreview(e.target, elements.materialPreview));
+}
+
+function enableActionButtons() {
+  if (elements.generateBtn) {
+    elements.generateBtn.disabled = false;
+    elements.generateBtn.textContent = "Show Me Magic Ideas! ✨";
+  }
+  if (elements.reviewBtn) {
+    elements.reviewBtn.disabled = false;
+    elements.reviewBtn.textContent = "Review My Project! ⭐";
+  }
 }
 
 // ─── Kid-Friendly Idea Generation ─────────────────────────────────────────
@@ -77,23 +99,24 @@ async function generateIdeas() {
   setLoading(elements.generateBtn, elements.aiStatus, "🍭 Finding fun ideas for you...", true);
 
   try {
-    const prompt = `You are a friendly DIY helper for kids and parents. 
+    const prompt = `You are a friendly DIY helper for kids. 
     Someone has "${material}" and wants to make "${goal}". 
-    ${customQuery ? "They also asked for: " + customQuery : ""}
-    Give 4 super fun and simple ideas! 
-    Output ONLY a JSON array: [{title, description, materials:[], steps:[], difficulty:"Easy/Medium/Hard"}]. 
-    Use very simple, happy words.`;
+    ${customQuery ? "Unique request: " + customQuery : ""}
+    Give 4 fun, buildable DIY project units. 
+    Output ONLY a JSON array: [{title, description, materials:[], steps:[], difficulty:"Easy/Medium/Hard"}].`;
     
-    const reply = await callEngine(prompt, false, true);
+    const reply = await callEngine(prompt, false);
     const match = reply.match(/\[[\s\S]*\]/);
     if (match) {
       const ideas = JSON.parse(match[0]);
       renderExpertPlans(ideas);
+      elements.resultsSection.style.display = "block";
+      elements.resultsSection.scrollIntoView({ behavior: 'smooth' });
       if (window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
     }
   } catch (e) {
     console.error(e);
-    elements.aiStatus.textContent = "Oops! The Magic Brain is resting. Try again soon!";
+    elements.aiStatus.textContent = "Oops! The Magic Brain had a Hiccup. Try again! ✨";
   } finally {
     setLoading(elements.generateBtn, null, "", false);
   }
@@ -101,50 +124,51 @@ async function generateIdeas() {
 
 function renderExpertPlans(plans) {
   elements.ideas.innerHTML = plans.map((plan, i) => `
-    <article class="course-card" style="background:#fff; border-radius:32px; padding:24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); cursor:pointer;" onclick="window.openPlanner(${JSON.stringify(plan).replace(/"/g, '&quot;')})">
+    <article class="course-card" onclick="window.openPlanner(${JSON.stringify(plan).replace(/"/g, '&quot;')})">
       <div class="card-img-wrap">
         <img src="https://picsum.photos/seed/${plan.title}/600/400" alt="plan">
       </div>
       <div class="card-content">
         <span style="background:#fef3c7; color:#d97706; padding:4px 12px; border-radius:100px; font-size:0.8rem; font-weight:800; font-family:'Fredoka';">${plan.difficulty}</span>
-        <h4 style="margin:12px 0 8px;">${escHtml(plan.title)}</h4>
+        <h4 style="margin:12px 0 8px; font-family:'Fredoka'; font-size:1.4rem;">${escHtml(plan.title)}</h4>
         <p>${escHtml(plan.description)}</p>
       </div>
     </article>
   `).join("");
 }
 
-// ─── Kid-Friendly Image Review ────────────────────────────────────────────
+// ─── Image Review ────────────────────────────────────────────
 async function analyzeImage() {
   const file = elements.imageInput.files[0];
   if (!file) {
-    alert("Don't forget to upload a photo of your project first! 📸");
+    alert("Don't forget your photo! 📸");
     return;
   }
 
   elements.reviewResult.style.display = "block";
-  elements.reviewResult.innerHTML = "<div class='modal-loader'><div class='spinner'></div> <p>Checking out your amazing project! ⭐</p></div>";
+  elements.reviewResult.innerHTML = "<div class='modal-loader'><div class='spinner'></div> <p style='font-weight:800; color:#4ea8de;'>Checking out your magic work... ⭐</p></div>";
   
   try {
     const dataUrl = await fileToDataUrl(file);
     const prompt = [
-      { type: "text", text: "You are a friendly teacher. Look at this kid's DIY project. Tell them: 1. What you see; 2. Why it's awesome; 3. One fun tip to make it even better; 4. A Star Rating (1-10 stars)." },
+      { type: "text", text: "You are a friendly teacher. Look at this kid's project. Tell them: 1. What you see; 2. Why it's awesome; 3. One tip to make it better; 4. Star Rating (1-10)." },
       { type: "image_url", image_url: { url: dataUrl } }
     ];
 
     const reply = await callEngine(prompt, true);
     elements.reviewResult.innerHTML = `
-      <div style="background:#fff; padding:24px; border-radius:20px; border-left:8px solid #72efdd;">
-        <h3 style="font-family:'Fredoka'; color:#2d3436; margin-bottom:12px;">Expert Feedback! ⭐</h3>
+      <div class="expert-feedback-box">
+        <h3>Expert Feedback! ⭐</h3>
         <div style="font-size:1.1rem; line-height:1.6; color:#636e72;">${reply.replace(/\n/g, '<br>')}</div>
       </div>
     `;
+    elements.reviewResult.scrollIntoView({ behavior: 'smooth' });
   } catch (e) {
-    elements.reviewResult.innerHTML = "Oops! I couldn't see your photo. Can you try uploading it again?";
+    elements.reviewResult.innerHTML = "Oops! I couldn't see it clearly. Try snapping another photo!";
   }
 }
 
-// ─── Interactive Planner Logic ───────────────────────────────────────────
+// ─── Interactive Planner ───────────────────────────────────────────
 window.openPlanner = function(plan) {
   elements.tutorialTitle.textContent = plan.title;
   elements.tutorialModal.showModal();
@@ -153,7 +177,7 @@ window.openPlanner = function(plan) {
   const savedProgress = state.progress[projectId] || { materials: [], steps: [], items: [] };
 
   const matsHtml = plan.materials ? `
-    <h3 style="font-family:'Fredoka'; margin-top:24px;">Stuff You Need 📦</h3>
+    <h3 style="font-family:'Fredoka'; margin-top:24px; color:#4ea8de;">Stuff You Need 📦</h3>
     ${plan.materials.map((m, i) => `
       <div class="planner-item">
         <input type="checkbox" id="m-${i}" ${savedProgress.materials?.includes(i) ? 'checked' : ''} onchange="window.saveProgress('${projectId}', 'materials', ${i}, this.checked)">
@@ -162,7 +186,7 @@ window.openPlanner = function(plan) {
     `).join('')}` : '';
     
   const stepsHtml = plan.steps ? `
-    <h3 style="font-family:'Fredoka'; margin-top:24px;">Step-by-Step ✅</h3>
+    <h3 style="font-family:'Fredoka'; margin-top:24px; color:#4ea8de;">Step-by-Step ✅</h3>
     ${plan.steps.map((s, i) => `
       <div class="planner-item">
         <input type="checkbox" id="s-${i}" ${savedProgress.steps?.includes(i) ? 'checked' : ''} onchange="window.saveProgress('${projectId}', 'steps', ${i}, this.checked)">
@@ -170,16 +194,7 @@ window.openPlanner = function(plan) {
       </div>
     `).join('')}` : '';
 
-  const itemsHtml = plan.items ? `
-    <h3 style="font-family:'Fredoka'; margin-top:24px;">Extra Checklist 📝</h3>
-    ${plan.items.map((it, i) => `
-      <div class="planner-item">
-        <input type="checkbox" id="it-${i}" ${savedProgress.items?.includes(i) ? 'checked' : ''} onchange="window.saveProgress('${projectId}', 'items', ${i}, this.checked)">
-        <label for="it-${i}">${escHtml(it)}</label>
-      </div>
-    `).join('')}` : '';
-
-  elements.tutorialContent.innerHTML = matsHtml + stepsHtml + itemsHtml;
+  elements.tutorialContent.innerHTML = matsHtml + stepsHtml;
 }
 
 window.saveProgress = function(pid, type, index, checked) {
@@ -201,14 +216,14 @@ window.accessToolkit = function(tid) {
     materials: t.default.materials || [],
     steps: t.default.steps || [],
     items: t.default.items || [],
-    difficulty: "Fun!"
+    difficulty: "Magical!"
   });
 }
 
 // ─── Engine Helpers ───────────────────────────────────────────────────
-async function callEngine(prompt, isVision = false, requireJSON = false) {
+async function callEngine(prompt, isVision = false) {
   const engine = await initEngine();
-  const systemMsg = "You are a friendly, happy DIY helper for kids. Use simple words. Format as clear points.";
+  const systemMsg = "Kid-friendly DIY Expert. Clear points only.";
   const messages = isVision 
     ? [{ role: "user", content: prompt }] 
     : [{ role: "system", content: systemMsg }, { role: "user", content: prompt }];
@@ -229,22 +244,23 @@ function fileToDataUrl(file) {
 function setLoading(btn, statusEl, message, active) {
   if (active) {
     btn.disabled = true;
+    btn.dataset.oldText = btn.textContent;
     btn.textContent = "...";
     if (statusEl) statusEl.textContent = message;
   } else {
     btn.disabled = false;
-    btn.textContent = "Show Me Magic! ✨";
-    if (statusEl) statusEl.textContent = "";
+    btn.textContent = btn.dataset.oldText || "Show Me Magic Ideas! ✨";
+    if (statusEl) statusEl.textContent = "Your Magic Brain is Awake! ✨";
   }
 }
 
 function renderMarketplace() {
   if (!elements.marketGrid) return;
   elements.marketGrid.innerHTML = templates.map(t => `
-    <div style="background:#fff; border-radius:24px; padding:24px; min-width:280px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align:center;">
-      <strong style="display:block; font-family:'Fredoka'; font-size:1.2rem; margin-bottom:8px;">${t.name}</strong>
-      <span style="color:#636e72;">${t.category} • ${t.price}c</span>
-      <button class="pill-btn secondary-btn" style="margin-top:16px; width:100%;" onclick="window.accessToolkit('${t.id}')">Open Tool! 🧰</button>
+    <div class="tool-panel">
+      <strong style="display:block; font-family:'Fredoka'; font-size:1.3rem; margin-bottom:8px;">${t.name}</strong>
+      <span style="color:#636e72;">${t.category}</span>
+      <button class="pill-btn secondary-btn" style="margin-top:16px; width:100%; font-size:1rem;" onclick="window.accessToolkit('${t.id}')">Open Tool! 🧰</button>
     </div>
   `).join("");
 }
@@ -264,7 +280,7 @@ function updateDashboard() {
 }
 
 function renderIdeasEmpty() {
-  elements.ideas.innerHTML = '<p style="grid-column: 1/-1; text-align:center; opacity:0.5; padding: 60px; font-family:Fredoka;">Tell us what you have to see magic ideas! ✨</p>';
+  if (elements.ideas) elements.ideas.innerHTML = '<p style="grid-column: 1/-1; text-align:center; opacity:0.5; padding: 60px; font-family:Fredoka;">Your magic ideas will appear right here! ✨</p>';
 }
 
 function renderPreview(input, container) {

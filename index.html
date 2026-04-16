@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   
@@ -33,29 +33,19 @@
     </header>
 
     <main class="page-content">
-      <!-- 1. Fun Hero -->
-      <section class="hero-card">
+      <!-- 1. Pure Hero (No Buttons Here) -->
+      <section class="simple-hero">
         <h1>Let’s Make Something Fun! 🎨</h1>
         <p>Turn your old stuff into magic creations! It's super easy and fun!</p>
-        
-        <div class="magic-input-box">
-          <input type="text" id="aiInput" placeholder="Tell us something special (like 'make it sparkly!')">
-          <button id="generateBtn" class="pill-btn primary-btn">Show Me Magic! ✨</button>
-        </div>
-        
-        <div id="aiStatus" class="status-msg"></div>
-        <div id="webllmProgress" class="loading-bar-wrap" style="display: none;">
-          <small id="webllmText">Waking up the Magic Brain... 🧠</small>
-          <div class="track"><div id="webllmFill" class="fill"></div></div>
-        </div>
       </section>
 
-      <!-- 2. Kid's Workshop -->
+      <!-- 2. Integrated Magic Workshop -->
       <section class="workshop-section">
         <div class="magic-card">
+          <h2 class="card-heading">1. Pick Your Stuff 📦</h2>
           <div class="card-grid">
             <div class="input-item">
-              <label>What do you have? 📦</label>
+              <label>What do you have?</label>
               <select id="materialType">
                 <option value="cardboard">Cardboard Boxes</option>
                 <option value="plastic-bottle">Plastic Bottles</option>
@@ -65,7 +55,7 @@
               </select>
             </div>
             <div class="input-item">
-              <label>What do you want to make? 🏠</label>
+              <label>What do you want to make?</label>
               <select id="projectGoal">
                 <option value="storage">Stuff Holder</option>
                 <option value="decor">Pretty Decoration</option>
@@ -73,18 +63,35 @@
                 <option value="fashion">Cool Accessories</option>
               </select>
             </div>
-            <div class="input-item">
-              <label>Upload your project 📸</label>
-              <label class="camera-btn">
-                <input type="file" id="imageInput">
-                <span>Snap a Photo</span>
-              </label>
-            </div>
-            <div class="input-item">
-              <label>How did you do? ⭐</label>
-              <button id="reviewBtn" class="pill-btn secondary-btn">Review My Work!</button>
+            <div class="input-item full-width">
+              <label>2. Add a Secret Ingredient! ✨</label>
+              <div class="magic-input-box">
+                <input type="text" id="aiInput" placeholder="Tell us something special (like 'make it sparkly!')">
+              </div>
             </div>
           </div>
+
+          <h2 class="card-heading mid-heading">3. Create the Magic! 🪄</h2>
+          <!-- Unified Action Buttons -->
+          <div class="action-row">
+            <button id="generateBtn" class="pill-btn primary-btn" disabled>Wait for Magic Brain... 🧠</button>
+            <div class="btn-divider">or</div>
+            <div class="review-group">
+              <label class="camera-btn">
+                <input type="file" id="imageInput">
+                <span>📸 Snap Photo</span>
+              </label>
+              <button id="reviewBtn" class="pill-btn secondary-btn" disabled>Review My Work! ⭐</button>
+            </div>
+          </div>
+
+          <!-- Magic Brain Loader -->
+          <div id="webllmProgress" class="loading-bar-wrap">
+            <div id="aiStatus" class="status-msg">Waking up the Magic Brain...</div>
+            <div class="track"><div id="webllmFill" class="fill"></div></div>
+          </div>
+
+          <!-- Expert Review Output -->
           <div class="preview-area">
             <div id="materialPreview" class="pic-preview"></div>
             <div id="reviewResult" class="expert-feedback-box" style="display:none"></div>
@@ -92,8 +99,8 @@
         </div>
       </section>
 
-      <!-- 3. Fun Ideas -->
-      <section class="ideas-section">
+      <!-- 3. Results Section -->
+      <section id="resultsSection" class="ideas-section" style="display:none">
         <h2 class="section-title">Fun Ideas for You! 💡</h2>
         <div id="ideas" class="ideas-grid"></div>
       </section>
