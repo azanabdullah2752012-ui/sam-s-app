@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | Magical Workshop</title>
+  <title>Eco Remix Studio | Professional DIY Workshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   
-  <!-- Fun Animated Blobs -->
   <div class="blob-bg">
     <div class="blob one"></div>
     <div class="blob two"></div>
-    <div class="blob three"></div>
   </div>
 
   <div class="app-container">
     <header class="navbar">
       <div class="nav-content">
         <div class="logo-area">
-          <div class="brand-icon">🎨</div>
+          <div class="brand-icon">🛠️</div>
           <span class="brand-name">Eco Remix Studio</span>
         </div>
         <div class="stats-pill">
@@ -34,92 +32,98 @@
     </header>
 
     <main class="single-column-flow">
-      <section class="hero-minimal fun-mode">
-        <h1>Tomorrow is for the Taking</h1>
-        <p>Turn your recyclables into magic creations! ✨</p>
+      <!-- 1. Hero & AI Research -->
+      <section class="hero-minimal">
+        <h1>Professional Eco-Reconstruction</h1>
+        <p>Expert-grade DIY ideas, vision-based project reviews, and interactive planning tools.</p>
         
         <div class="main-input-group">
-          <input type="text" id="aiInput" placeholder="Add a secret ingredient (e.g. 'extra glitter')">
-          <button id="generateBtn" class="primary-hero-btn fun-btn">REMIX MAGIC ✨</button>
+          <input type="text" id="aiInput" placeholder="Add specific requirements (e.g. 'industrial style' or 'child-safe')">
+          <button id="generateBtn" class="primary-hero-btn">GENERATE PLAN ➔</button>
         </div>
         
         <div id="aiStatus" class="ai-status-msg"></div>
         <div id="webllmProgress" class="progress-wrap" style="display: none;">
-          <small id="webllmText">Starting Studio Brain...</small>
+          <small id="webllmText">Initializing WebLLM Vision Engine...</small>
           <div class="p-bar"><div id="webllmFill"></div></div>
         </div>
       </section>
 
+      <!-- 2. The Professional Workshop Tools -->
       <section class="simple-workshop">
-        <div class="workshop-card fun-card">
+        <div class="workshop-card pro-card">
           <div class="tool-row">
             <div class="tool-cell">
-              <label>Select Material</label>
+              <label>Material Preference</label>
               <select id="materialType">
-                <option value="mixed">Mixed Stuff</option>
-                <option value="cardboard">Cardboard</option>
-                <option value="plastic-bottle">Plastic Bottles</option>
-                <option value="old-fabric">Old Fabric</option>
+                <option value="cardboard">High-Density Cardboard</option>
+                <option value="plastic-bottle">PET Plastic Bottles</option>
+                <option value="old-fabric">Refurbished Textiles</option>
+                <option value="glass-jar">Glass Containment</option>
+                <option value="tin-can">Aluminum/Tin Cans</option>
               </select>
             </div>
             <div class="tool-cell">
-              <label>What's the Goal?</label>
+              <label>Project Objective</label>
               <select id="projectGoal">
-                <option value="storage">Storage Box</option>
-                <option value="decor">Cool Decor</option>
-                <option value="garden">Garden Fun</option>
-                <option value="fashion">Eco Wear</option>
+                <option value="storage">Structural Storage</option>
+                <option value="decor">Aesthetic Decor</option>
+                <option value="garden">Hydraulic/Garden Systems</option>
+                <option value="fashion">Wearable Accessories</option>
               </select>
             </div>
             <div class="tool-cell">
-              <label>Material Photo</label>
-              <label class="file-trigger fun-trigger">
+              <label>Work-in-Progress</label>
+              <label class="file-trigger pro-trigger">
                 <input type="file" id="imageInput">
-                <span>📸 Snap Pick</span>
+                <span>📸 Upload Photo</span>
               </label>
             </div>
             <div class="tool-cell">
-              <label>Final Result</label>
-              <label class="file-trigger secondary fun-trigger-blue">
-                <input type="file" id="finalInput">
-                <span>✅ Showcase</span>
-              </label>
+              <label>Quality Review</label>
+              <button id="reviewBtn" class="action-btn secondary-btn">ANALYZE BUILD</button>
             </div>
           </div>
           <div class="previews-row">
             <div id="materialPreview"></div>
-            <div id="finalPreview"></div>
+            <div id="reviewResult" class="review-display" style="display:none"></div>
           </div>
         </div>
       </section>
 
+      <!-- 3. Active Project Planners -->
       <section class="results-area">
-        <h2 class="section-title">Magical Remixes</h2>
+        <h2 class="section-title">Verified Project Plans</h2>
         <div id="ideas" class="clean-grid"></div>
       </section>
 
+      <!-- 4. Interactive Templates & Tools -->
       <section class="marketplace-area">
-        <h2 class="section-title">Premium Blueprints</h2>
+        <h2 class="section-title">Professional Toolkit</h2>
         <div id="marketGrid" class="horizontal-market-scroll"></div>
       </section>
     </main>
   </div>
 
-  <dialog id="tutorialModal" class="simple-modal fun-modal">
+  <!-- Instruction/Planner Modal -->
+  <dialog id="tutorialModal" class="simple-modal planner-modal">
     <div class="modal-inner">
       <header class="modal-top">
-        <h2 id="tutorialTitle">Magic Instructions</h2>
+        <h2 id="tutorialTitle">Project Planner</h2>
         <button id="closeModalBtn">✕</button>
       </header>
       <div id="tutorialLoading" class="loading-state" style="display:none">
-        <div class="loader-fun"></div>
-        <p>Expert AI is drafting points...</p>
+        <div class="loader"></div>
+        <p>AI Engineer is generating structured data...</p>
       </div>
-      <div id="tutorialContent" class="modal-body points-mode"></div>
+      <div id="tutorialContent" class="modal-body planner-view"></div>
     </div>
   </dialog>
 
+  <!-- Persistence Markers (Hidden) -->
   <div style="display:none">
+    <input type="file" id="finalInput">
+    <div id="finalPreview"></div>
     <span id="projectCount">0</span>
     <span id="favoriteCategory"></span>
     <span id="lastScore"></span>
