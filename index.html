@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco Remix Studio | Let’s Make Something Fun!</title>
+  <title>Eco Remix Studio | Practical DIY Crafts</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
   
@@ -33,13 +33,11 @@
     </header>
 
     <main class="page-content">
-      <!-- 1. Pure Hero (No Buttons Here) -->
       <section class="simple-hero">
-        <h1>Let’s Make Something Fun! 🎨</h1>
-        <p>Turn your old stuff into magic creations! It's super easy and fun!</p>
+        <h1>Fun DIY Projects! 🎨</h1>
+        <p>Pick what you have and find something cool to make!</p>
       </section>
 
-      <!-- 2. Integrated Magic Workshop -->
       <section class="workshop-section">
         <div class="magic-card">
           <h2 class="card-heading">1. Pick Your Stuff 📦</h2>
@@ -64,34 +62,32 @@
               </select>
             </div>
             <div class="input-item full-width">
-              <label>2. Add a Secret Ingredient! ✨</label>
+              <label>2. Search for something... 🔍</label>
               <div class="magic-input-box">
-                <input type="text" id="aiInput" placeholder="Tell us something special (like 'make it sparkly!')">
+                <input type="text" id="aiInput" placeholder="Enter a word (like 'mask' or 'planter')">
               </div>
             </div>
           </div>
 
-          <h2 class="card-heading mid-heading">3. Create the Magic! 🪄</h2>
-          <!-- Unified Action Buttons -->
+          <h2 class="card-heading mid-heading">3. Choose Your Action! 🛠️</h2>
           <div class="action-row">
-            <button id="generateBtn" class="pill-btn primary-btn" disabled>Wait for Magic Brain... 🧠</button>
+            <button id="generateBtn" class="pill-btn primary-btn">Get Project Ideas! 💡</button>
             <div class="btn-divider">or</div>
             <div class="review-group">
               <label class="camera-btn">
                 <input type="file" id="imageInput">
                 <span>📸 Snap Photo</span>
               </label>
-              <button id="reviewBtn" class="pill-btn secondary-btn" disabled>Review My Work! ⭐</button>
+              <button id="reviewBtn" class="pill-btn secondary-btn">Review My Work! ⭐</button>
             </div>
           </div>
 
-          <!-- Magic Brain Loader -->
-          <div id="webllmProgress" class="loading-bar-wrap">
-            <div id="aiStatus" class="status-msg">Waking up the Magic Brain...</div>
+          <!-- AI Progress (Only shows when Reviewing) -->
+          <div id="webllmProgress" class="loading-bar-wrap" style="display:none; margin-top:32px;">
+            <div id="aiStatus" class="status-msg">Waking up the AI Reviewer...</div>
             <div class="track"><div id="webllmFill" class="fill"></div></div>
           </div>
 
-          <!-- Expert Review Output -->
           <div class="preview-area">
             <div id="materialPreview" class="pic-preview"></div>
             <div id="reviewResult" class="expert-feedback-box" style="display:none"></div>
@@ -99,13 +95,11 @@
         </div>
       </section>
 
-      <!-- 3. Results Section -->
       <section id="resultsSection" class="ideas-section" style="display:none">
-        <h2 class="section-title">Fun Ideas for You! 💡</h2>
+        <h2 class="section-title">Projects for You! 💡</h2>
         <div id="ideas" class="ideas-grid"></div>
       </section>
 
-      <!-- 4. Toolkit -->
       <section class="tools-section">
         <h2 class="section-title">Your Tools 🧰</h2>
         <div id="marketGrid" class="tools-scroll"></div>
@@ -119,26 +113,9 @@
         <h2 id="tutorialTitle">Project Planner</h2>
         <button id="closeModalBtn">✕</button>
       </header>
-      <div id="tutorialLoading" class="modal-loader" style="display:none">
-        <div class="spinner"></div>
-        <p>Finding the easy steps for you...</p>
-      </div>
       <div id="tutorialContent" class="modal-body"></div>
     </div>
   </dialog>
-
-  <!-- State Tracking (Hidden) -->
-  <div style="display:none">
-    <input type="file" id="finalInput">
-    <div id="finalPreview"></div>
-    <span id="projectCount">0</span>
-    <span id="favoriteCategory"></span>
-    <span id="lastScore"></span>
-    <div id="ownedTemplates"></div>
-    <div id="rating"></div>
-    <button id="rateBtn"></button>
-    <span id="aiFeedbackStatus"></span>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script type="module" src="script.js"></script>
