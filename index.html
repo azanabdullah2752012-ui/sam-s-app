@@ -24,11 +24,14 @@
           <div class="logo-icon">🎨</div>
           <span class="logo-text">Eco Remix Studio</span>
         </div>
-        <div class="user-stats">
-          <span>Coins: <strong id="coinCount">0</strong></span>
-          <span class="stat-dot"></span>
-          <span>Streak: <strong id="streakCount">0-day</strong></span>
-        </div>
+        <nav class="header-nav" style="display: flex; gap: 20px; align-items: center;">
+          <a href="instructions.html" style="font-weight:700; color:#4ea8de; text-decoration:none; font-family:'Fredoka'; font-size:1.1rem; background: #fff; padding: 10px 24px; border-radius: 100px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); transition: transform 0.2s;">How to Play 📖</a>
+          <div class="user-stats">
+            <span>Coins: <strong id="coinCount">0</strong></span>
+            <span class="stat-dot"></span>
+            <span>Streak: <strong id="streakCount">0-day</strong></span>
+          </div>
+        </nav>
       </div>
     </header>
 
@@ -72,6 +75,7 @@
           <h2 class="card-heading mid-heading">3. Choose Your Action! 🛠️</h2>
           <div class="action-row">
             <button id="generateBtn" class="pill-btn primary-btn">Get Project Ideas! 💡</button>
+            <button id="createCustomBtn" class="pill-btn primary-btn" style="background: linear-gradient(135deg, #72efdd 0%, #4ea8de 100%);">Create Custom! ✍️</button>
             <div class="btn-divider">or</div>
             <div class="review-group">
               <label class="camera-btn">
@@ -114,6 +118,53 @@
         <button id="closeModalBtn">✕</button>
       </header>
       <div id="tutorialContent" class="modal-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="createModal" class="fun-modal">
+    <div class="modal-card">
+      <header class="modal-head">
+        <h2>Create New Project! ✍️</h2>
+        <button id="closeCreateModalBtn">✕</button>
+      </header>
+      <div class="modal-body">
+        <div class="input-item">
+          <label>Project Title</label>
+          <input type="text" id="customTitle" placeholder="e.g., Cool Robot Shield">
+        </div>
+        <div class="input-item">
+          <label>Short Description</label>
+          <input type="text" id="customDesc" placeholder="What is it for?">
+        </div>
+        <div class="input-item">
+          <label>Material Type</label>
+          <select id="customMaterial">
+            <option value="cardboard">Cardboard Boxes</option>
+            <option value="plastic-bottle">Plastic Bottles</option>
+            <option value="old-fabric">Old Clothes/Fabric</option>
+            <option value="glass-jar">Glass Jars</option>
+            <option value="tin-can">Tin Cans</option>
+          </select>
+        </div>
+        <div class="input-item">
+          <label>Goal Category</label>
+          <select id="customGoal">
+            <option value="storage">Stuff Holder</option>
+            <option value="decor">Pretty Decoration</option>
+            <option value="garden">Garden Fun</option>
+            <option value="fashion">Cool Accessories</option>
+          </select>
+        </div>
+        <div class="input-item">
+          <label>Stuff You Need (comma separated)</label>
+          <textarea id="customMaterials" placeholder="Box, Glue, Tape..."></textarea>
+        </div>
+        <div class="input-item">
+          <label>Steps (one per line)</label>
+          <textarea id="customSteps" style="height: 120px;" placeholder="1. Cut the box&#10;2. Glue the edges..."></textarea>
+        </div>
+        <button id="saveCustomBtn" class="pill-btn primary-btn" style="width:100%; margin-top:20px;">Save My Project! ✨</button>
+      </div>
     </div>
   </dialog>
 
