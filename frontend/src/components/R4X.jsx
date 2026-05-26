@@ -5,9 +5,15 @@ const R4X = () => {
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-end pb-12 px-4 relative">
       
-      {/* Full-Screen Spline Background (Specific to this page) */}
-      <div className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[100%] h-[100%] relative">
+      {/* Constrained Spline Container to preserve aspect ratio and prevent cropping */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+        <div 
+          className="w-full max-w-5xl aspect-square md:aspect-video relative pointer-events-auto"
+          style={{ 
+            maskImage: 'radial-gradient(ellipse at center, black 65%, transparent 100%)', 
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 65%, transparent 100%)' 
+          }}
+        >
           <iframe 
             src="https://my.spline.design/r4xbot-N8mQ7Th4l37mz2C8pg1NIfQK/" 
             frameBorder="0" 

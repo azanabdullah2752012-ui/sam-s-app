@@ -376,7 +376,7 @@ const Hero = () => {
             width="100%" 
             height="100%"
             title="Spline 3D Robot"
-            className="pointer-events-none"
+            className="pointer-events-auto"
           ></iframe>
         </div>
       </div>
