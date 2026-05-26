@@ -368,7 +368,7 @@ const Hero = () => {
       </div> {/* End Left Column */}
 
       {/* Right Column: Spline Robot */}
-      <Scroll3DWrapper className="relative w-full h-[600px] z-10 flex items-center justify-end lg:col-span-7 lg:h-[800px]">
+      <div className="relative w-full h-[600px] z-10 flex items-center justify-end lg:col-span-7 lg:h-[800px]">
         <div className="w-[110%] h-[110%] relative -mr-10">
           <iframe 
             src="https://my.spline.design/genkubgreetingrobot-1KptFeQdAv0V22LStKoG7CSD/" 
@@ -376,10 +376,10 @@ const Hero = () => {
             width="100%" 
             height="100%"
             title="Spline 3D Robot"
-            className="pointer-events-auto"
+            className="pointer-events-none"
           ></iframe>
         </div>
-      </Scroll3DWrapper>
+      </div>
 
       </div> {/* End Top Split Layout */}
 
