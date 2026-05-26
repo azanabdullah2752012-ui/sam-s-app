@@ -1,62 +1,59 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Scroll3DWrapper from './Scroll3DWrapper';
 
 const Toolkit = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center pt-32 pb-20 z-10 relative">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4 tracking-tight text-white">Your Toolkit 🛠️</h2>
-        <p className="text-sm text-white/60">All the instruments you need to craft your masterpiece.</p>
-      </div>
+    <div className="w-full min-h-screen flex flex-col items-center pt-32 pb-32 z-10 relative overflow-hidden">
+      
+      <Scroll3DWrapper className="text-center mb-16 max-w-3xl px-4">
+        <h2 className="text-5xl font-bold mb-6 tracking-tight">Maker Toolkit 🛠️</h2>
+        <p className="text-lg text-white/60 leading-relaxed">
+          The central hub for all your upcycling operations. Manage your physical inventory, calculate your environmental impact, and configure your maker profile.
+        </p>
+      </Scroll3DWrapper>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4">
         
-        {/* Planner Tool */}
-        <div className="glass p-8 rounded-2xl border border-neoBorder flex flex-col justify-between hover:bg-neoHover transition-colors h-64 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-neoAccent opacity-10 rounded-bl-full"></div>
-          <div>
-            <div className="w-12 h-12 rounded-full border border-neoBorder flex items-center justify-center bg-[rgba(20,9,30,0.3)] mb-4">
-              <span className="text-xl">📝</span>
+        {/* Inventory Card */}
+        <Scroll3DWrapper>
+          <div className="glass p-10 rounded-3xl border border-neoBorder flex flex-col justify-between h-full hover-lift relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-neoAccent/10 rounded-bl-full group-hover:bg-neoAccent/20 transition-colors blur-2xl pointer-events-none"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-full border border-neoBorder flex items-center justify-center bg-[rgba(20,9,30,0.4)] mb-6">
+                <span className="text-3xl animate-float">📦</span>
+              </div>
+              <h3 className="text-3xl font-bold text-white mb-4">Maker Inventory</h3>
+              <p className="text-sm text-white/60 leading-relaxed mb-8">
+                Keep an accurate log of all the recyclable materials you have gathered. Track your cardboard boxes, plastic bottles, fabrics, and adhesives in a centralized digital stockroom.
+              </p>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Project Planner</h3>
-            <p className="text-xs text-white/60 leading-relaxed">Map out your materials and step-by-step blueprints before building.</p>
+            <button onClick={() => navigate('/inventory')} className="w-full py-4 bg-[rgba(20,9,30,0.6)] border border-neoBorder btn-spring font-bold rounded-xl text-sm transition mt-auto text-white relative z-10">
+              Open Digital Stockroom
+            </button>
           </div>
-          <button onClick={() => navigate('/planner')} className="w-full py-2.5 bg-[rgba(20,9,30,0.6)] border border-neoBorder hover:bg-white/10 font-medium rounded-lg text-sm transition mt-4 text-white">
-            Launch Planner
-          </button>
-        </div>
+        </Scroll3DWrapper>
 
-        {/* Inventory Tool */}
-        <div className="glass p-8 rounded-2xl border border-neoBorder flex flex-col justify-between hover:bg-neoHover transition-colors h-64 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-neoBlue opacity-10 rounded-bl-full"></div>
-          <div>
-            <div className="w-12 h-12 rounded-full border border-neoBorder flex items-center justify-center bg-[rgba(20,9,30,0.3)] mb-4">
-              <span className="text-xl">📦</span>
+        {/* Impact Calculator Card (Coming Soon) */}
+        <Scroll3DWrapper>
+          <div className="glass p-10 rounded-3xl border border-neoBorder flex flex-col justify-between h-full hover-lift relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-green-500/10 rounded-bl-full group-hover:bg-green-500/20 transition-colors blur-2xl pointer-events-none"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-full border border-neoBorder flex items-center justify-center bg-[rgba(20,9,30,0.4)] mb-6">
+                <span className="text-3xl animate-float">🌍</span>
+              </div>
+              <h3 className="text-3xl font-bold text-white mb-4">Impact Calculator</h3>
+              <p className="text-sm text-white/60 leading-relaxed mb-8">
+                Run advanced algorithms to determine the exact carbon footprint reduction and landfill diversion weight achieved by your completed upcycling projects.
+              </p>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Maker Inventory</h3>
-            <p className="text-xs text-white/60 leading-relaxed">Keep track of the cardboard, plastic, and fabric you have in stock.</p>
+            <button className="w-full py-4 bg-black/40 border border-white/5 font-bold rounded-xl text-sm mt-auto text-white/40 cursor-not-allowed relative z-10">
+              Offline (Coming Soon)
+            </button>
           </div>
-          <button onClick={() => navigate('/inventory')} className="w-full py-2.5 bg-[rgba(20,9,30,0.6)] border border-neoBorder hover:bg-white/10 font-medium rounded-lg text-sm transition mt-4 text-white">
-            Open Inventory
-          </button>
-        </div>
-
-        {/* AI Scanner Tool */}
-        <div className="glass p-8 rounded-2xl border border-neoBorder flex flex-col justify-between hover:bg-neoHover transition-colors h-64 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white opacity-5 rounded-bl-full"></div>
-          <div>
-            <div className="w-12 h-12 rounded-full border border-neoBorder flex items-center justify-center bg-[rgba(20,9,30,0.3)] mb-4">
-              <span className="text-xl">🤖</span>
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Magic Brain Scanner</h3>
-            <p className="text-xs text-white/60 leading-relaxed">Have our AI teacher review your finished builds and award stars.</p>
-          </div>
-          <button onClick={() => navigate('/')} className="w-full py-2.5 bg-review-gradient border border-neoBorder hover:opacity-80 font-medium rounded-lg text-sm transition mt-4 text-white">
-            Open Scanner
-          </button>
-        </div>
+        </Scroll3DWrapper>
 
       </div>
     </div>
