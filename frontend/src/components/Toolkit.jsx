@@ -38,8 +38,8 @@ const Toolkit = () => {
             <h3 className="text-xl font-bold text-white mb-2">Maker Inventory</h3>
             <p className="text-xs text-white/60 leading-relaxed">Keep track of the cardboard, plastic, and fabric you have in stock.</p>
           </div>
-          <button className="w-full py-2.5 bg-[rgba(20,9,30,0.6)] border border-neoBorder hover:bg-white/10 font-medium rounded-lg text-sm transition mt-4 text-white/40 cursor-not-allowed">
-            Coming Soon
+          <button onClick={() => navigate('/inventory')} className="w-full py-2.5 bg-[rgba(20,9,30,0.6)] border border-neoBorder hover:bg-white/10 font-medium rounded-lg text-sm transition mt-4 text-white">
+            Open Inventory
           </button>
         </div>
 
