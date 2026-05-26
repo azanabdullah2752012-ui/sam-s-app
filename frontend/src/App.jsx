@@ -18,6 +18,17 @@ const AmbientBackground = () => {
       {/* 3D Perspective Grid */}
       <div className="absolute inset-0 bg-grid opacity-30 transform perspective-[1000px] rotate-x-60 scale-150 origin-bottom" style={{ transform: 'perspective(1000px) rotateX(60deg) scale(1.5)', transformOrigin: 'bottom' }}></div>
 
+      {/* Spline R4X Bot Background */}
+      <div className="absolute inset-0 z-0 opacity-100 pointer-events-auto mix-blend-normal">
+        <iframe 
+          src="https://my.spline.design/r4xbot-N8mQ7Th4l37mz2C8pg1NIfQK/" 
+          frameBorder="0" 
+          width="100%" 
+          height="100%"
+          title="Spline R4X Bot Background"
+        ></iframe>
+      </div>
+
       {/* Floating Plasma Orbs (Keep for extra depth) */}
       <motion.div 
         animate={{ 
@@ -94,7 +105,7 @@ function App() {
   return (
     <Router>
       <div 
-        className="min-h-screen text-white selection:bg-neoAccent selection:text-neoBg font-inter relative"
+        className="min-h-screen text-gray-900 selection:bg-neoAccent selection:text-white font-inter relative"
         onMouseMove={handleMouseMove}
       >
         <AmbientBackground />
