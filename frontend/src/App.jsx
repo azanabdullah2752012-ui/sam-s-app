@@ -9,25 +9,13 @@ import Toolkit from './components/Toolkit';
 import Progress from './components/Progress';
 import About from './components/About';
 import Inventory from './components/Inventory';
-
-import Spline from '@splinetool/react-spline';
+import R4X from './components/R4X';
 
 const AmbientBackground = () => {
   return (
     <div className="fixed inset-0 z-0 overflow-hidden bg-transparent pointer-events-none">
       {/* 3D Perspective Grid */}
       <div className="absolute inset-0 bg-grid opacity-30 transform perspective-[1000px] rotate-x-60 scale-150 origin-bottom" style={{ transform: 'perspective(1000px) rotateX(60deg) scale(1.5)', transformOrigin: 'bottom' }}></div>
-
-      {/* Spline R4X Bot Background */}
-      <div className="absolute inset-0 z-0 opacity-100 pointer-events-auto mix-blend-normal">
-        <iframe 
-          src="https://my.spline.design/r4xbot-N8mQ7Th4l37mz2C8pg1NIfQK/" 
-          frameBorder="0" 
-          width="100%" 
-          height="100%"
-          title="Spline R4X Bot Background"
-        ></iframe>
-      </div>
 
       {/* Floating Plasma Orbs (Keep for extra depth) */}
       <motion.div 
@@ -115,6 +103,7 @@ function App() {
           <main className="w-full flex-grow">
             <Routes>
               <Route path="/" element={<Hero />} />
+              <Route path="/assistant" element={<R4X />} />
               <Route 
                 path="/marketplace" 
                 element={<Marketplace 
