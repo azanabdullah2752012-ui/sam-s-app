@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marketplace from './components/Marketplace';
@@ -9,14 +10,34 @@ import Progress from './components/Progress';
 import About from './components/About';
 import Inventory from './components/Inventory';
 
-const PlaceholderPage = ({ title }) => (
-  <div className="w-full min-h-screen flex flex-col items-center justify-center pt-32 pb-20 z-10 relative">
-    <div className="glass p-12 rounded-2xl border border-neoBorder text-center max-w-2xl">
-      <h2 className="text-4xl font-bold mb-4">{title}</h2>
-      <p className="text-white/60">This section is currently under construction in the NeoLab. Check back later!</p>
+const AmbientBackground = () => {
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-transparent">
+      {/* 3D Perspective Grid */}
+      <div className="absolute inset-0 bg-grid opacity-30 transform perspective-[1000px] rotate-x-60 scale-150 origin-bottom" style={{ transform: 'perspective(1000px) rotateX(60deg) scale(1.5)', transformOrigin: 'bottom' }}></div>
+
+      {/* Floating Plasma Orbs */}
+      <motion.div 
+        animate={{ 
+          x: [0, 100, -100, 0], 
+          y: [0, -50, 50, 0],
+          scale: [1, 1.2, 0.8, 1]
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-neoAccent/10 rounded-full blur-[120px]"
+      />
+      <motion.div 
+        animate={{ 
+          x: [0, -150, 100, 0], 
+          y: [0, 100, -100, 0],
+          scale: [1, 1.5, 0.9, 1]
+        }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-1/4 right-1/4 w-[800px] h-[800px] bg-neoBlue/10 rounded-full blur-[150px]"
+      />
     </div>
-  </div>
-);
+  );
+};
 
 function App() {
   // Global State Initializers (from localStorage or defaults)
@@ -46,7 +67,7 @@ function App() {
 
   // Sync to localStorage on change
   useEffect(() => {
-    localStorage.setItem('neoCoins', coinBalance);
+    localStorage.setItem('neoCoins', coinBalance.toString());
   }, [coinBalance]);
 
   useEffect(() => {
@@ -71,35 +92,39 @@ function App() {
   return (
     <Router>
       <div 
-        className="min-h-screen text-white selection:bg-neoAccent selection:text-neoBg font-inter"
+        className="min-h-screen text-white selection:bg-neoAccent selection:text-neoBg font-inter relative"
         onMouseMove={handleMouseMove}
       >
-        <Navbar coinBalance={coinBalance} />
-        <main className="w-full">
-          <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route 
-              path="/marketplace" 
-              element={<Marketplace 
-                coinBalance={coinBalance} 
-                setCoinBalance={setCoinBalance} 
-                purchasedProjects={purchasedProjects}
-                setPurchasedProjects={setPurchasedProjects}
-              />} 
-            />
-            <Route 
-              path="/planner" 
-              element={<ProjectPlanner 
-                savedProjects={savedProjects}
-                setSavedProjects={setSavedProjects}
-              />} 
-            />
-            <Route path="/toolkit" element={<Toolkit />} />
-            <Route path="/inventory" element={<Inventory inventory={inventory} setInventory={setInventory} />} />
-            <Route path="/progress" element={<Progress coinBalance={coinBalance} />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
+        <AmbientBackground />
+        
+        <div className="relative z-10 w-full flex flex-col min-h-screen">
+          <Navbar coinBalance={coinBalance} />
+          <main className="w-full flex-grow">
+            <Routes>
+              <Route path="/" element={<Hero />} />
+              <Route 
+                path="/marketplace" 
+                element={<Marketplace 
+                  coinBalance={coinBalance} 
+                  setCoinBalance={setCoinBalance} 
+                  purchasedProjects={purchasedProjects}
+                  setPurchasedProjects={setPurchasedProjects}
+                />} 
+              />
+              <Route 
+                path="/planner" 
+                element={<ProjectPlanner 
+                  savedProjects={savedProjects}
+                  setSavedProjects={setSavedProjects}
+                />} 
+              />
+              <Route path="/toolkit" element={<Toolkit />} />
+              <Route path="/inventory" element={<Inventory inventory={inventory} setInventory={setInventory} />} />
+              <Route path="/progress" element={<Progress coinBalance={coinBalance} />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </main>
+        </div>
       </div>
     </Router>
   );
