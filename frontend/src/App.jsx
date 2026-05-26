@@ -1,39 +1,28 @@
-
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import ReviewWork from './components/ReviewWork';
+import Marketplace from './components/Marketplace';
+import ProjectPlanner from './components/ProjectPlanner';
 
-import ScrollToTop from './ScrollToTop.jsx';
-import Navbar from './Navbar.jsx';
-import ReviewWork from './ReviewWork.jsx';
-import Marketplace from './Marketplace.jsx';
-import ProjectPlanner from './ProjectPlanner.jsx';
-import MyProgress from './MyProgress.jsx';
-import About from './About.jsx';
+function App() {
+  const [coinBalance, setCoinBalance] = useState(150);
 
-
-function Home() {
-  return (
-    <div className="glass p-8 mt-8">
-      <h1 className="text-4xl mb-4">Welcome to Eco Remix Studio</h1>
-      <p className="text-lg">Turning today’s recycling into tomorrow’s treasures!</p>
-    </div>
-  );
-}
-
-export default function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/review" element={<ReviewWork />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/toolkit" element={<ProjectPlanner />} />
-        <Route path="/progress" element={<MyProgress />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <div className="min-h-screen bg-darkPurple text-white font-sans selection:bg-accentPurple selection:text-white">
+        <Navbar coinBalance={coinBalance} />
+        <main className="max-w-6xl mx-auto p-6">
+          <Routes>
+            <Route path="/" element={<><Hero /><ReviewWork /></>} />
+            <Route path="/marketplace" element={<Marketplace coinBalance={coinBalance} setCoinBalance={setCoinBalance} />} />
+            <Route path="/planner" element={<ProjectPlanner />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
 
-// trailing duplicate export removed
+export default App;
