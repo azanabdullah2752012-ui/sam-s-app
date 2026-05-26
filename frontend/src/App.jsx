@@ -91,7 +91,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <div 
         className="min-h-screen text-gray-900 selection:bg-neoAccent selection:text-white font-inter relative"
         onMouseMove={handleMouseMove}

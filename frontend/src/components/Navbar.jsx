@@ -25,7 +25,7 @@ const Navbar = ({ coinBalance }) => {
       
       <div className="flex space-x-2">
         <NavLink to="/" className={getLinkClass}>Home</NavLink>
-        <Link to="/assistant" className={getLinkClass}>Assistant</Link>
+        <NavLink to="/assistant" className={getLinkClass}>Assistant</NavLink>
         <NavLink to="/marketplace" className={getLinkClass}>Projects</NavLink>
         <NavLink to="/toolkit" className={getLinkClass}>Toolkit</NavLink>
         <NavLink to="/progress" className={getLinkClass}>My Progress</NavLink>
