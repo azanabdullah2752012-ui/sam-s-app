@@ -27,9 +27,9 @@ const Hero = () => {
   
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Modals & Loaders
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedIdeas, setGeneratedIdeas] = useState(null);
+  const [selectedIdea, setSelectedIdea] = useState(null);
   
   const [isReviewing, setIsReviewing] = useState(false);
   const [reviewResult, setReviewResult] = useState(null);
@@ -51,11 +51,27 @@ const Hero = () => {
   const handleGetIdeas = () => {
     setIsGenerating(true);
     setGeneratedIdeas(null);
+    setSelectedIdea(null);
     setTimeout(() => {
       setGeneratedIdeas([
-        { title: `${material.label} Desk Organizer`, difficulty: 'Easy' },
-        { title: `Epic ${projectType.label} out of ${material.label}`, difficulty: 'Medium' },
-        { title: `Recycled ${material.label} Masterpiece`, difficulty: 'Hard' }
+        { 
+          title: `${material.label} Desk Organizer`, 
+          difficulty: 'Easy',
+          materials: [`2x ${material.label}`, 'Scissors', 'Glue', 'Markers'],
+          steps: ['Cut the material into sections', 'Glue the sections together', 'Decorate with markers']
+        },
+        { 
+          title: `Epic ${projectType.label} out of ${material.label}`, 
+          difficulty: 'Medium',
+          materials: [`3x ${material.label}`, 'Tape', 'Paint', 'Brushes'],
+          steps: ['Assemble the base structure', 'Reinforce with tape', 'Paint and let dry']
+        },
+        { 
+          title: `Recycled ${material.label} Masterpiece`, 
+          difficulty: 'Hard',
+          materials: [`5x ${material.label}`, 'Hot Glue Gun', 'Craft Knife', 'LED Lights'],
+          steps: ['Carefully carve the intricate pieces', 'Assemble using hot glue', 'Install the LED lighting']
+        }
       ]);
       setIsGenerating(false);
     }, 2000);
@@ -235,17 +251,54 @@ const Hero = () => {
             </div>
 
             {/* Modals directly inside the card for sleekness */}
-            {generatedIdeas && (
+            {generatedIdeas && !selectedIdea && (
               <div className="mt-8 p-4 glass rounded-xl border border-neoAccent/40 animate-fade-in">
                 <h4 className="text-neoAccent font-bold text-sm mb-3">Found 3 Project Ideas!</h4>
                 <div className="flex flex-col gap-2">
                   {generatedIdeas.map((idea, i) => (
-                    <div key={i} className="bg-[rgba(20,9,30,0.4)] p-3 rounded-lg flex justify-between items-center text-sm">
+                    <div 
+                      key={i} 
+                      onClick={() => setSelectedIdea(idea)}
+                      className="bg-[rgba(20,9,30,0.4)] p-3 rounded-lg flex justify-between items-center text-sm cursor-pointer hover:bg-[rgba(20,9,30,0.6)] transition border border-transparent hover:border-neoAccent/50"
+                    >
                       <span className="text-white/90">{idea.title}</span>
                       <span className="text-[10px] uppercase tracking-wider text-neoBlue bg-neoBlue/10 px-2 py-1 rounded-full">{idea.difficulty}</span>
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {selectedIdea && (
+              <div className="mt-8 p-6 glass rounded-xl border border-neoAccent animate-fade-in">
+                <button 
+                  onClick={() => setSelectedIdea(null)}
+                  className="text-xs text-white/40 hover:text-white mb-4 flex items-center gap-1 transition"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                  Back to ideas
+                </button>
+                <h4 className="text-xl font-bold text-white mb-2">{selectedIdea.title}</h4>
+                <div className="flex gap-2 mb-6">
+                   <span className="text-[10px] uppercase tracking-wider text-neoBlue bg-neoBlue/10 px-2 py-1 rounded-full">{selectedIdea.difficulty}</span>
+                </div>
+                
+                <h5 className="text-neoAccent font-bold text-sm mb-2">Materials Needed:</h5>
+                <ul className="list-disc pl-5 mb-6 text-sm text-white/80 space-y-1">
+                  {selectedIdea.materials.map((m, i) => <li key={i}>{m}</li>)}
+                </ul>
+
+                <h5 className="text-neoAccent font-bold text-sm mb-2">Steps:</h5>
+                <ol className="list-decimal pl-5 text-sm text-white/80 space-y-2">
+                  {selectedIdea.steps.map((s, i) => <li key={i}>{s}</li>)}
+                </ol>
+                
+                <button 
+                  onClick={() => navigate('/planner')}
+                  className="w-full mt-6 py-2 bg-button-gradient border border-neoAccent/40 hover:bg-white/5 font-medium rounded-lg text-sm transition text-white"
+                >
+                  Save to Planner
+                </button>
               </div>
             )}
 
