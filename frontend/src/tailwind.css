@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-darkPurple text-gray-200 min-h-screen font-sans;
+}
+
+#root {
+  @apply flex flex-col items-center w-full max-w-screen-xl mx-auto min-h-screen;
+}
+
+h1, h2 {
+  @apply font-semibold text-accentPurple;
+}
+
+.glass {
+  @apply bg-white bg-opacity-10 backdrop-blur-glass shadow-glass rounded-xl border border-accentPurple;
+}
