@@ -29,18 +29,43 @@ const ReviewWork = () => {
   };
 
   return (
-    <div className="mt-12 bg-lightPurple/40 backdrop-blur-xl border border-lightPurple p-12 rounded-[32px] shadow-glow">
-      <h2 className="text-3xl font-bold mb-6">Review My Work 🤖</h2>
-      <button 
-        onClick={handleReview} 
-        disabled={loading}
-        className="px-8 py-4 bg-gradient-to-br from-accentPurple to-[#8855db] hover:opacity-90 text-darkPurple font-bold rounded-full transition disabled:opacity-50"
-      >
-        {loading ? 'AI is scanning...' : 'Analyze Image'}
-      </button>
+    <div className="mt-8 bg-white border-4 border-ecoDark p-10 rounded-3xl shadow-[0_12px_0_rgba(0,0,0,0.15)] relative overflow-hidden">
+      {/* Decorative element */}
+      <div className="absolute -top-10 -right-10 w-32 h-32 bg-ecoYellow rounded-full opacity-50 z-0"></div>
+      
+      <div className="relative z-10 flex flex-col items-center">
+        <h2 className="text-4xl font-bold mb-8 flex items-center gap-3">
+          <span className="text-5xl">🤖</span> Magic Brain Review
+        </h2>
+        
+        <p className="text-xl mb-8 text-center max-w-lg font-medium text-ecoDark/70">
+          Finished building something awesome? The Magic Brain wants to see it! Give it a scan to get your stars!
+        </p>
 
-      {error && <div className="mt-6 p-4 bg-red-900/50 border border-red-500 rounded-xl text-red-200">{error}</div>}
-      {feedback && <div className="mt-6 p-4 bg-green-900/30 border border-green-500 rounded-xl text-green-200">{feedback}</div>}
+        <button 
+          onClick={handleReview} 
+          disabled={loading}
+          className="px-10 py-5 bg-ecoPink text-white text-2xl font-bold rounded-full border-4 border-ecoDark shadow-bouncy bouncy-hover disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-bouncy flex items-center gap-3"
+        >
+          {loading ? (
+            <><span className="animate-spin inline-block">⏳</span> Brain is thinking...</>
+          ) : (
+            <><span>📸</span> Scan My Project!</>
+          )}
+        </button>
+
+        {error && (
+          <div className="mt-8 p-6 bg-[#FF6B6B]/20 border-4 border-[#FF6B6B] rounded-2xl text-xl font-bold text-[#FF6B6B] w-full max-w-2xl text-center">
+            Oh no! The brain got dizzy: {error} 😵‍💫
+          </div>
+        )}
+        
+        {feedback && (
+          <div className="mt-8 p-6 bg-ecoGreen/20 border-4 border-ecoGreen rounded-2xl text-2xl font-bold text-ecoDark w-full max-w-2xl text-center animate-bounce" style={{animationIterationCount: 3}}>
+            {feedback} 🎉
+          </div>
+        )}
+      </div>
     </div>
   );
 };

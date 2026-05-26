@@ -11,9 +11,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-darkPurple text-white font-sans selection:bg-accentPurple selection:text-white">
+      <div className="min-h-screen text-ecoDark selection:bg-ecoPink selection:text-white">
         <Navbar coinBalance={coinBalance} />
-        <main className="max-w-6xl mx-auto p-6">
+        <main className="max-w-6xl mx-auto p-6 pb-20">
           <Routes>
             <Route path="/" element={<><Hero /><ReviewWork /></>} />
             <Route path="/marketplace" element={<Marketplace coinBalance={coinBalance} setCoinBalance={setCoinBalance} />} />
