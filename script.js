@@ -384,17 +384,7 @@ const elements = {
   tutorialTitle: document.getElementById("tutorialTitle"),
   closeModalBtn: document.getElementById("closeModalBtn"),
   tutorialContent: document.getElementById("tutorialContent"),
-  materialPreview: document.getElementById("materialPreview"),
-  createCustomBtn: document.getElementById("createCustomBtn"),
-  createModal: document.getElementById("createModal"),
-  closeCreateModalBtn: document.getElementById("closeCreateModalBtn"),
-  saveCustomBtn: document.getElementById("saveCustomBtn"),
-  customTitle: document.getElementById("customTitle"),
-  customDesc: document.getElementById("customDesc"),
-  customMaterial: document.getElementById("customMaterial"),
-  customGoal: document.getElementById("customGoal"),
-  customMaterials: document.getElementById("customMaterials"),
-  customSteps: document.getElementById("customSteps")
+  materialPreview: document.getElementById("materialPreview")
 };
 
 init();
@@ -414,9 +404,6 @@ function init() {
   }
 
   if (elements.closeModalBtn) elements.closeModalBtn.addEventListener("click", () => elements.tutorialModal.close());
-  if (elements.closeCreateModalBtn) elements.closeCreateModalBtn.addEventListener("click", () => elements.createModal.close());
-  if (elements.createCustomBtn) elements.createCustomBtn.addEventListener("click", () => elements.createModal.showModal());
-  if (elements.saveCustomBtn) elements.saveCustomBtn.addEventListener("click", saveCustomProject);
   elements.imageInput?.addEventListener("change", (e) => renderPreview(e.target, elements.materialPreview));
 }
 
@@ -429,11 +416,7 @@ function generateIdeas() {
   const search = elements.aiInput.value.toLowerCase();
   
   const key = `${mat}-${goal}`;
-  let ideas = [...(PROJECT_LIBRARY[key] || [])];
-
-  // Add user's custom projects
-  const customMatches = (state.customProjects || []).filter(p => p.material === mat && p.goal === goal);
-  ideas = [...customMatches, ...ideas];
+  let ideas = PROJECT_LIBRARY[key] || [];
 
   if (search) {
     ideas = ideas.filter(p => p.title.toLowerCase().includes(search) || p.description.toLowerCase().includes(search));
@@ -451,8 +434,7 @@ function renderExpertPlans(plans) {
   }
   elements.ideas.innerHTML = plans.map(plan => `
     <article class="course-card" onclick='window.openPlanner(${JSON.stringify(plan).replace(/'/g, "&apos;")})'>
-      <div class="card-img-wrap" style="position:relative;">
-        ${plan.isCustom ? '<span style="position:absolute; top:12px; right:12px; background:#72efdd; color:#111; padding:6px 12px; border-radius:100px; font-weight:800; font-size:0.8rem; box-shadow:0 4px 10px rgba(0,0,0,0.1);">YOUR CREATION</span>' : ''}
+      <div class="card-img-wrap">
         <img src="https://picsum.photos/seed/${plan.title}/600/400" alt="plan">
       </div>
       <div class="card-content">
@@ -548,50 +530,8 @@ window.accessToolkit = function(tid) {
   window.openPlanner({ title: t.name, materials: t.default.materials, steps: t.default.steps });
 }
 
-function saveCustomProject() {
-  const title = elements.customTitle.value.trim();
-  const desc = elements.customDesc.value.trim();
-  const mat = elements.customMaterial.value;
-  const goal = elements.customGoal.value;
-  const mats = elements.customMaterials.value.split(',').map(m => m.trim()).filter(m => m);
-  const steps = elements.customSteps.value.split('\n').map(s => s.trim()).filter(s => s);
-
-  if (!title || !desc || mats.length === 0 || steps.length === 0) {
-    alert("Please fill in all the details! ✍️");
-    return;
-  }
-
-  const newProject = {
-    title: title + " ✨",
-    description: desc,
-    material: mat,
-    goal: goal,
-    materials: mats,
-    steps: steps,
-    isCustom: true
-  };
-
-  if (!state.customProjects) state.customProjects = [];
-  state.customProjects.unshift(newProject);
-  saveState();
-
-  // Clear form and close
-  elements.customTitle.value = "";
-  elements.customDesc.value = "";
-  elements.customMaterials.value = "";
-  elements.customSteps.value = "";
-  elements.createModal.close();
-
-  // Refresh ideas if searching
-  generateIdeas();
-  
-  if (window.confetti) {
-    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-  }
-}
-
 function fileToDataUrl(file) { return new Promise((r, j) => { const reader = new FileReader(); reader.onload = () => r(reader.result); reader.onerror = j; reader.readAsDataURL(file); }); }
-function loadState() { return JSON.parse(localStorage.getItem(storageKey)) || { coins: 150, streak: 7, progress: {}, customProjects: [] }; }
+function loadState() { return JSON.parse(localStorage.getItem(storageKey)) || { coins: 150, streak: 7, progress: {} }; }
 function saveState() { localStorage.setItem(storageKey, JSON.stringify(state)); }
 function updateDashboard() { elements.coinCount.textContent = state.coins; elements.streakCount.textContent = `${state.streak}-day`; }
 function renderIdeasEmpty() { if (elements.ideas) elements.ideas.innerHTML = '<p style="grid-column: 1/-1; text-align:center; opacity:0.5; padding: 60px; font-family:Fredoka;">Pick your stuff to see curated projects! 💡</p>'; }
