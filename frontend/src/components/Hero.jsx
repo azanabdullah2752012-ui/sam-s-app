@@ -48,31 +48,70 @@ const Hero = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  const generateDetailedIdeas = (mat, type) => {
+    // Generate highly detailed, non-generic instructions based on selections
+    const ideas = [];
+    
+    if (mat.label === 'Cardboard Boxes' && type.label === 'Stuff Holder') {
+      ideas.push({
+        title: 'Geometric Hexagon Desk Organizer',
+        difficulty: 'Medium',
+        materials: ['3x Medium Cardboard Boxes', 'Hot Glue Gun & Sticks', 'Utility Knife / Box Cutter', 'Metal Ruler', 'Pencil', 'Acrylic Paint (Optional)'],
+        steps: [
+          'Flatten the cardboard boxes completely and lay them on a cutting mat.',
+          'Using the pencil and ruler, draw 6 identical rectangles (4x6 inches) for the outer walls, and one hexagon for the base.',
+          'Carefully score the cardboard along the drawn lines with the utility knife. Do not cut all the way through if you want seamless folding corners.',
+          'Fold the scored cardboard into a hexagonal tube shape.',
+          'Run a bead of hot glue along the final seam and hold it tightly for 30 seconds until the glue sets.',
+          'Apply hot glue to the bottom edges of the tube and firmly press it onto the hexagonal base piece.',
+          'For internal compartments, cut 3 intersecting rectangular dividers and slot them into the center.',
+          'Paint the exterior with acrylic paint or wrap it in decorative paper for a premium finish.'
+        ]
+      });
+    } else if (mat.label === 'Plastic Bottles' && type.label === 'Planter') {
+      ideas.push({
+        title: 'Self-Watering Hanging Planter',
+        difficulty: 'Easy',
+        materials: ['1x 2-Liter Plastic Bottle', 'Cotton String / Twine', 'Soil', 'Seeds/Small Plant', 'Scissors', 'Push Pin or Nail'],
+        steps: [
+          'Remove the label from the 2-liter plastic bottle and rinse the inside thoroughly.',
+          'Using scissors, cut the bottle in half horizontally (about 5 inches from the bottom).',
+          'Take the top half (with the cap) and use the push pin to carefully poke a hole directly through the center of the plastic cap.',
+          'Cut a 10-inch piece of cotton string. Thread it through the hole in the cap so that half is inside the bottle and half hangs out.',
+          'Screw the cap back onto the top half of the bottle tightly.',
+          'Fill the bottom half of the bottle with 2 inches of water.',
+          'Invert the top half of the bottle and nest it inside the bottom half. The string should submerge into the water.',
+          'Fill the inverted top half with soil and plant your seeds. The string will act as a wick, drawing water up to the roots automatically!'
+        ]
+      });
+    }
+
+    // Default fallback with detailed generic structure
+    ideas.push({
+      title: `Upcycled ${mat.label} ${type.label}`,
+      difficulty: 'Hard',
+      materials: [`4x ${mat.label}`, 'Heavy Duty Craft Glue', 'Painter\'s Tape', 'Sandpaper (Fine Grit)', 'Measuring Tape', 'Protective Gloves'],
+      steps: [
+        `Begin by thoroughly cleaning and prepping the ${mat.label}. Ensure there is no residue or moisture left on the surface.`,
+        'Measure and mark the primary cutting points at 2-inch intervals along the longest edge.',
+        `Carefully dissect the ${mat.label} into modular pieces according to your markings. Sand down any rough edges for safety.`,
+        `Begin assembling the core structure of the ${type.label}. Use painter's tape to temporarily hold the joints together.`,
+        'Apply heavy duty craft glue along the interior seams. The tape will keep it stable while the glue cures for 24 hours.',
+        'Once fully cured, remove the tape. Reinforce any wobbly joints with an additional layer of glue.',
+        'Add customized exterior detailing to personalize the build.',
+        'Perform a final stress test to ensure the structure can hold weight before putting it into daily use.'
+      ]
+    });
+
+    return ideas;
+  };
+
   const handleGetIdeas = () => {
     setIsGenerating(true);
     setGeneratedIdeas(null);
     setSelectedIdea(null);
     setTimeout(() => {
-      setGeneratedIdeas([
-        { 
-          title: `${material.label} Desk Organizer`, 
-          difficulty: 'Easy',
-          materials: [`2x ${material.label}`, 'Scissors', 'Glue', 'Markers'],
-          steps: ['Cut the material into sections', 'Glue the sections together', 'Decorate with markers']
-        },
-        { 
-          title: `Epic ${projectType.label} out of ${material.label}`, 
-          difficulty: 'Medium',
-          materials: [`3x ${material.label}`, 'Tape', 'Paint', 'Brushes'],
-          steps: ['Assemble the base structure', 'Reinforce with tape', 'Paint and let dry']
-        },
-        { 
-          title: `Recycled ${material.label} Masterpiece`, 
-          difficulty: 'Hard',
-          materials: [`5x ${material.label}`, 'Hot Glue Gun', 'Craft Knife', 'LED Lights'],
-          steps: ['Carefully carve the intricate pieces', 'Assemble using hot glue', 'Install the LED lighting']
-        }
-      ]);
+      setGeneratedIdeas(generateDetailedIdeas(material, projectType));
       setIsGenerating(false);
     }, 2000);
   };
