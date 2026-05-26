@@ -15,7 +15,7 @@
     @apply m-0 p-0 overflow-x-hidden;
     
     /* Interactive Parallax Background Setup */
-    background: linear-gradient(180deg, #1A0522 0%, #230C33 100%);
+    background: #F0F2F5;
     min-height: 100vh;
   }
 }
@@ -23,25 +23,27 @@
 .bg-grid {
   background-size: 50px 50px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
 }
 
 /* Glassmorphism utility */
 .glass {
-  background: rgba(89, 46, 131, 0.25);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
 }
 
+/* Glass Mask for gradients */
 .glass-mask {
   mask-image: linear-gradient(black, black), linear-gradient(black, black);
   mask-clip: padding-box, border-box;
   mask-composite: exclude;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(202, 156, 225, 0.6) 0%, rgba(202, 156, 225, 0) 100%) border-box;
+  background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 100%);
   border: 1px solid transparent;
 }
 

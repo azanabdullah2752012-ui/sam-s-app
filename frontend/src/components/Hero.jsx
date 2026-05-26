@@ -146,28 +146,33 @@ const Hero = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center pt-32 pb-20">
+    <div className="w-full min-h-screen flex flex-col items-center pt-32 pb-20 px-4">
       
-      {/* Title Section */}
-      <Scroll3DWrapper className="text-center mb-16 relative z-10">
-        <h1 className="text-6xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-          Fun DIY Projects! 🎨
-        </h1>
-        <p className="text-lg text-white/70 max-w-2xl mx-auto flex items-center justify-center gap-2">
-          <span className="text-neoAccent animate-pulse">✧</span> 
-          Pick what you have lying around the house, and let our Magic Brain find something incredible for you to make. 
-          <span className="text-neoAccent animate-pulse">✧</span>
-        </p>
-      </Scroll3DWrapper>
+      {/* Top Split Layout: UI & Spline Robot */}
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16">
+        
+        {/* Left Column: Title & UI */}
+        <div className="flex flex-col w-full z-10 lg:col-span-5">
+          {/* Title Section */}
+          <Scroll3DWrapper className="text-left mb-10 relative z-10">
+            <h1 className="text-6xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+              Welcome to the NeoLab! 🤖
+            </h1>
+            <p className="text-lg text-white/70 max-w-xl flex items-center justify-start gap-2">
+              <span className="text-neoAccent animate-pulse">✧</span> 
+              Tell the robot what you have lying around, and it will generate an incredible project blueprint for you. 
+              <span className="text-neoAccent animate-pulse">✧</span>
+            </p>
+          </Scroll3DWrapper>
 
-      {/* Main Glass Panel */}
-      <Scroll3DWrapper className="relative w-full max-w-4xl z-10 hover-lift">
-        <div className="absolute inset-0 rounded-2xl glass-mask pointer-events-none"></div>
-        <div className="glass rounded-2xl p-10 relative overflow-visible">
-          
-          <div className="absolute top-6 right-6 w-12 h-12 rounded-full border border-neoBorder flex items-center justify-center opacity-40 animate-float">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
-          </div>
+          {/* Main Glass Panel */}
+          <Scroll3DWrapper className="relative w-full z-10 hover-lift">
+            <div className="absolute inset-0 rounded-2xl glass-mask pointer-events-none"></div>
+            <div className="glass rounded-2xl p-10 relative overflow-visible">
+              
+              <div className="absolute top-6 right-6 w-12 h-12 rounded-full border border-neoBorder flex items-center justify-center opacity-40 animate-float">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+              </div>
 
           {/* Row 1: Pick Your Stuff & Search */}
           <div className="mb-10">
@@ -360,6 +365,23 @@ const Hero = () => {
 
         </div>
       </Scroll3DWrapper>
+      </div> {/* End Left Column */}
+
+      {/* Right Column: Spline Robot */}
+      <Scroll3DWrapper className="relative w-full h-[600px] z-10 flex items-center justify-end lg:col-span-7 lg:h-[800px]">
+        <div className="w-[110%] h-[110%] relative -mr-10">
+          <iframe 
+            src="https://my.spline.design/genkubgreetingrobot-1KptFeQdAv0V22LStKoG7CSD/" 
+            frameBorder="0" 
+            width="100%" 
+            height="100%"
+            title="Spline 3D Robot"
+            className="pointer-events-auto"
+          ></iframe>
+        </div>
+      </Scroll3DWrapper>
+
+      </div> {/* End Top Split Layout */}
 
       {/* Your Tools Section */}
       <Scroll3DWrapper className="w-full max-w-4xl mt-16 z-10">

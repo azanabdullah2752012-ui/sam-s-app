@@ -10,13 +10,15 @@ import Progress from './components/Progress';
 import About from './components/About';
 import Inventory from './components/Inventory';
 
+import Spline from '@splinetool/react-spline';
+
 const AmbientBackground = () => {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-transparent">
+    <div className="fixed inset-0 z-0 overflow-hidden bg-transparent pointer-events-none">
       {/* 3D Perspective Grid */}
       <div className="absolute inset-0 bg-grid opacity-30 transform perspective-[1000px] rotate-x-60 scale-150 origin-bottom" style={{ transform: 'perspective(1000px) rotateX(60deg) scale(1.5)', transformOrigin: 'bottom' }}></div>
 
-      {/* Floating Plasma Orbs */}
+      {/* Floating Plasma Orbs (Keep for extra depth) */}
       <motion.div 
         animate={{ 
           x: [0, 100, -100, 0], 
@@ -24,7 +26,7 @@ const AmbientBackground = () => {
           scale: [1, 1.2, 0.8, 1]
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-neoAccent/10 rounded-full blur-[120px]"
+        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-neoAccent/10 rounded-full blur-[120px] pointer-events-none"
       />
       <motion.div 
         animate={{ 
@@ -33,7 +35,7 @@ const AmbientBackground = () => {
           scale: [1, 1.5, 0.9, 1]
         }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-1/4 right-1/4 w-[800px] h-[800px] bg-neoBlue/10 rounded-full blur-[150px]"
+        className="absolute bottom-1/4 right-1/4 w-[800px] h-[800px] bg-neoBlue/10 rounded-full blur-[150px] pointer-events-none"
       />
     </div>
   );

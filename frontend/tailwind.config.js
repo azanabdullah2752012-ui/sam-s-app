@@ -9,12 +9,12 @@ export default {
         inter: ['Inter', 'sans-serif'],
       },
       colors: {
-        neoBg: '#230C33',
-        neoCard: 'rgba(89, 46, 131, 0.25)',
-        neoAccent: '#CA9CE1',
-        neoBlue: '#A9D6E5',
-        neoBorder: 'rgba(255, 255, 255, 0.12)',
-        neoHover: 'rgba(255, 255, 255, 0.05)',
+        neoBg: '#F5F5F7',
+        neoCard: 'rgba(255, 255, 255, 0.7)',
+        neoAccent: '#8B5CF6',
+        neoBlue: '#0ea5e9',
+        neoBorder: 'rgba(0, 0, 0, 0.1)',
+        neoHover: 'rgba(0, 0, 0, 0.05)',
       },
       backgroundImage: {
         'neo-gradient': 'linear-gradient(135deg, rgba(89, 46, 131, 0.4) 0%, rgba(35, 12, 51, 0.1) 100%)',
