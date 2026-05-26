@@ -45,7 +45,7 @@ const ReviewWork = () => {
         <button 
           onClick={handleReview} 
           disabled={loading}
-          className="px-10 py-5 bg-ecoPink text-white text-2xl font-bold rounded-full border-4 border-ecoDark shadow-bouncy bouncy-hover disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-bouncy flex items-center gap-3"
+          className="px-10 py-5 bg-ecoPink text-gray-900 text-2xl font-bold rounded-full border-4 border-ecoDark shadow-bouncy bouncy-hover disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-bouncy flex items-center gap-3"
         >
           {loading ? (
             <><span className="animate-spin inline-block">⏳</span> Brain is thinking...</>

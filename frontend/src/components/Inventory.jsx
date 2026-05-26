@@ -48,7 +48,7 @@ const Inventory = ({ inventory, setInventory }) => {
     <div className="w-full min-h-screen flex flex-col items-center pt-32 pb-32 z-10 relative overflow-hidden">
       <Scroll3DWrapper className="text-center mb-16 max-w-4xl px-4">
         <h2 className="text-5xl font-bold mb-6 tracking-tight">Digital Stockroom 📦</h2>
-        <p className="text-lg text-white/60 leading-relaxed">
+        <p className="text-lg text-gray-500 leading-relaxed">
           Maintain absolute control over your physical resources. Log your gathered recyclables, track their quantities in real-time, and deploy them strategically into your DIY projects. Your inventory is automatically saved and synchronized to your local vault.
         </p>
       </Scroll3DWrapper>
@@ -62,24 +62,24 @@ const Inventory = ({ inventory, setInventory }) => {
             <h3 className="font-bold text-2xl mb-8 relative z-10">Intake Logistics</h3>
             <form onSubmit={handleAddItem} className="flex flex-col gap-6 relative z-10">
               <div className="flex flex-col gap-3">
-                <label className="text-xs font-bold text-white/60 uppercase tracking-wider">Material Designation</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Material Designation</label>
                 <input 
                   type="text" 
                   value={newItemName}
                   onChange={(e) => setNewItemName(e.target.value)}
                   placeholder="e.g. Toilet Paper Rolls"
-                  className="bg-[rgba(20,9,30,0.5)] border border-neoBorder p-4 rounded-xl text-sm outline-none input-glow"
+                  className="bg-white/40 border border-neoBorder p-4 rounded-xl text-sm outline-none input-glow"
                   required
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <label className="text-xs font-bold text-white/60 uppercase tracking-wider">Quantity to Log</label>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Quantity to Log</label>
                 <input 
                   type="number" 
                   min="1"
                   value={newItemQty}
                   onChange={(e) => setNewItemQty(e.target.value)}
-                  className="bg-[rgba(20,9,30,0.5)] border border-neoBorder p-4 rounded-xl text-sm outline-none input-glow"
+                  className="bg-white/40 border border-neoBorder p-4 rounded-xl text-sm outline-none input-glow"
                   required
                 />
               </div>
@@ -101,34 +101,34 @@ const Inventory = ({ inventory, setInventory }) => {
             </h3>
             
             {inventory.length === 0 ? (
-              <div className="py-20 text-center text-white/40 border border-dashed border-white/10 rounded-2xl relative z-10">
+              <div className="py-20 text-center text-gray-400 border border-dashed border-black/10 rounded-2xl relative z-10">
                 Your stockroom is empty. Deploy intake logistics to begin.
               </div>
             ) : (
               <div className="flex flex-col gap-4 relative z-10">
                 {inventory.map(item => (
-                  <div key={item.id} className="bg-[rgba(20,9,30,0.4)] p-5 rounded-2xl border border-neoBorder flex items-center justify-between transition-colors hover:bg-[rgba(20,9,30,0.6)]">
+                  <div key={item.id} className="bg-white/30 p-5 rounded-2xl border border-neoBorder flex items-center justify-between transition-colors hover:bg-black/50">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 shadow-inner">
+                      <div className="w-12 h-12 rounded-xl bg-black/5 flex items-center justify-center border border-black/10 shadow-inner">
                         <span className="text-neoBlue font-bold text-lg">{item.quantity}</span>
                       </div>
-                      <span className="font-bold text-white text-lg tracking-wide">{item.name}</span>
+                      <span className="font-bold text-gray-900 text-lg tracking-wide">{item.name}</span>
                     </div>
                     
                     <div className="flex items-center gap-3">
                       <button 
                         onClick={() => updateQuantity(item.id, -1)}
-                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition btn-spring text-lg"
+                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 hover:bg-black/10 border border-black/10 transition btn-spring text-lg"
                       >
                         -
                       </button>
                       <button 
                         onClick={() => updateQuantity(item.id, 1)}
-                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition btn-spring text-lg"
+                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 hover:bg-black/10 border border-black/10 transition btn-spring text-lg"
                       >
                         +
                       </button>
-                      <div className="w-px h-8 bg-white/10 mx-2"></div>
+                      <div className="w-px h-8 bg-black/10 mx-2"></div>
                       <button 
                         onClick={() => removeItem(item.id)}
                         className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500/10 hover:bg-red-500/30 text-red-400 border border-red-500/20 transition btn-spring"

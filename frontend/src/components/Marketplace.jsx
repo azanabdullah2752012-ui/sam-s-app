@@ -56,7 +56,7 @@ const Marketplace = ({ coinBalance, setCoinBalance, purchasedProjects, setPurcha
       
       <Scroll3DWrapper className="text-center mb-16 max-w-4xl px-4">
         <h2 className="text-5xl font-bold mb-6 tracking-tight">Community Marketplace 🛒</h2>
-        <p className="text-lg text-white/60 leading-relaxed">
+        <p className="text-lg text-gray-500 leading-relaxed">
           Access premium, highly-detailed blueprints curated by the NeoLab community. Spend the NeoCoins you've earned from upcycling to unlock permanent access to these advanced builds.
         </p>
       </Scroll3DWrapper>
@@ -79,13 +79,13 @@ const Marketplace = ({ coinBalance, setCoinBalance, purchasedProjects, setPurcha
                 <div className="absolute top-0 right-0 w-48 h-48 bg-neoAccent/5 rounded-bl-full group-hover:bg-neoAccent/10 transition-colors blur-2xl"></div>
                 
                 <h3 className="text-2xl font-bold mb-3 relative z-10">{project.title}</h3>
-                <p className="text-sm text-white/60 mb-8 leading-relaxed relative z-10 flex-grow">{project.description}</p>
+                <p className="text-sm text-gray-500 mb-8 leading-relaxed relative z-10 flex-grow">{project.description}</p>
                 
                 <div className="relative z-10 mt-auto">
                   {!isPurchased ? (
-                    <div className="flex items-center justify-between border-t border-white/10 pt-6">
+                    <div className="flex items-center justify-between border-t border-black/10 pt-6">
                       <div>
-                        <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Price</p>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Price</p>
                         <p className="text-xl text-neoAccent font-bold">{project.cost} Coins</p>
                       </div>
                       <button 
@@ -96,16 +96,16 @@ const Marketplace = ({ coinBalance, setCoinBalance, purchasedProjects, setPurcha
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-between border-t border-white/10 pt-6">
+                    <div className="flex items-center justify-between border-t border-black/10 pt-6">
                       <div>
                         <p className="text-sm text-green-400 font-bold flex items-center gap-2">
                           <span className="animate-pulse">🔓</span> Unlocked
                         </p>
-                        <p className="text-xs text-white/40">Permanent Access</p>
+                        <p className="text-xs text-gray-400">Permanent Access</p>
                       </div>
                       <button 
                         onClick={() => setActiveBlueprint(activeBlueprint?._id === project._id ? null : project)}
-                        className="px-8 py-3 bg-white/10 border border-white/20 font-bold rounded-xl text-sm btn-spring"
+                        className="px-8 py-3 bg-black/10 border border-black/20 font-bold rounded-xl text-sm btn-spring"
                       >
                         {activeBlueprint?._id === project._id ? 'Close Blueprint' : 'Open Blueprint'}
                       </button>
@@ -125,20 +125,20 @@ const Marketplace = ({ coinBalance, setCoinBalance, purchasedProjects, setPurcha
             <h3 className="text-3xl font-bold mb-8 text-neoAccent">{activeBlueprint.title} Blueprint</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
-              <div className="md:col-span-1 glass p-6 rounded-2xl border border-white/10 h-fit">
-                <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
+              <div className="md:col-span-1 glass p-6 rounded-2xl border border-black/10 h-fit">
+                <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
                   <span className="text-neoAccent">📦</span> Materials Required
                 </h4>
-                <ul className="list-disc pl-5 text-white/70 space-y-3 text-sm">
+                <ul className="list-disc pl-5 text-gray-600 space-y-3 text-sm">
                   {activeBlueprint.materials.map((m, i) => <li key={i}>{m}</li>)}
                 </ul>
               </div>
               
               <div className="md:col-span-2">
-                <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
+                <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm flex items-center gap-2">
                   <span className="text-neoAccent">🛠️</span> Construction Steps
                 </h4>
-                <ol className="list-decimal pl-5 text-white/70 space-y-6 text-sm leading-relaxed">
+                <ol className="list-decimal pl-5 text-gray-600 space-y-6 text-sm leading-relaxed">
                   {activeBlueprint.steps.map((s, i) => <li key={i} className="pl-2">{s}</li>)}
                 </ol>
               </div>

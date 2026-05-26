@@ -19,8 +19,8 @@ const Progress = ({ coinBalance }) => {
       
       {/* Header */}
       <Scroll3DWrapper className="text-center mb-16 max-w-3xl px-4">
-        <h2 className="text-5xl font-bold mb-6 tracking-tight text-white">Your Eco Journey 🚀</h2>
-        <p className="text-lg text-white/60 leading-relaxed">
+        <h2 className="text-5xl font-bold mb-6 tracking-tight text-gray-900">Your Eco Journey 🚀</h2>
+        <p className="text-lg text-gray-500 leading-relaxed">
           Track your impact on the planet. Every project you build keeps waste out of the landfill. Level up your maker skills to unlock exclusive community perks.
         </p>
       </Scroll3DWrapper>
@@ -34,17 +34,17 @@ const Progress = ({ coinBalance }) => {
             {/* Level Info */}
             <div className="flex-1 text-center md:text-left">
               <h3 className="text-2xl font-bold text-neoAccent mb-2">Maker Level {currentLevel}</h3>
-              <p className="text-4xl font-bold text-white mb-6">Master Upcycler</p>
+              <p className="text-4xl font-bold text-gray-900 mb-6">Master Upcycler</p>
               
-              <div className="w-full bg-black/40 h-4 rounded-full overflow-hidden mb-2 border border-white/10">
+              <div className="w-full bg-black/40 h-4 rounded-full overflow-hidden mb-2 border border-black/10">
                 <div 
                   className="bg-button-gradient h-full rounded-full relative"
                   style={{ width: `${progressPercent}%` }}
                 >
-                  <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
+                  <div className="absolute inset-0 bg-black/20 w-full animate-pulse"></div>
                 </div>
               </div>
-              <div className="flex justify-between text-xs text-white/50">
+              <div className="flex justify-between text-xs text-gray-900/50">
                 <span>{coinBalance} NeoCoins</span>
                 <span>{nextLevelCost} to Level 5</span>
               </div>
@@ -52,15 +52,15 @@ const Progress = ({ coinBalance }) => {
 
             {/* Impact Stats */}
             <div className="flex-1 grid grid-cols-2 gap-4 w-full">
-              <div className="bg-[rgba(20,9,30,0.5)] p-6 rounded-2xl border border-white/5 text-center">
+              <div className="bg-white/40 p-6 rounded-2xl border border-white/5 text-center">
                 <span className="text-3xl block mb-2">🗑️</span>
-                <p className="text-2xl font-bold text-white">12 lbs</p>
-                <p className="text-xs text-white/40 uppercase tracking-wider">Waste Saved</p>
+                <p className="text-2xl font-bold text-gray-900">12 lbs</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider">Waste Saved</p>
               </div>
-              <div className="bg-[rgba(20,9,30,0.5)] p-6 rounded-2xl border border-white/5 text-center">
+              <div className="bg-white/40 p-6 rounded-2xl border border-white/5 text-center">
                 <span className="text-3xl block mb-2">🔥</span>
-                <p className="text-2xl font-bold text-white">4 Days</p>
-                <p className="text-xs text-white/40 uppercase tracking-wider">Build Streak</p>
+                <p className="text-2xl font-bold text-gray-900">4 Days</p>
+                <p className="text-xs text-gray-400 uppercase tracking-wider">Build Streak</p>
               </div>
             </div>
           </div>
@@ -82,14 +82,14 @@ const Progress = ({ coinBalance }) => {
               <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-4 ${ach.unlocked ? 'bg-neoAccent/20 shadow-[0_0_15px_rgba(202,156,225,0.4)]' : 'bg-black/40 grayscale'}`}>
                 {ach.icon}
               </div>
-              <h4 className="font-bold text-lg mb-2 text-white">{ach.title}</h4>
-              <p className="text-xs text-white/60 leading-relaxed mb-4">{ach.desc}</p>
+              <h4 className="font-bold text-lg mb-2 text-gray-900">{ach.title}</h4>
+              <p className="text-xs text-gray-500 leading-relaxed mb-4">{ach.desc}</p>
               
               <div className="mt-auto">
                 {ach.unlocked ? (
                   <span className="text-[10px] uppercase tracking-wider font-bold text-neoAccent bg-neoAccent/10 px-3 py-1 rounded-full">Unlocked</span>
                 ) : (
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-white/40 bg-black/40 px-3 py-1 rounded-full">Locked</span>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400 bg-black/40 px-3 py-1 rounded-full">Locked</span>
                 )}
               </div>
             </div>

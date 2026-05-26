@@ -29,7 +29,7 @@ const ProjectPlanner = ({ savedProjects, setSavedProjects }) => {
       
       <Scroll3DWrapper className="text-center mb-16 max-w-4xl px-4">
         <h2 className="text-5xl font-bold mb-6 tracking-tight">Project Planner 📝</h2>
-        <p className="text-lg text-white/60 leading-relaxed">
+        <p className="text-lg text-gray-500 leading-relaxed">
           The ultimate drafting table for your upcycling ideas. Write out your materials and map out your construction steps. Everything is saved locally to your device, ensuring your blueprints are always ready when you are.
         </p>
       </Scroll3DWrapper>
@@ -40,33 +40,33 @@ const ProjectPlanner = ({ savedProjects, setSavedProjects }) => {
           
           <form onSubmit={handleSubmit} className="flex flex-col gap-8 relative z-10">
             <div className="flex flex-col gap-3">
-              <label className="text-sm font-bold text-white/80 uppercase tracking-wider">Project Title</label>
+              <label className="text-sm font-bold text-gray-700 uppercase tracking-wider">Project Title</label>
               <input 
                 type="text" 
                 value={title} 
                 onChange={(e) => setTitle(e.target.value)} 
                 placeholder="e.g. Cardboard Arcade Cabinet"
-                className="bg-[rgba(20,9,30,0.5)] border border-neoBorder p-4 rounded-xl text-sm text-white outline-none input-glow"
+                className="bg-white/40 border border-neoBorder p-4 rounded-xl text-sm text-gray-900 outline-none input-glow"
                 required
               />
             </div>
             <div className="flex flex-col gap-3">
-              <label className="text-sm font-bold text-white/80 uppercase tracking-wider">Materials Needed <span className="text-xs font-normal text-white/40 normal-case">(One item per line)</span></label>
+              <label className="text-sm font-bold text-gray-700 uppercase tracking-wider">Materials Needed <span className="text-xs font-normal text-gray-400 normal-case">(One item per line)</span></label>
               <textarea 
                 value={materials} 
                 onChange={(e) => setMaterials(e.target.value)} 
                 placeholder="10x Heavy Cardboard Boxes&#10;Duct Tape&#10;Utility Knife"
-                className="bg-[rgba(20,9,30,0.5)] border border-neoBorder p-4 rounded-xl text-sm text-white outline-none input-glow min-h-[120px] resize-y"
+                className="bg-white/40 border border-neoBorder p-4 rounded-xl text-sm text-gray-900 outline-none input-glow min-h-[120px] resize-y"
                 required
               />
             </div>
             <div className="flex flex-col gap-3">
-              <label className="text-sm font-bold text-white/80 uppercase tracking-wider">Construction Steps <span className="text-xs font-normal text-white/40 normal-case">(One step per line)</span></label>
+              <label className="text-sm font-bold text-gray-700 uppercase tracking-wider">Construction Steps <span className="text-xs font-normal text-gray-400 normal-case">(One step per line)</span></label>
               <textarea 
                 value={steps} 
                 onChange={(e) => setSteps(e.target.value)} 
                 placeholder="1. Flatten all boxes and remove tape.&#10;2. Measure out the side panels.&#10;3. Assemble using duct tape."
-                className="bg-[rgba(20,9,30,0.5)] border border-neoBorder p-4 rounded-xl text-sm text-white outline-none input-glow min-h-[180px] resize-y"
+                className="bg-white/40 border border-neoBorder p-4 rounded-xl text-sm text-gray-900 outline-none input-glow min-h-[180px] resize-y"
                 required
               />
             </div>
@@ -84,16 +84,16 @@ const ProjectPlanner = ({ savedProjects, setSavedProjects }) => {
         </h3>
         
         {savedProjects.length === 0 ? (
-          <div className="p-16 glass rounded-3xl border border-dashed border-white/20 text-center text-white/50 text-lg">
+          <div className="p-16 glass rounded-3xl border border-dashed border-black/20 text-center text-gray-900/50 text-lg">
             The vault is empty. Draft a master plan above to store it here permanently.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {savedProjects.map((proj, index) => (
               <div key={proj.id} className="glass p-8 rounded-3xl border border-neoBorder flex flex-col hover-lift h-full group">
-                <div className="flex justify-between items-start mb-6 border-b border-white/10 pb-4">
+                <div className="flex justify-between items-start mb-6 border-b border-black/10 pb-4">
                   <h4 className="font-bold text-2xl group-hover:text-neoAccent transition-colors">{proj.title}</h4>
-                  <span className="text-xs font-mono text-white/40 bg-black/40 px-3 py-1 rounded-full">{proj.date}</span>
+                  <span className="text-xs font-mono text-gray-400 bg-black/40 px-3 py-1 rounded-full">{proj.date}</span>
                 </div>
                 
                 {activeViewId === proj.id ? (
@@ -103,7 +103,7 @@ const ProjectPlanner = ({ savedProjects, setSavedProjects }) => {
                         <h5 className="text-neoAccent font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-2">
                           <span>📦</span> Materials
                         </h5>
-                        <ul className="list-disc pl-5 text-sm text-white/70 space-y-2">
+                        <ul className="list-disc pl-5 text-sm text-gray-600 space-y-2">
                           {proj.materials.map((m, i) => <li key={i}>{m}</li>)}
                         </ul>
                       </div>
@@ -111,26 +111,26 @@ const ProjectPlanner = ({ savedProjects, setSavedProjects }) => {
                         <h5 className="text-neoAccent font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-2">
                           <span>🛠️</span> Steps
                         </h5>
-                        <ol className="list-decimal pl-5 text-sm text-white/70 space-y-2">
+                        <ol className="list-decimal pl-5 text-sm text-gray-600 space-y-2">
                           {proj.steps.map((s, i) => <li key={i}>{s}</li>)}
                         </ol>
                       </div>
                     </div>
                     <button 
                       onClick={() => setActiveViewId(null)}
-                      className="w-full py-3 bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl text-sm font-bold transition mt-auto"
+                      className="w-full py-3 bg-black/5 border border-black/10 hover:bg-black/10 rounded-xl text-sm font-bold transition mt-auto"
                     >
                       Hide Details
                     </button>
                   </div>
                 ) : (
                   <div className="flex-grow flex flex-col justify-end">
-                    <p className="text-sm text-white/50 mb-8">
+                    <p className="text-sm text-gray-900/50 mb-8">
                       {proj.materials.length} Materials Required • {proj.steps.length} Construction Steps
                     </p>
                     <button 
                       onClick={() => setActiveViewId(proj.id)}
-                      className="w-full py-3 bg-[rgba(20,9,30,0.6)] border border-neoBorder font-bold rounded-xl text-sm btn-spring"
+                      className="w-full py-3 bg-black/50 border border-neoBorder font-bold rounded-xl text-sm btn-spring"
                     >
                       Open Blueprint
                     </button>
