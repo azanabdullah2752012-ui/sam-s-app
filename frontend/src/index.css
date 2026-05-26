@@ -4,10 +4,14 @@
 
 @layer base {
   body {
-    @apply bg-neoBg text-white font-inter m-0 p-0 overflow-x-hidden;
+    background-color: #230C33;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    @apply m-0 p-0 overflow-x-hidden;
     background-image: url('/bg.png');
-    background-size: cover;
-    background-position: center;
+    background-size: 100vw auto;
+    background-repeat: no-repeat;
+    background-position: top center;
     background-attachment: fixed;
   }
 }
