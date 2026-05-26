@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ReviewWork from './components/ReviewWork';
 import Marketplace from './components/Marketplace';
 import ProjectPlanner from './components/ProjectPlanner';
 
@@ -11,11 +10,11 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen text-ecoDark selection:bg-ecoPink selection:text-white">
+      <div className="min-h-screen text-white selection:bg-neoAccent selection:text-neoBg font-inter">
         <Navbar coinBalance={coinBalance} />
-        <main className="max-w-6xl mx-auto p-6 pb-20">
+        <main className="w-full">
           <Routes>
-            <Route path="/" element={<><Hero /><ReviewWork /></>} />
+            <Route path="/" element={<Hero />} />
             <Route path="/marketplace" element={<Marketplace coinBalance={coinBalance} setCoinBalance={setCoinBalance} />} />
             <Route path="/planner" element={<ProjectPlanner />} />
           </Routes>

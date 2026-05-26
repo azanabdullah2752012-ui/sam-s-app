@@ -2,29 +2,42 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Navbar = ({ coinBalance }) => {
-  const linkBase = "px-5 py-2.5 rounded-full font-semibold border-2 transition-all duration-200 bouncy-hover";
+  const linkBase = "px-4 py-1.5 rounded-full text-sm font-medium transition-colors";
   const getLinkClass = ({ isActive }) => 
     isActive 
-      ? `${linkBase} bg-ecoYellow border-ecoDark shadow-bouncy translate-y-[-2px]` 
-      : `${linkBase} bg-white border-ecoDark/20 text-ecoDark/70 hover:border-ecoDark hover:text-ecoDark hover:shadow-bouncy`;
+      ? `${linkBase} bg-[rgba(89,46,131,0.6)] text-white border border-neoBorder` 
+      : `${linkBase} text-white/70 hover:text-white`;
 
   return (
-    <nav className="flex justify-between items-center p-6 bg-white border-b-4 border-ecoDark shadow-sm sticky top-0 z-50">
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 bg-ecoGreen rounded-full border-4 border-ecoDark flex items-center justify-center text-white text-2xl shadow-bouncy">
-          ♻️
+    <nav className="flex justify-between items-center px-12 py-6 w-full absolute top-0 left-0 z-50">
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+            <path d="M2 12c0-5.52 4.48-10 10-10 5.52 0 10 4.48 10 10 0 5.52-4.48 10-10 10-5.52 0-10-4.48-10-10z"></path>
+            <path d="M12 8v4l3 3"></path>
+          </svg>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">Eco Remix <span className="text-ecoPink">Studio</span></h1>
+        <div>
+          <h1 className="text-lg font-semibold tracking-wide">Eco Remix Studio</h1>
+          <p className="text-[10px] tracking-[0.2em] text-neoAccent uppercase">Neo Lab</p>
+        </div>
       </div>
       
-      <div className="hidden md:flex space-x-4">
-        <NavLink to="/" className={getLinkClass}>🏠 Home</NavLink>
-        <NavLink to="/marketplace" className={getLinkClass}>🛍️ Projects</NavLink>
-        <NavLink to="/planner" className={getLinkClass}>📝 Planner</NavLink>
+      <div className="flex space-x-2">
+        <NavLink to="/" className={getLinkClass}>Home</NavLink>
+        <NavLink to="/marketplace" className={getLinkClass}>Projects</NavLink>
+        <NavLink to="/toolkit" className={getLinkClass}>Toolkit</NavLink>
+        <NavLink to="/progress" className={getLinkClass}>My Progress</NavLink>
+        <NavLink to="/about" className={getLinkClass}>About</NavLink>
       </div>
 
-      <div className="bg-ecoBlue px-5 py-2.5 rounded-full border-4 border-ecoDark font-bold text-xl flex items-center gap-2 shadow-bouncy">
-        <span>🪙</span> {coinBalance}
+      <div className="flex items-center gap-3">
+        <div className="bg-[rgba(20,9,30,0.6)] px-4 py-1.5 rounded-full border border-neoBorder text-sm font-medium flex items-center gap-2">
+          <span className="text-neoAccent font-bold">S</span> Coins: {coinBalance}
+        </div>
+        <div className="bg-[rgba(20,9,30,0.6)] px-4 py-1.5 rounded-full border border-neoBorder text-sm font-medium flex items-center gap-2">
+          <span>🔥</span> Streak: 7-day
+        </div>
       </div>
     </nav>
   );
