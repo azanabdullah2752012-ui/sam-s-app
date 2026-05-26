@@ -1,4 +1,4 @@
-# 🎨 Eco Remix Studio
+# 🎨 Eco Studio
 
 **Turning today's recycling into tomorrow's treasures!**
 
